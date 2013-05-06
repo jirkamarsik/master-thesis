@@ -197,6 +197,39 @@ useful, we often focus ourselves only on terms that have a specific
 constants and some distinguished type, we can describe languages of,
 e.g. tree-like (and by extension string-like), lambda terms.
 
+Let us take a look at an example from
+\cite{pogodalla2007generalizing}. We will start with a very simple
+signature of string expressions with the concatenation operator,
+$\Sigma_{String} = \mathopen{<}A_{String}, C_{String},
+\tau_{String}\mathclose{>}$. Our signature will need only one atomic
+type, $A_{String} = \{\textsc{String}\}$. Our constants will be the
+wordforms of our example fragment ($every$, $some$, $man$, $woman$,
+$loves$), the empty string $\epsilon$ and the string concatention
+operator, $+$. $\tau_{String}$ assigns the type $\textsc{String}$ to all
+the wordforms and to $\epsilon$ and the type $\textsc{String} \limp
+\textsc{String} \limp \textsc{String}$\footnote{As a convention,
+  whenever we omit parentheses in a type, we presume the $\limp$ and
+  $\to$ type constructors always bind from the right, meaning that $a
+  \to b \to c$ should be read as $a \to (b \to c)$.}
+to the concatenation operator $+$.
+
+Now we can look at some well-typed terms from the string domain
+(i.e. elements of $\Lambda(\Sigma_{String})$). The term $t_1 =
+some\ +\ woman$\footnote{Here we introduce another notational
+  convention. The unadorned way of writing this term would be $t_1 =
+  (+\ some)\ woman$. Firstly, we will allow ourselves to drop the
+  parentheses, meaning that any string of expressions $f\ x\ y$ should
+  be read as $(f\ x)\ y$. Secondly, we will admit a specific infix
+  notation for some constants which denote functions of two
+  arguments. This will then let us write $x\ +\ y$ instead of
+  $+\ x\ y$.} denotes the concatenation of $some$ and $woman$, which is
+the phrase $some\ woman$; its type is $\textsc{String}$. A term such as
+$t_2 = \lambda^{\circ} x. x\ +\ man$ denotes a function that appends the
+string $man$ to its argument; its type is $\textsc{String} \limp
+\textsc{String}$. If we restrict the set $\Lambda(\Sigma_{String})$ only
+to terms having the type $\textsc{String}$, we get the set of
+expressions which denote strings.
+
 The idea of a signature is coupled with that of a \textbf{lexicon},
 which is a mapping between two different signatures (mapping the
 constants of one into well-typed terms of the other). Formally speaking,

@@ -130,6 +130,8 @@ We present the grammatical framework in which we will develop our
 system. Abstract categorial grammars are built upon two mathematical
 structures, \emph{(higher-order) signatures} and \emph{lexicons}.
 
+\subsubsection{Higher-order signatures}
+
 A \textbf{higher-order signature} is a set of elements that we call
 \emph{constants}, each of which is associated with a type. Formally, it
 is defined as a triple $\Sigma = \mathopen{<}A, C, \tau\mathclose{>}$,
@@ -197,6 +199,9 @@ useful, we often focus ourselves only on terms that have a specific
 constants and some distinguished type, we can describe languages of,
 e.g. tree-like (and by extension string-like), lambda terms.
 
+\subsubsection{Example signature}
+\label{sssec:example-sig}
+
 Let us take a look at an example from
 \cite{pogodalla2007generalizing}. We will start with a very simple
 signature of string expressions with the concatenation operator,
@@ -228,7 +233,10 @@ $t_2 = \lambda^{\circ} x. x\ +\ man$ denotes a function that appends the
 string $man$ to its argument; its type is $\textsc{String} \limp
 \textsc{String}$. If we restrict the set $\Lambda(\Sigma_{String})$ only
 to terms having the type $\textsc{String}$, we get the set of
-expressions which denote strings.
+expressions which denote strings (a set that contains terms like $t_1$
+but not $t_2$).
+
+\subsubsection{Lexicons}
 
 The idea of a signature is coupled with that of a \textbf{lexicon},
 which is a mapping between two different signatures (mapping the
@@ -262,21 +270,129 @@ inverting the surface lexicon to get the abstract term and then applying
 to it the logical lexicon. Generation is symmetric, we simply invert the
 logical lexicon and apply the surface lexicon.
 
-\subsubsection{Example ACG}
+\subsubsection{Example lexicon}
 
-We will look at an example of an ACG from
+\newcommand{\synt}[1]{C_{\textrm{#1}}}
 
-
-$\Sigma_{Synt}$ will be our abstract signature with $A_{Synt} = \{np, n,
-s\}$, $C_{Synt} = \{C_{every}, C_{some}, C_{love}, C_{man}, C_{woman}\}$
-and $\tau_{Synt}$ as follows:
+To illustrate the ideas of a lexicon and an abstract categorial grammar,
+we will expand our example from \ref{sssec:example-sig}. We will
+consider another signature, $\Sigma_{Synt}$, which will describe the
+syntax of quantified noun phrases in the style of Montague
+\cite{montague1973proper}. The atomic types $A_{Synt}$ will consist of
+the types $np$, $n$ and $s$. Our constants, $C_{Synt} = \{\synt{every},
+\synt{some}, \synt{love}, \synt{man}, \synt{woman}\}$, will have the
+following types, as predicted by $\tau_{Synt}$:
 \begin{itemize}
-\item
+\item $\tau_{Synt}(\synt{every}) = \tau_{Synt}(\synt{some}) = n \limp
+  ((np \limp s) \limp s)$
+\item $\tau_{Synt}(\synt{love}) = np \limp np \limp s$
+\item $\tau_{Synt}(\synt{man}) = \tau_{Synt}(\synt{woman}) = n$
 \end{itemize}
 
-...
+Let us explore some terms from $\Lambda(\Sigma_{Synt})$. $t_3 =
+\synt{some}\ \synt{woman}$ has type $(np \limp s) \limp s$, which is the
+type that serves to describe quantified noun phrases in our
+example. Terms of this type expect a verb phrase (or some other
+predicate) of type $np \limp s$, and can yield a sentence of type $s$.
 
-\subsection{Interaction Grammars}
+Now we will see how this approach can handle transitive verbs. In $t_4 =
+\lambda^{\circ} x.\ (\synt{some}\ \synt{woman})\ (\lambda^{\circ}
+y.\ \synt{love}\ x\ y)$, which is a term of type $np \limp s$
+representing the verb phrase \emph{loves some woman}, we first take the
+expression $\synt{love}\ x\ y$ (\emph{$x$ loves $y$}, type $s$) and we
+abstract over $y$ to get the predicate $\lambda^{\circ}
+y.\ \synt{love}\ x\ y$ (\emph{is loved by $x$}, type $np \limp s$). By
+applying the quantified noun phrase $t_3$ to this term, we get
+$(\synt{some}\ \synt{woman})\ (\lambda^{\circ} y.\ \synt{love}\ x\ y)$
+(\emph{$x$ loves some woman}, type $s$). Finally, by abstracting over
+$x$, we get the verb phrase $t_4$.
+
+$t_5 = (\synt{every}\ \synt{man})\ (\lambda^{\circ}
+x.\ (\synt{some}\ \synt{woman})\ (\lambda^{\circ}
+y.\ \synt{love}\ x\ y))$ is the result of applying the quantified noun
+phrase $\synt{every}\ \synt{man}$ (of type $(np \limp s) \limp s$) to
+$t_4$. What we get is a term of type $s$ which describes the sentence
+\emph{every man loves some woman}. Note that as before, we can restrict
+the set $\Lambda(\Sigma_{Synt})$ to terms having the distinguished type
+$s$ and we will arrive at the set of terms which describe sentences
+(this set will include $t_5$, but not $t_3$ or $t_4$).
+
+In the example above, I have been presuming some kind of implied
+connection between the terms of $\Lambda(\Sigma_{Synt})$ and phrases of
+some natural language, strings. Indeed, while we have defined a system
+of structures which describe the quantification and predicate structures
+of a microscopic fragment of English and a system for talking about
+strings in concatenation, we have not given any explicit link between
+the two. It is at this moment that we will introduce a lexicon to link
+these two levels of description.
+
+Our lexicon $\mathcal{L}_{syntax}$ will map the constants of
+$\Sigma_{Synt}$, our abstract signature, into terms from
+$\Lambda(\Sigma_{String})$, our object signature. If we view terms of
+$\Lambda(\Sigma_{Synt})$ as abstract computations, the lexicon will
+instantiate this abstraction by providing an implementation for the
+constants of $\Sigma_{Synt}$. This way we can map an abstract
+computation representing a phrase into a more specific object
+computation that computes the string representing the phrase.
+
+So, how does our lexicon $\mathcal{L}_{syntax}$ look like? It will map
+all the atomic types of $\Sigma_{Synt}$ into $\textsc{String}$, which we
+can write as $\mathcal{L}_{syntax}(n) = \mathcal{L}_{syntax}(np) =
+\mathcal{L}_{syntax}(s)$\footnote{Whenever we talk about some lexicon,
+  we will use the lexicon itself, which is formally a pair of mappings
+  $\mathopen{<}F, G\mathclose{>}$, to mean either $F$, $G$ or their
+  homomorphic extensions $\hat{F}$ and $\hat{G}$ depending on whether
+  the argument is an atomic type, a constant, a complex type or a term
+  respectively.}. From that, we can use the homomorphic extension of our
+type mapping to arrive at the object-level interpretations of complex
+types, such as the type of predicates, $np \limp s$, which becomes a
+unary string function, $\textsc{String} \limp \textsc{String}$, or the
+type of quantified noun phrases, $(np \limp s) \limp s$, which becomes a
+higher-order string function, $(\textsc{String} \limp \textsc{String})
+\limp \textsc{String}$. With the types out of the way, we can give the
+interpretation of the individual constants of $\Sigma_{Synt}$:
+\begin{itemize}
+\item $\mathcal{L}_{syntax}(\synt{every}) = \lambda^{\circ} x
+  R.\ R\ (every\ +\ x)$
+\item $\mathcal{L}_{syntax}(\synt{some}) = \lambda^{\circ} x
+  R.\ R\ (some\ +\ x)$
+\item $\mathcal{L}_{syntax}(\synt{love}) = \lambda^{\circ} x
+  y.\ x\ +\ loves\ +\ y$
+\item $\mathcal{L}_{syntax}(\synt{man}) = man$
+\item $\mathcal{L}_{syntax}(\synt{woman}) = woman$
+\end{itemize}
+
+We can now go back to our examples from $\Lambda(\Sigma_{Synt})$ and
+look at what they look like after applying the lexicon to them.
+\begin{itemize}
+\item $t_3 = \synt{some}\ \synt{woman}$ \\ Mapping this term using the
+  lexicon and $\beta$-reducing gives us $\mathcal{L}_{syntax}(t_3)
+  =_{\beta} \lambda^{\circ} R.\ R\ (some\ +\ woman)$, which is a
+  type-raised version of the string \emph{some woman}.
+\item $t_4 = \lambda^{\circ}
+  x.\ (\synt{some}\ \synt{woman})\ (\lambda^{\circ}
+  y.\ \synt{love}\ x\ y)$ \\ Our verb phrase ends up being mapped onto
+  a function which appends the phrase \emph{loves some woman} to its
+  argument, $\mathcal{L}_{syntax}(t_4) =_{\beta} \lambda^{\circ}
+  x.\ x\ +\ loves\ +\ some\ +\ woman$
+\item $t_5 = (\synt{every}\ \synt{man})\ (\lambda^{\circ}
+  x.\ (\synt{some}\ \synt{woman})\ (\lambda^{\circ}
+  y.\ \synt{love}\ x\ y))$ \\ Finally, the sentence (type $s$) is mapped
+  into a simple $\textsc{String}$, $\mathcal{L}_{syntax}(t_5) =_{\beta}
+  every\ +\ man\ +\ loves\ +\ some\ +\ woman$.
+\end{itemize}
+
+Now we have enough machinery in play to define the set of strings which
+form our fragment of English. We will consider the \emph{abstract
+  language} generated by our signature $\Sigma_{Synt}$ and the
+distinguished type $s$, that is, elements of $\Lambda(\Sigma_{Synt})$
+having type $s$. Then we can define the \emph{object language}, which is
+the image of the abstract language when transformed using the
+lexicon. The object language contains strings, terms from
+$\Lambda(\Sigma_{String})$ having the type $\textsc{String}$. However,
+the object language does not contain all such terms, but only those
+object terms, for which there exists a term in the abstract language
+such that its image given by the lexicon yields the same object term.
 
 \bibliographystyle{plain}
 \bibliography{biblio}

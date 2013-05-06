@@ -1,0 +1,112 @@
+\subsection{Motivation}
+
+To develop applications capable of understanding natural language, we
+have to analyze the discourse as a complex structure. The structure of
+the discourse and the rhetorical relations between its constituent
+propositions have shown to have an important effect on anaphora and on
+the semantic content of the discourse.
+
+Let us consider these examples from \cite{asher2003logics}.
+
+\begin{exe}
+  \ex \label{narxexp-nar} \begin{xlist}
+    \ex \label{narxexp-nar-a} Max fell.
+    \ex \label{narxexp-nar-b} John helped him up.
+  \end{xlist}
+  \ex \label{narxexp-exp} \begin{xlist}
+    \ex \label{narxexp-exp-a} Max fell.
+    \ex \label{narxexp-exp-b} John pushed him.
+  \end{xlist}
+\end{exe}
+
+In (\ref{narxexp-nar}), we intuitively recognize that the second
+proposition (\ref{narxexp-nar-b}) serves as a narrative continuation of
+(\ref{narxexp-nar-a}), whereas in (\ref{narxexp-exp}), the proposition
+(\ref{narxexp-exp-b}) serves as an explanation to the event described in
+(\ref{narxexp-exp-a}). This distinction has interesting consequences as
+to what we can infer from these two discourse excerpts. In the case of
+(\ref{narxexp-nar}), we can infer that the event described in
+(\ref{narxexp-nar-b}) occurred after the event described in
+(\ref{narxexp-nar-a}). In the latter case (\ref{narxexp-exp}), we can
+conversely infer that the events happened in the opposite order. We feel
+that a complete understanding of the two examples above entails
+inferring the correct temporal order and we would welcome a principled
+way to make this kind of decisions.
+
+\begin{exe}
+  \ex \label{salmon} \begin{xlist}
+    \ex Max had a lovely evening last night.
+    \ex He had a great meal.
+    \ex \label{salmon-here} He ate salmon.
+    \ex He devoured lots of cheese.
+    \ex He then won a dancing competition.
+  \end{xlist}
+\end{exe}
+
+%% \sdrtree{
+%%  &                      & \LAB{Max had a lovely evening} \\
+%%           & \LAB{He had a great meal} & & \LAB{He won a dancing competition} \\
+%% \LAB{He ate salmon} &     & \LAB{He devoured cheese}
+%% }
+
+The discourse in (\ref{salmon}) and its structure in (TODO) demonstrate
+another feature of discourse structures. First off, seeing the
+hiearchical structure of the discourse gives us important information
+about the granularity of the descriptions given in the individual
+propositions, information that could be useful for performing tasks such
+as text summarization.
+
+Furthermore, the discourse structure has grammatical consequences. It is
+thanks to our knowledge of the discourse structure that we can predict
+that a proposition like ``It was a beautiful pink.''  could not
+coherently follow our excerpt. SDRT, \cite{asher2003logics}, the theory
+of discourse structure that we adhere to, would not license a discourse
+structure in which the new proposition connects to (\ref{salmon-here})
+as its \emph{Elaboration}. As a consequence, it states that the pronoun
+``it'' cannot have the salmon as its antecedent, which is a constraint
+that is not enforced by prior theories of discourse such as DRT.
+
+\begin{exe}
+  \ex \label{diaimp} \begin{xlist}
+    \ex A: Smith doesn't seem to have a girlfriend.
+    \ex \label{diaimp-b} B: He's been paying lots of visits to New York lately.
+  \end{xlist}
+\end{exe}
+
+In the example dialogue (\ref{diaimp}), based on the prosody of
+proposition (\ref{diaimp-b}) the discourse structure would link the two
+propositions with an \emph{Evidence} or \emph{Counter-evidence}
+relation. Knowing this structure would allow us to either infer that B
+believes that Smith has a girlfriend in New York or that Smith doesn't
+have a girlfriend because he is too busy in New York.
+
+Based on the findings in \cite{asher2003logics}, we surmise that a clear
+picture of the discourse structure is essential to capturing the
+intended meaning of a discourse.
+
+To support our approach, we will stand on the shoulders of many giants,
+the first of them being Richard Montague. As in his approach
+\cite{montague1973proper}, we will assign functions and values as
+denotations of wordforms and use function application to compose them
+together to yield the denotations of phrases, propositions and
+discourses. To account for the discourse-level phenomena, we will defer
+to the theories of DRT \cite{kamp1993discourse} and SDRT
+\cite{asher2003logics}.
+
+The grammatical formalism of our choice for this task will be the
+Abstract Categorial Grammars (ACG) \cite{de2001towards}. This framework
+lets use lambda calculus to express the syntax-semantics interface in a
+fashion similar to Montague's. Furthermore, elegant techniques for using
+ACGs to implemenent DRT and SDRT using continuations have been
+discovered \cite{de2006towards} \cite{asher2011sdrt}
+\cite{asher2011montagovian}.
+
+However, abstract categorial grammars are quite young and no significant
+grammar has been developed under this framework. To facilitate the
+creation of such a grammar, we will borrow heavily from the Frigram
+Interaction Grammar \cite{perrier2007french} and its linguistic
+resources.
+
+Finally, our work will be supported by the existence of a corpus
+annotated with the rhetorical relations of SDRT, the Annodis corpus
+\cite{afantenos2012empirical}.

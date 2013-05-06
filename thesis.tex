@@ -271,6 +271,7 @@ to it the logical lexicon. Generation is symmetric, we simply invert the
 logical lexicon and apply the surface lexicon.
 
 \subsubsection{Example lexicon}
+\label{sssec:example-lex}
 
 \newcommand{\synt}[1]{C_{\textrm{#1}}}
 
@@ -393,6 +394,122 @@ $\Lambda(\Sigma_{String})$ having the type $\textsc{String}$. However,
 the object language does not contain all such terms, but only those
 object terms, for which there exists a term in the abstract language
 such that its image given by the lexicon yields the same object term.
+
+\subsubsection{Example semantic lexicon}
+
+One perk of working with abstract categorial grammars is that one
+abstract term can be interpreted multiple ways, using different
+lexicons. In the previous section, we considered the abstract terms of
+the $\Sigma_{Synt}$ signature and interpreted them as computations on
+strings. Now we will take the same abstract terms, but try to intepret
+them as computations on entities and truth values.
+
+We will introduce a new signature, $\Sigma_{Sem}$, for our semantic
+computations. The atomic types $A_{Sem}$ will consist of a type for
+entities, $e$, and a type for truth values, $t$. The constants $C_{Sem}$
+will contain atomic predicates from our fragment, $\textbf{man}$,
+$\textbf{woman}$ and $\textbf{love}$, logical connectives, $\Rightarrow$
+and $\land$, and quantifiers, $\forall$ and $\exists$. Their types as
+given by $\tau_{Sem}$ are:
+\begin{itemize}
+\item $\tau_{Sem}(\textbf{man}) = \tau_{Sem}(\textbf{woman}) = e \limp
+  t$
+\item $\tau_{Sem}(\textbf{love}) = e \limp e \limp t$
+\item $\tau_{Sem}(\Rightarrow) = \tau_{Sem}(\land) = t \limp t \limp t$
+\item $\tau_{Sem}(\forall) = \tau_{Sem}(\exists) = (e \to t) \limp t$
+\end{itemize}
+
+Now to see how this signature connects to our abstract signature
+$\Sigma_{Synt}$, we will give a lexicon from the latter to the
+former. First, we give the type mappings. $\mathcal{L}_{sem}(n) = e
+\limp t$ meaning that nouns will yield boolean functions of one argument
+(unary \emph{predicates} in functional programming
+terminology). $\mathcal{L}_{sem}(np) = e$, simple noun phrases will be
+mapped into terms which yield some entity. Finally,
+$\mathcal{L}_{sem}(s) = t$, sentences will be assigned terms which
+compute their truthiness. Let us see how this plan is achieved in the
+$\mathcal{L}_{sem}$ lexicon.
+\begin{itemize}
+\item $\mathcal{L}_{sem}(\synt{every}) = \lambda^{\circ} P Q.\ \forall
+  x.\ ((P\ x) \Rightarrow (Q\ x))$\footnote{We will be using $\forall
+    x.\ M$ as a shortcut for $\forall\ (\lambda x.\ M)$ and $\exists
+    x.\ M$ for $\exists\ (\lambda x.\ M)$.}
+\item $\mathcal{L}_{sem}(\synt{some}) = \lambda^{\circ} P Q.\ \exists
+  x.\ ((P\ x) \land (Q\ x))$
+\item $\mathcal{L}_{sem}(\synt{love}) = \textbf{love}$
+\item $\mathcal{L}_{sem}(\synt{man}) = \textbf{man}$
+\item $\mathcal{L}_{sem}(\synt{woman}) = \textbf{woman}$
+\end{itemize}
+
+Let us now consider the example terms of the $\Sigma_{Synt}$ signature
+from \ref{sssec:example-lex}. $t_3 = \synt{some}\ \synt{woman}$ will be
+interpreted as $\mathcal{L}_{sem}(t_3) =_{\beta} \lambda^{\circ}
+Q.\ \exists x.\ ((\textbf{woman}\ x) \land (Q\ x))$ having type $(e \limp
+t) \limp t$. It is a function that expects some predicate function and
+tests whether that predicate holds at least for some woman (some entity
+for which the $\textbf{woman}$ predicate holds).
+
+In $t_4 = \lambda^{\circ}
+x.\ (\synt{some}\ \synt{woman})\ (\lambda^{\circ}
+y.\ \synt{love}\ x\ y)$, we get $\mathcal{L}_{sem}(t_4) =_{\beta}
+\lambda^{\circ} x.\ \exists y.\ ((\textbf{woman}\ y) \land
+(\textbf{love}\ x\ y))$ of type $e \limp t$. What we have here is a
+predicate function testing whether the argument entity loves some woman.
+
+Finally, in $t_5 = (\synt{every}\ \synt{man})\ (\lambda^{\circ}
+x.\ (\synt{some}\ \synt{woman})\ (\lambda^{\circ}
+y.\ \synt{love}\ x\ y))$, we have $\mathcal{L}_{sem}(t_5) =_{\beta}
+\forall x.\ ((\textbf{man}\ x) \Rightarrow (\exists
+y.\ ((\textbf{woman}\ y) \land (\textbf{love}\ x\ y))))$ of type
+$t$. This computation yields a truth value, which tells us whether the
+proposition that every man loves some woman is true given some universe
+that the quantifiers range over and some values of the $\textbf{man}$,
+$\textbf{woman}$ and $\textbf{love}$ predicates. The term itself, in its
+$\beta$-normal form, can serve as our semantic representation for the
+proposition \emph{every man loves some woman}.
+
+We will finish our exposition of abstract categorial grammars by
+highlighting a prominent feature of the example grammar we have just
+described and that is its treatment of scope ambiguity. You might have
+noticed that $t_5 = (\synt{every}\ \synt{man})\ (\lambda^{\circ}
+x.\ (\synt{some}\ \synt{woman})\ (\lambda^{\circ}
+y.\ \synt{love}\ x\ y))$ is not the only term in
+$\Lambda(\Sigma_{Synt})$ for which $\mathcal{L}_{syntax}(t_5) =_{\beta}
+every\ +\ man\ +\ loves\ +\ some\ +\ woman$. We could just as well take $t_6
+= (\synt{some}\ \synt{woman})\ (\lambda^{\circ}
+y.\ (\synt{every}\ \synt{man})\ (\lambda^{\circ}
+x.\ \synt{love}\ x\ y))$ which is not $\beta$-equivalent to $t_5$. When
+we apply our syntactic lexicon to $t_6$, we see that we end up with an
+expression denoting the same string, $\mathcal{L}_{syntax}(t_6)
+=_{\beta} every\ +\ man\ +\ loves\ +\ some\ +\ woman$.
+
+However, when we consider a different interpretation for the abstract
+constants in $\Sigma_{Synt}$, for example our semantic lexicon
+$\mathcal{L}_{sem}$, we can see the differences rise to surface.
+
+$$
+\mathcal{L}_{sem}(t_5) =_{\beta} \forall x.\ ((\textbf{man}\ x)
+\Rightarrow (\exists y.\ ((\textbf{woman}\ y) \land
+(\textbf{love}\ x\ y))))
+$$
+$$
+\mathcal{L}_{sem}(t_6) =_{\beta} \exists y.\ ((\textbf{woman}\ y)
+\land (\forall x.\ ((\textbf{man}\ x) \Rightarrow
+(\textbf{love}\ x\ y))))
+$$
+
+When we try to parse some sentence using abstract categorial grammars,
+we are trying to find the abstract terms which upon transformation by
+the lexicon and $\beta$-reduction yield the sentence encoded in some
+object term. This is basically trying to invert the lexicon function,
+modulo $\beta$-equivalence. It is therefore no surprise then that we can
+find multiple abstract terms which all map to the same string term but
+which can be mapped to distinct terms using the semantic lexicon. It is
+this mechanism that enables abstract categorial grammars to handle
+ambiguity. When we reverse the scenario and go from semantic
+representations to strings, the same situation can occur (more than one
+abstract term having the same semantics but different surface strings)
+and this is what enables paraphrases.
 
 \bibliographystyle{plain}
 \bibliography{biblio}

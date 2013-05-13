@@ -115,7 +115,8 @@ one node of the PTD is mapped onto a single node of the syntactic tree,
 the polarities of each feature are combined. The combination mechanism
 allows to combine a positively polarized feature with a negatively
 polarized one to yield a saturated one. Virtual features can be factored
-out only by combining with a saturated polarity.
+out only by combining with a saturated polarity (they are somewhat
+analogous to the $=_{c}$ constraints of LFG \cite{kaplan1982lexical}).
 
 If we look at the PTDs of Figure~\ref{fig:ig-eptds}, we can see this
 polarity mechanism in action. The EPTD of $Jean$ has a positive $cat$
@@ -123,7 +124,7 @@ feature in its root node saying that it provides one $np$, and a
 negative $funct$ feature saying that it expects some function. In the
 EPTD of $voit$, we have two nodes for the subject and object, both of
 them expecting an $np$ and providing them the $subj$ and $obj$
-functions, respectively. The root of the EPTD than provides a complete
+functions, respectively. The root of the EPTD then provides a complete
 sentence of category $s$ and expects some function that this sentence
 will play. The full stop EPTD finalizes the sentence by accepting a node
 with category $s$ and giving it a $void$ function.
@@ -136,7 +137,7 @@ which this rule is applicable, so as to avoid over-generation.
 
 Now that we understand the constraints imposed by PTDs, we can start to
 see that the syntactic tree in Figure~\ref{fig:ig-parse} is truly a
-model of the PTDS given in Figure~\ref{fig:ig-eptds} and more than that,
+model of the PTDs given in Figure~\ref{fig:ig-eptds} and more than that,
 it is the only minimal model. To illustrate more clearly how the
 polarities and constraints of the individual PTDs end up generating the
 syntactic tree of Figure~\ref{fig:ig-parse}, we can look at the result
@@ -151,3 +152,72 @@ Figure~\ref{fig:ig-partial}.
     $la$ and $voit$ by merging the nodes (1,5) and (1,5) with (2,2) and
     (2,4), respectively.}
 \end{figure}
+
+\subsubsection{Frigram, an interaction grammar}
+
+The reason we are interested in interaction grammars is because of the
+existence of Frigram, a large scale grammar of French which is
+lexicalized by Frilex, an independent lexical resource that we will be
+building our grammar on as well. Furthermore, as we will see
+in~\ref{sssec:link-ig-acg}, interaction grammars are closely linked with
+abstract categorial grammars, which makes Frigram a suitable grammar to
+use as a guide when developing our grammar.
+
+In this section, we will introduce the metagrammatical structure of
+Frigram and talk about how it uses the formalism of interaction grammars
+to solve several tricky linguistic phenomena.
+
+Frigram is a wide-coverage interaction grammar of French. As we
+mentioned before, an interaction grammar is a set of elementary
+polarized tree descriptions. In a lexicalized interaction grammar, each
+of these EPTDs is connected to a specific wordform whose particular use
+it describes. Given the amount of wordforms that a useable grammar of
+French would need to cover, the number of EPTDs in our grammar could
+easily reach hundreds of thousands, if not millions.
+
+The first step in fighting this explosion is to factor out irrelevant
+differences between similar wordforms. For this purpose, Frilex was
+created. Frilex is a morpho-syntactic lexicon of French compiled from
+various other pre-existing lexicons of French. It is in effect a large
+relation linking the wordforms of French to \emph{hypertags}, feature
+structures describing the morphological properties of the wordforms and
+their syntactic valencies.
+
+With Frilex in place, Frigram can be defined as a set of unanchored
+EPTDs which are paired with feature structures which delimit the subset
+of the Frilex items to which the EPTDs apply. This kind of simple
+``metagrammar'' already saves us a lot of effort, the number of
+unanchored EPTDs defined by Frigram is somewhere around 4000 (TODO: Cite
+the Frig documentation somehow).
+
+However, defining some 4000 EPTDs manually still seems like a very
+tedious, error prone and hard to maintain approach. Many of the EPTDs
+have to repeatedly describe common phenomena such as subject-object
+agreement or predicate-argument saturation. Similarly as in other
+software endeavors, it would be preferable to define these common
+patterns in some reusable module and compose EPTDs from these building
+blocks. This is where XMG steps in.
+
+XMG is a metagrammar compiler adding yet another level of indirection
+between what the grammar author writes and what ends up in the
+bottom-level interaction grammar. XMG provides a language that lets the
+grammar author define the lexical items of his grammar and to combine
+these definitions to yield new and more elaborate lexical items.
+
+In the case of Frigram, the lexical items (termed \emph{classes} in XMG)
+take the shape of PTDs coupled with feature structures which
+circumscribe the interface to Frilex. Both tree descriptions and feature
+structures have very natural ways of composing together, by conjunction
+and unification, respectively. This, alongside with disjunction, are the
+chief tools that the grammar authors can use (and in the case of
+Frigram, have used) to succintly define their grammar.
+
+With the added capability of composing classes, the definition of
+Frigram reduces to about 400 class definitions. Of these classes, 160
+are terminal, meaning that they actually describe lexical items that are
+to be included in the final grammar. Thanks to the disjunction
+composition operator of XMG, these 160 classes end up generating the
+staggering 4000 EPTDs.
+
+\subsubsection{The link with abstract categorial grammars}
+\label{sssec:link-ig-acg}

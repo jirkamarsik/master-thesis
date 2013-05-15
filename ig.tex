@@ -297,3 +297,266 @@ ancestor's features.
 
 \subsubsection{The link with abstract categorial grammars}
 \label{sssec:link-ig-acg}
+
+Both abstract categorial grammars and interaction grammars, having come
+out of the same research team, are both closely related to linear
+logic. Not only are these two formalisms based on the same logical
+framework, there is a surprisingly direct connection between the
+principles guiding the syntactic composition of constants having
+intuitionistic implicative linear types in abstract categorial grammars
+and of polarized tree descriptions in interaction grammars.
+
+Perrier \cite{perrier1999intuitionistic} proved an interesting result
+which bridges these two worlds. His theorem states that every IILL
+(intuitionistic implicative linear logic) sequent $F_1, ..., F_n \vdash
+G$ is provable if and only if the syntactic description $D((F_1 \limp
+... \limp F_n \limp G)^+)$ is valid. The second premise deserves some
+elaboration.
+
+What we mean by a \emph{syntactic description} is something similar to a
+polarized tree description, albeit more minimalistic. Syntactic
+descriptions only talk about immediate dominance and (large) dominance,
+there are no precedence constraints on sister nodes and (large)
+dominance cannot be restricted by a feature structure. Nodes themselves
+are no longer even represented by feature structures, but by simple
+atomic categories paired with polarities. Every node in a syntactic
+description is thus associated with a single atomic category and a
+polarity which is either positive or negative.
+
+A syntactic description that is \emph{valid} is one for which there
+exists a model. A model of a syntactic description is defined in the
+same manner as for polarized tree descriptions, but instead of unifying
+feature structures, we simply demand that all nodes of the description
+which map to a node in the model must have the same category and the
+number of positively polarized nodes must equal the number of negatively
+polarized nodes.
+
+Finally, we explain the term $D((F_1 \limp ... \limp F_n \limp
+G)^+)$. The $+$ operation recursively assigns positive and negative
+polarities to all formula occurrences within $F_1 \limp ... \limp F_n
+\limp G$. These polarities then drive the recursive definition of $D$,
+which maps this polarized formula into a syntactic description. Since we
+will not cover the theorem deeply in our treatise, we will settle for
+knowing that the composition of the positive polarization operation $+$
+and the syntactic description producing operation $D$ maps an IILL
+formula into a syntactic description such that above-stated theorem
+holds. Furthermore, this mapping can be easily constructed since Perrier
+gives straightforward ways of computing the results of both operations.
+
+This theorem establishes a striking symmetry between the two
+formalisms. Let us consider the case of parsing a sentence using a
+lexicalized grammar in both formalism. First, the sentence is tokenized
+into wordforms and for each wordform, a lexical item is selected, be it
+a typed constant in some abstract signature for ACGs or an EPTD for IGs.
+
+In ACGs, we will try to take the typed constants and to use them to
+produce a term having some distinguished type $s$. Thanks to the
+Curry-Howard correspondence, constructing a term having a given type is
+nothing more than proving that term's type as a formula in the logic of
+our type system. What this means is that our parsing problem boils down
+to proving the IILL sequent $\tau_1, ..., \tau_n \vdash s$ (we omit the
+inclusion of intuitionistic non-linear implications since they are not
+relevant for parsing sentences). The sentence thus becomes parseable by
+our grammar under the given lexical selection if and only if this
+sequent is provable and furthermore, the proof of the sequent is our
+desired syntactic structure in a disguise.
+
+Now in IGs, we will conjoin all the EPTDs into a single complex
+polarized tree description. Parsing is then just a matter of finding a
+model for this description. The sentence is therefore parseable by our
+grammar under the given lexical selection if and only if this
+description is valid and furthermore, the model which proves the
+description valid is our desired syntactic structure.
+
+This symmetry turns Perrier's theorem into a strong claim that lets us
+transform the types of a signature into elementary syntactic
+descriptions such that some selection of descriptions will generate some
+tree if and only if the selection of the corresponging typed constants
+generated some properly-typed term. Inverting this transformation would
+then let us take the elementary syntactic descriptions of an IG like
+Frigram and turn them into types for an abstract signature of our ACG.
+
+However, this approach is not sufficient. The $D \circ +$ transformation
+is far from a bijection.
+
+Firstly, it is not injective and several types end up being represented
+by the same syntactic description. What this means is that the
+transformation ignores the insignificant differences between formulas
+such as $a \limp (b \limp c)$ and $b \limp (a \limp c)$. This would not
+pose a serious issue though, as when we would try to invert $D \circ +$,
+we could simply choose one of the possible formulas which fit the
+syntactic description as our canonical representation.
+
+A bigger problem is posed by the fact that $D \circ +$ is not
+surjective. Perrier \cite{perrier2001intuitionistic} characterized the
+set of syntactic descriptions that can be obtained as images of IILL
+sequents using our transformation $D \circ +$, the set of \emph{IILL
+  tree descriptions}, which is a proper subset of the set of all
+syntactic descriptions. Specifically, in an IILL tree descriptions, all
+immediate dominance constraints go from negative nodes to positive
+nodes, all (large) dominance constraints lead from positive nodes to
+negative nodes and the root has a positive polarity.
+
+While this property may not hold for the PTDs we find in Frigram, it
+still gives us a general plan for recovering IILL types. The strategy
+suggested by the description-formula connection given by the theorem
+yields a mapping $F$ from the under-specified trees to IILL formulas.
+
+$$
+F(N) = F(N_1) \limp ... \limp F(N_k) \limp cat(N)
+$$
+
+where $N_1, ..., N_k$ are the children of $N$ and $cat(N)$ is the
+category of $N$. If $N$ is a leaf, then $F(N)$ is simply $cat(N)$. In
+this definition, we treat the tree descriptions as trees with the union
+of the immediate dominance and (large) dominance constraints serving as
+the edges of the tree.
+
+This strategy corresponds to our intuitions about tree descriptions
+should be expressed using IILL types. We will consider two very simple
+cases to demonstrate it.
+
+First, picture a simple tree description with a positive root $A$ and
+two (necessarily) negative children $B$ and $C$. Our strategy would give
+this tree the type $B \limp C \limp A$ (or $C \limp B \limp A$), which
+correctly expresses the fact that this tree needs to consume some node
+of category $B$ and another one of category $C$ and is able to provide a
+node of category $A$. This tree description can also be easily
+translated to TAG by turning the negative leaf nodes into substitution
+nodes. The conventional translation of TAG into categorial grammar then
+confirms the type proposed by our strategy.
+
+The second example will demonstrate the translation of a Frigram
+EPTD. Before we do that, however, we will first discuss some of the ways
+the actual PTDs of interaction grammars and Frigram differ from the IILL
+tree descriptions we just talked about.
+
+The PTDs of IG include precedence constraints. We can see them as
+serving two purposes, to both provide an ordering of the constituents
+and to further constrain syntactic composition. In our translation to an
+ACG, we could imagine handling the first role, that of providing word
+order, by defining a lexicon from our abstract signature. Each constant
+would combine its arguments in the order in which their corresponding
+subtrees appeared in the ordered PTD. However, the second role of
+precedence constraints, to establish further restrictions on syntactic
+composition, would be lost, as the only restricting factor on syntactic
+composition in ACGs is the type system.
+
+Another large difference is the use of multiple independent polarized
+features per node. A possible solution here is to salvage the most
+salient polarized feature, $cat$ (possibly with its complementary
+feature, $funct$), and ignore the others. The results and intuitions we
+have about intepreting tree descriptions as types do not offer an easy
+way of modeling polarities across different dimensions, features, at the
+same time. This would mean that phenomena, such as the paired
+grammatical words for negation in French, which were handled using
+special polarized features will need new solutions in the framework of
+ACGs.
+
+Next up are the virtual features. They serve multiple purposes as
+well. Most often they are used to select nodes in the context and to
+link them to the nodes contributed by the EPTD.
+
+A common pattern using virtual features is Frigram's handling of
+modifiers. The way we would model a modifier in categorial grammars
+would be to have a function of type $X \limp X$ where $X$ is the type of
+the consituent being modified. In TAG, we would have an adjunction tree
+with a root and a foot node of category $X$ and which pins the modifier
+on the $X$ phrase. This approach would work in interaction grammars as
+well but the formalism offers other solutions too. The designers of
+Frigram have opted for an alternate treatment in which modifying a
+constituent does not increase the depth of the parse tree. Modifiers are
+adjoined as sister nodes of the constituents they modify and it is
+through virtual features that IGs can ensure that a modifier is inserted
+only in the proper context.
+
+See Figure~\ref{fig:ig-adj} for an example of an adjective modifier in
+Frigram. Nodes (1,3) and (1,2) select the noun to be modified and its
+projection, respectively. Singling out this pair of nodes lets us hang
+the adjective as a child of the projection and state that it must
+precede the noun in the word order. We can see that this does not
+increase the depth of the noun in the parse tree, since the noun is only
+referred to using virtual features in this EPTD, meaning that some other
+EPTD must provide the nodes that will saturate these virtual features.
+
+\begin{figure}
+  \centering
+  \includegraphics[scale=0.25]{ig-adj.pdf}
+  \caption{\label{fig:ig-adj} An EPTD for the adjective $grand$ in
+    Frigram.}
+\end{figure}
+
+Understanding this pattern can give us a useful tool for reading
+EPTDs. Consider the EPTD of $la$ we saw in
+Figure~\ref{fig:ig-eptds}. The EPTD can now be seen as applying this
+pattern twice at the same time to both cliticize the pronoun to the
+verbal kernel and to fill the object valency slot of the
+verb.
+
+Another use of virtual features in IGs is to restrict the range of
+(large) dominance relations. We have seen this before in the EPTD of the
+determiner $aucun$ (Figure~\ref{fig:ig-neg}), which had to reach up to
+the nearest containing clause and hang a negative $neg$ feature there.
+It is also present in the EPTD of the relative pronoun $que$
+(Figure~\ref{fig:ig-que}) which will bring us back to the translation
+strategy proposed above.
+
+\begin{figure}
+  \centering
+  \includegraphics[scale=0.25]{ig-que.pdf}
+  \caption{\label{fig:ig-que} An EPTD of the relative pronoun $que$.}
+\end{figure}
+
+Once again, at the root of the EPTD we see the modifier pattern in
+action. If we take the subtree formed by the nodes (2,8) and (2,9) to
+represent a modification of some constituent, say a noun, then we get a
+type like $n \limp n$. However, the EPTD contains also positive and
+negative $cat$ polarities. The node (2,0) has a negative $cat$ polarity
+and we can consider it as an argument, meaning that the type we would
+like to derive would look like $F((2,0)) \limp (n \limp n)$. Our
+strategy $F$ has nothing to say about virtual features or (large)
+dominance constraints. If we look only at the positive and negative
+$cat$ features, $F((2,0))$ becomes $np \limp s$, which would give us
+$(np \limp s) \limp (n \limp n)$ as the final type.
+
+However, this translation is very lossy in terms of its discriminatory
+power. Many of the constraints which were forced by the original EPTD
+are now ignored. We can imagine boosting our strategy by using the
+feature structures as our types instead of atomic categories, which
+would not only ensure that e.g. the $sent\_type$ of the embedded clause
+must be $decl$, but would also capture the information in the polarized
+$funct$ feature so that the relative pronoun $que$ is not permitted to
+extract subjects. There are still constraints that we would miss out
+though, such as the fact that the subject (2,3) of the clause (2,0) must
+precede any embedded clauses (2,6)...(2,5), the fact that any such
+embedded clause must serve either the $modal$ or the $obj$ function and
+the fact that the embedded clause (2,5) must have a subject (2,4).
+
+Other constraints that we did not mention also do not have a direct
+equivalent in ACGs. One example would be a feature of IGs that we have
+not even mentioned which allows us the grammar author to provide an
+\emph{exhaustive} list of children of a node in a PTD. Another kind of
+tricky constraint are the orange rectangles that we can see in
+Figure~\ref{fig:ig-que} which enforce that a constituent must be the
+left-most or right-most daughter. The problem with these is similar as
+with precedence relations. To model their impact on word order would be
+easy using an ACG lexicon, but to model their effect on restricting
+syntactic composition would be more tricky.
+
+In the end, even though both formalisms (IGs and ACGs) are built on the
+framework of linear logic and their fundamental principles of syntactic
+composition have been linked together by Perrier's theorem, we conclude
+that embedding Frigram into an ACG or constructing some automated
+technique for translating the Frigram EPTDs into ACG types and terms
+would not be feasible. Perhaps using some of the other connectives of
+linear logic would allows us to model the Frigram EPTDs, and the ways
+they manipulate multiple resources at the same time, in a more efficient
+manner. However, this would lead us well out of the framework of ACGs in
+which we wish to conduct our research.
+
+In our grammar, we will still gladly use the lexicon Frilex, which
+proves the usefulness of clearly defining the interface between the
+lexicon from the grammar in the architecture of Frigram. In our grammar,
+Frigram can still serve as a guide on how to interface with Frilex, on
+which phenomena need to be covered and in what detail, and what is a
+good way to structure the reusable components of a grammar of French.

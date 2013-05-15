@@ -31,35 +31,35 @@ established through the judgment schemas in Figure
 
 \begin{figure}
   \begin{prooftree}
-    \AxiomC{$\emptyset, \Gamma_i \vdash_\Sigma c : \tau(c)$ (cons)}
+    \AxiomC{$\emptyset; \Gamma_i \vdash_\Sigma c : \tau(c)$ (cons)}
   \end{prooftree}
   \begin{prooftree}
-    \AxiomC{$(x : \alpha), \Gamma_i \vdash_\Sigma x : \alpha$ (l-var)}
+    \AxiomC{$(x : \alpha); \Gamma_i \vdash_\Sigma x : \alpha$ (l-var)}
   \end{prooftree}
   \begin{prooftree}
-    \AxiomC{$\emptyset, (\Gamma_i, x : \alpha) \vdash_\Sigma x : \alpha$ (i-var)}
+    \AxiomC{$\emptyset; (\Gamma_i, x : \alpha) \vdash_\Sigma x : \alpha$ (i-var)}
   \end{prooftree}
   \begin{prooftree}
-    \AxiomC{$(\Gamma_l, x : \alpha), \Gamma_i \vdash_\Sigma t : \beta$}
+    \AxiomC{$(\Gamma_l, x : \alpha); \Gamma_i \vdash_\Sigma t : \beta$}
     \RightLabel{(l-abs)}
-    \UnaryInfC{$\Gamma_l, \Gamma_i \vdash_\Sigma \lambda^{\circ} x. t : \alpha \limp \beta$}
+    \UnaryInfC{$\Gamma_l; \Gamma_i \vdash_\Sigma \lambda^{\circ} x. t : \alpha \limp \beta$}
   \end{prooftree}
   \begin{prooftree}
-    \AxiomC{$\Gamma_l, (\Gamma_i, x : \alpha) \vdash_\Sigma t : \beta$}
+    \AxiomC{$\Gamma_l; (\Gamma_i, x : \alpha) \vdash_\Sigma t : \beta$}
     \RightLabel{(i-abs)}
-    \UnaryInfC{$\Gamma_l, \Gamma_i \vdash_\Sigma \lambda x. t : \alpha \to \beta$}
+    \UnaryInfC{$\Gamma_l; \Gamma_i \vdash_\Sigma \lambda x. t : \alpha \to \beta$}
   \end{prooftree}
   \begin{prooftree}
-    \AxiomC{$\Gamma_l, \Gamma_i \vdash_\Sigma t : \alpha \limp \beta$}
-    \AxiomC{$\Delta_l, \Delta_i \vdash_\Sigma u : \alpha$}
+    \AxiomC{$\Gamma_l; \Gamma_i \vdash_\Sigma t : \alpha \limp \beta$}
+    \AxiomC{$\Delta_l; \Delta_i \vdash_\Sigma u : \alpha$}
     \RightLabel{(l-app)}
-    \BinaryInfC{$(\Gamma_l, \Delta_l), (\Gamma_i, \Delta_i) \vdash_\Sigma (t\ u) : \beta$}
+    \BinaryInfC{$(\Gamma_l, \Delta_l); (\Gamma_i, \Delta_i) \vdash_\Sigma (t\ u) : \beta$}
   \end{prooftree}
   \begin{prooftree}
-    \AxiomC{$\Gamma_l, \Gamma_i \vdash_\Sigma t : \alpha \to \beta$}
-    \AxiomC{$\emptyset, \Delta_i \vdash_\Sigma u : \alpha$}
+    \AxiomC{$\Gamma_l; \Gamma_i \vdash_\Sigma t : \alpha \to \beta$}
+    \AxiomC{$\emptyset; \Delta_i \vdash_\Sigma u : \alpha$}
     \RightLabel{(i-app)}
-    \BinaryInfC{$\Gamma_l, (\Gamma_i, \Delta_i) \vdash_\Sigma (t\ u) : \beta$}
+    \BinaryInfC{$\Gamma_l; (\Gamma_i, \Delta_i) \vdash_\Sigma (t\ u) : \beta$}
   \end{prooftree}
   \caption{\label{fig:type-judgments} Type judgment schemas of the
     well-typed lambda terms $\Lambda(\Sigma)$ for a signature $\Sigma =
@@ -136,13 +136,13 @@ such that:
 
 An abstract categorial grammar for us will then be just a collection of
 signatures with their distinguished types and lexicons connecting these
-signatures. A common pattern will have us using two signatures for the
-surface forms of utterances (strings) and their logical forms (logical
-propositions) and an abstract signature which is connected to both of
-the object signatures via lexicons. Parsing is then just a matter of
-inverting the surface lexicon to get the abstract term and then applying
-to it the logical lexicon. Generation is symmetric, we simply invert the
-logical lexicon and apply the surface lexicon.
+signatures. A common pattern will have us using two object signatures
+for the surface forms of utterances (strings) and their logical forms
+(logical propositions) and an abstract signature which is connected to
+both of the object signatures via lexicons. Parsing is then just a
+matter of inverting the surface lexicon to get the abstract term and
+then applying to it the logical lexicon. Generation is symmetric, we
+simply invert the logical lexicon and apply the surface lexicon.
 
 \subsubsection{Example lexicon}
 \label{sssec:example-lex}
@@ -213,19 +213,20 @@ computation that computes the string representing the phrase.
 So, how does our lexicon $\mathcal{L}_{syntax}$ look like? It will map
 all the atomic types of $\Sigma_{Synt}$ into $\textsc{String}$, which we
 can write as $\mathcal{L}_{syntax}(n) = \mathcal{L}_{syntax}(np) =
-\mathcal{L}_{syntax}(s)$\footnote{Whenever we talk about some lexicon,
-  we will use the lexicon itself, which is formally a pair of mappings
-  $\mathopen{<}F, G\mathclose{>}$, to mean either $F$, $G$ or their
-  homomorphic extensions $\hat{F}$ and $\hat{G}$ depending on whether
-  the argument is an atomic type, a constant, a complex type or a term
-  respectively.}. From that, we can use the homomorphic extension of our
-type mapping to arrive at the object-level interpretations of complex
-types, such as the type of predicates, $np \limp s$, which becomes a
-unary string function, $\textsc{String} \limp \textsc{String}$, or the
-type of quantified noun phrases, $(np \limp s) \limp s$, which becomes a
-higher-order string function, $(\textsc{String} \limp \textsc{String})
-\limp \textsc{String}$. With the types out of the way, we can give the
-interpretation of the individual constants of $\Sigma_{Synt}$:
+\mathcal{L}_{syntax}(s) = \textsc{String}$\footnote{Whenever we talk
+  about some lexicon, we will use the lexicon itself, which is formally
+  a pair of mappings $\mathopen{<}F, G\mathclose{>}$, to mean either
+  $F$, $G$ or their homomorphic extensions $\hat{F}$ and $\hat{G}$
+  depending on whether the argument is an atomic type, a constant, a
+  complex type or a term respectively.}. From that, we can use the
+homomorphic extension of our type mapping to arrive at the object-level
+interpretations of complex types, such as the type of predicates, $np
+\limp s$, which becomes a unary string function, $\textsc{String} \limp
+\textsc{String}$, or the type of quantified noun phrases, $(np \limp s)
+\limp s$, which becomes a higher-order string function,
+$(\textsc{String} \limp \textsc{String}) \limp \textsc{String}$. With
+the types out of the way, we can give the interpretation of the
+individual constants of $\Sigma_{Synt}$:
 \begin{itemize}
 \item $\mathcal{L}_{syntax}(\synt{every}) = \lambda^{\circ} x
   R.\ R\ (every\ +\ x)$
@@ -249,7 +250,7 @@ look at what they look like after applying the lexicon to them.
   y.\ \synt{love}\ x\ y)$ \\ Our verb phrase ends up being mapped onto
   a function which appends the phrase \emph{loves some woman} to its
   argument, $\mathcal{L}_{syntax}(t_4) =_{\beta} \lambda^{\circ}
-  x.\ x\ +\ loves\ +\ some\ +\ woman$
+  x.\ x\ +\ loves\ +\ some\ +\ woman$.
 \item $t_5 = (\synt{every}\ \synt{man})\ (\lambda^{\circ}
   x.\ (\synt{some}\ \synt{woman})\ (\lambda^{\circ}
   y.\ \synt{love}\ x\ y))$ \\ Finally, the sentence (type $s$) is mapped
@@ -267,7 +268,9 @@ lexicon. The object language contains strings, terms from
 $\Lambda(\Sigma_{String})$ having the type $\textsc{String}$. However,
 the object language does not contain all such terms, but only those
 object terms, for which there exists a term in the abstract language
-such that its image given by the lexicon yields the same object term.
+such that its image given by the lexicon yields the same object term,
+i.e. it contains only terms which denote strings that spell out
+sentences of our fragment of English.
 
 \subsubsection{Example semantic lexicon}
 

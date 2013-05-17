@@ -1,0 +1,106 @@
+\section{Wide-coverage abstract categorial grammars}
+
+As part of my internship, I will have to construct a wide-coverage
+abstract categorial grammar of French. Abstract categorial grammars
+are defined in terms of signatures, universes of typed constants, and
+lexicons, which map elements of signatures to lambda terms in other
+signatures. Our grammar will thus end up as an ensemble of signatures,
+each containing a number of elements proportional to the size of our
+dictionary, and some lexicons that will link the signatures together.
+
+From the above exposition, it should be obvious that giving the
+grammar in its literal form, i.e. listing the contents of all the
+signatures and the mappings of the lexicons, would be unfeasible. The
+approach that we have chosen is to employ a pre-existing database of
+lexical items and describe how entries in this database generate the
+elements of our signatures and the mappings in our lexicons.
+
+The lexical database that we will be using is Frilex. Frilex was
+itself constructed by collating several lexicographic sources and its
+purpose was to serve as the lexical database for Frigram, a
+wide-coverage interaction grammar of French, much like the way we will
+use it to populate our grammar. In terms of structure, Frilex is a
+relation between wordforms and hypertags, which are feature structures
+giving the lemma, syntactic category, agreement, valency and other
+pertinent morpho-syntactic features of the wordform.
+
+\subsection{Defining signatures}
+
+The task of the grammar author is then to describe for each signature
+how the entries of the lexical database correspond to typed citizens
+of the signature and analogously so for the lexicons. If we look at
+how this correspondence should be modelled, we quickly arrive at the
+conclusion that it cannot be a total function (e.g. in the case of a
+signature of semantic predicates, we will most likely not want to have
+predicates that correspond to determiners) nor in fact a partial
+function (e.g. in the syntactic signature, we might very well desire
+to have two different elements for transitive verbs depending on
+whether they are to be interpreted with subject-wide or object-wide
+scope). In the end, the correspondence seems to be most aptly
+described as a relation. Therefore in our computational representation
+of the grammar, the signature is defined via a relational (logic)
+program. The relational programming system we have chosen is
+miniKanren, particularly its Clojure implementation dubbed core.logic.
+
+The next question we will have to answer is how exactly will this
+signature-defining relation look like. To answer that, we first have
+to be more precise about how we want the elements of our signature
+yielded by this relation to be structured. As was said before, we want
+all the elements in our signatures to have a type. Furthermore, we
+also need a way how to distinguish elements of the same type, so we
+will need to provide each element with some kind of identifier. We
+could state that these identifiers are completely arbitrary or up to
+the grammar author to generate, but this would make specifying the
+mappings of lexicons burdensome, so we will try to reach something
+better.
+
+For starters, we might consider the hypertag as a candidate for the
+identifier. However, it is possible that our lexical database will
+hold two entries with the same hypertag but different wordforms (e.g.
+alternative spellings) and we would like to distinguish the two to be
+able to produce either of the two spellings using a lexicon. So next,
+we can think of the entire lexical entry, the wordform and its
+hypertag, as an identifier. This breaks down in the case of transitive
+verbs having two projections which differ in subject/object scope. To
+resolve cases like these, we add a synthetic part to our identifier
+which we call a specifier and which is the grammar author's duty to
+assign.
+
+In the end, the identifiers for the elements of our signatures are
+composed of their ``naturally-occurring'' part (the wordform and the
+hypertag of their lexical entry) and their synthetic part (the
+author-defined specifier). To answer our question, the relation which
+defines the elements of a signature is a 4-ary relation between
+wordforms, hypertags, spec(ifier)s and types. This relation posits
+some constraints on the wordform and hypertag and then licenses the
+possible combinations of values for the spec and the type. Since the
+definition of this relation takes place within a general purpose
+programming language, the grammar author is able to define any
+abstractions which facilitate his statement of the relation.
+
+It might seem we have solved the problem of defining signatures, but
+there is still one thing that we have to address. In many of our
+signatures, we will desire to have some elements of the signature that
+don't correspond to any lexical item but instead provide some kind of
+furniture for working in the domain. In the signature of semantics,
+these might be constants corresponding to the boolean operators and
+quantifiers, whereas in the domain of strings, we might think of the
+string concatenation operator. Therefore, in our formalism, we must
+acknowledge that elements of signatures are not only generated by the
+above-described lexical relation, but also by contain some set of
+constant elements. These elements also have a type and an identifier,
+however, in their case, the identifier is not composed of some lexical
+entry, but is simply the symbol that was used by the grammar author to
+name the constant.
+
+\subsection{Defining lexicons}
+
+Now that we have a way of giving a concise computational
+representation of a wide-coverage signature, we turn our attention to
+the lexicons, the mappings relating the signatures. A lexicon is
+defined as a mapping from elements of one signature to terms over the
+elements of another signature. In our formalism, we simply follow this
+definition, though for ease of implementation, we do not implement the
+function as a functional program, but as a relational program. So far,
+it is up to the grammar author to make sure that his lexicon assigns
+only one term to a single element of the signature.

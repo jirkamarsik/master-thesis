@@ -68,4 +68,97 @@ test some of its properties.
 In this chapter, we will spend time explaining the decisions which went
 into designing the system and the form it has now.
 
-\subsection{}
+\subsection{The tools and techniques}
+
+The dominant decision which we made during the development of the system
+was to use \emph{relational programming}. Relational programming is a
+discipline of logic programming where relations are written in a
+``pure'' style \cite{byrd2010relational}. This means that relations
+cannot be picky about which arguments are passed in as inputs and which
+as outputs, all modes must be permissible. Accepting such a discipline
+prohibits us from using some of the special operators of Prolog such as
+cut (\texttt{!}) and \texttt{copy\_term/2}. Instead, we must resort to
+other techniques which do not break purity, like \emph{constraint logic
+  programming}, which allows us to express properties outside of the
+scope of unification by attaching constraints to terms and verifying
+them at the proper time.
+
+By insisting on purity, I/O becomes more difficult as we would not allow
+the side-effectful pseudorelations of Prolog. Therefore, we will not
+force ourselves to implement the entire program front-to-back using only
+relational programming. Instead, we will use a relational programming
+system, miniKanren, which is embedded inside a functional programming
+language. This lets us reap the benefits of relational programming
+inside the core logic of our program while deferring to the functional
+programming language to provide I/O and other bookkeeping operations.
+
+\subsubsection{The case for relational programming}
+
+There are several reasons why we might want to choose a relational
+programming system for our implementation. First off, the problems which
+consiture the algorithmic core of our program are often mere textbook
+examples of how to use a relational programming system. This goes for
+type inference/checking/inhabitation, which are all implemented by a
+single relation which is often used as a kind of ``Hello World'' program
+in the world of relational programming. Similarly, implementing
+$\beta$-reduction cleanly (without having to handle variable clashes by
+generating new variables and $\alpha$-converting) is a motivational
+example for introducing \emph{nominal logic programming}. To reach
+feature parity with the ACG toolkit, one would only need to implement
+the mapping of a lexicon over a term, which is a simple functor.
+
+The use of logic programming techniques is also very popular in our
+domain. If we look at the system demonstrations at the \emph{Logical
+  Aspects of Computational Linguistics 2012} conference, we see that 3
+out of the 5 proposals have been implemented in a declarative/logic
+programming system (Oz, Prolog). 2 of the 3 systems are parsers for
+categorial grammars (automated theorem provers), which might turn out to
+be an interesting direction for our system to go into as well, as
+practical applications appear on the horizon.\footnote{Theorem provers
+  are another problem area where miniKanren fits well, see
+  $\alpha$leanTAP \cite{near2008alpha}.}
+
+The third system was XMG, a language for writing metagrammars, which is
+another goal of our system, the one which distinguishes it from the
+original ACG toolkit. We believe that using a declarative programming
+system such as miniKanren with the ability to extend it using a
+practical functional programming language presents an empowering way of
+defining metagrammars. This allows the grammar designer to compose his
+grammar in any way he sees fit and to use the metaprogramming facilities
+of the underlying programming language to transcribe the grammar in a
+way that makes the most sense in her case.
+
+Finally, some of the structures that we will encounter in our domain are
+more directly modelled in mathematics as a relation instead of a
+function. This has the benefit that to implement a relation in
+relational programming, one just writes the relation, while if we were
+forced to encode everything in functions, we would have to manage this
+multiplicity of values manually. Examples of structures that have this
+kind of structures if Frilex, our lexical database, where a single
+wordform can be mapped to multiple hypertags. We will see another
+example of a relation within our domain in the next subsection and we
+will also discuss the advantages and drawbacks of modelling functions as
+relations.
+
+\subsubsection{Choice of implementation language}
+
+There are two languages which play host to a substantial implementation
+of miniKanren (meaning one that has extensible unification and/or
+constraints and that includes support for nominal logic),
+Racket\footnote{\url{https://github.com/calvis/cKanren}} and
+Clojure\footnote{\url{https://github.com/clojure/core.logic}}. The two
+languages are very similar to each other and therefore the choice is of
+no great significance. An appealing feature of Clojure is that it uses
+abstract collection types pervasively instead of tying the standard
+operations to specific structures such as lists and cons cells and that
+it follows other similarly enlightened design decisions. Racket on the
+other hand has had more time to mature, has better metaprogramming
+facilities and is more recognized in academia. In developing our system,
+we have settled for Clojure. One of the advantages of doing so is that
+the Clojure implementation of miniKanren, dubbed core.logic, has
+inspired the software community and the project has attracted
+contributors that submit issue reports and
+patches\footnote{\url{http://dev.clojure.org/jira/browse/LOGIC}}.
+
+
+\subsection{Defining signatures and lexicons}

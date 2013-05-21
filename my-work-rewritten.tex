@@ -1,0 +1,71 @@
+\section{Wide-coverage abstract categorial grammars}
+
+Our goal is to develop large abstract categorial grammars which cover a
+variety of linguistic phenomena. All of these phenomena have been
+studied in detail but we would like to have a grammar which gracefully
+combines all these solutions. At this scale, working out the grammar on
+paper stops being sufficient to detect all the subtle interactions and
+it is desirable to have a formalized representation that can be reasoned
+about or tested by a computer.
+
+To some extent, this need is already met by the \textbf{ACG development
+  toolkit}\footnote{\url{http://www.loria.fr/equipes/calligramme/acg/}}. The
+toolkit reads in signature and lexicon definitions and offers two modes
+of operation. In the first, it checks the validity of the defined
+ACG. That is to say, it checks whether the terms assigned by the
+lexicons are well-typed and whether their types are consistent with the
+object types dictated by the lexicon. The second mode of operation
+offers an interactive experience in which the user is free to run type
+inference on terms built on one of their signatures to find out whether
+they are well-typed and if so, what is their principal type. The
+interactive mode then lets the user apply a lexicon, or a composition of
+lexicons, to a term and get the $\beta$-normal form of the object term.
+
+We consider the above capabilities vital for doing any involved grammar
+engineering in the framework of ACGs. However, there are some
+limitations which make it not sufficient for our needs. The foremost of
+those is that the signatures and lexicons are all explicitly realized in
+(primary) memory and the toolkit expects them to be given directly in a
+file. The grammars that we would like to develop will cover an
+exhaustive list of wordforms and the size of our grammar definitions
+would therefore grow proportionately with the size of our dictionary.
+
+Given this setup, there are several approaches we might try, none of
+them too appealing. We might write our metagrammar in a different format
+and use a tool which would combine the metagrammar and the lexical
+database\footnote{We will be using the term \emph{lexical database} to
+  refer to what is usually called a lexicon, in order not to cause
+  confusion with the lexicons of ACGs.} to produce the lexicalized ACG
+in a direct representation, ready to be loaded by the toolkit. This
+workflow would make development on the grammar tedious as every time we
+would change the metagrammar, we would have to regenerate the direct
+representation and then load it in the ACG toolkit. With extra effort,
+the former cost could be alleviated by devising a system for
+regenerating only parts of the grammars which will have changed since
+last time. However, we would still have to pay the price of loading the
+entire grammar into the toolkit before being able to interact with it
+again.
+
+Furthermore, we could pick a small representative fragment of the
+dictionary and test only on that fragment during the development of our
+grammar, to reduce the time it takes to both generate the direct
+representation of the grammar and the time it takes to load it in the
+toolkit. This would have made developing the grammar already
+tenable.
+
+However, in our approach, we have opted to spend more time on tool
+development to ease subsequent work and we have developed a system which
+makes defining and experimenting with lexicalized ACGs easier. The
+metagrammars are defined as relational procedures which link the items
+of the lexical database to elements of signatures and lexicons. The
+grammars can be redefined without having to reload the lexical database
+or any file of similar scale. Type inference and lexicon application
+with $\beta$-normalization are provided as relations which can be used
+interactively or as part of a larger program. En example of such a
+larger program might be a routine to check the validity of an ACG or to
+test some of its properties.
+
+In this chapter, we will spend time explaining the decisions which went
+into designing the system and the form it has now.
+
+\subsection{}

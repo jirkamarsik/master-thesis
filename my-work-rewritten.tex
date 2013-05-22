@@ -162,3 +162,149 @@ patches\footnote{\url{http://dev.clojure.org/jira/browse/LOGIC}}.
 
 
 \subsection{Defining signatures and lexicons}
+
+\subsubsection{Defining signatures}
+
+In~\ref{sssec:sig}, we formally presented signatures as triples
+$\mathopen{<}A, C, \tau\mathclose{>}$. The set $C$ can be easily
+reconstructed as the domain of $\tau$ and the set $A$ is just the set of
+all atomic types occurring in the range of $\tau$. Therefore, to define
+the signature $\mathopen{<}A, C, \tau\mathclose{>}$, it is enough to
+provide the function $\tau$, which in its set-theoretical realization is
+just a set of pairs.  In relational programming, a set can be easily
+encoded as a unary relation that answers the membership test. Therefore,
+our goal will be to construct to answer this relation and this relation
+will be our final representation of a signature.
+
+We have our lexical database, a set of pairs of wordforms and hypertags,
+and we want to arrive at a set of pairs of constants and their
+types. This mapping decomposed into smaller parts by considering the
+contribution of every part of the lexical database individually. What
+will be the right model for the link between some part of the lexical
+database and some part of our signature?
+
+\begin{description}
+  \item[Function of wordform] We could imagine that every different
+    wordform of the lexical database will end up being mapped to some
+    constant in the signature. However, this is unsuitable since the
+    lexical database is a relation that can assign more than one
+    distinct hypertag to a single wordform (e.g. with different part of
+    speech) and we would like to have constants of different types for
+    each of these hypertags.
+  \item[Function of hypertag] Conversely, we might imagine that the
+    hypertags of the lexical database are mapped via a function to the
+    constants of the signature. Here we run into trouble when we
+    consider variations in spelling or phonology. We might have two
+    items in our lexical database that share the same hypertag but whose
+    wordforms still differ. We would like to have two distinct constants
+    in our signature then, so that when these two constants are mapped
+    by the surface lexicon, they will yield two different strings.
+  \item[Function of lexical entry] Since neither the wordform nor the
+    hypertag is enough, we could consider the entire lexical entry (an
+    element of the lexical database, a pair of a wordform and one of its
+    hypertags). This solves both of the above problems but it is still
+    not perfect. Consider the case of a determiner and some semantic
+    signature. Since our link between elements of the lexical database
+    and of our signature is a function, there must be a constant in the
+    signature for every item of our lexical database. If you recall
+    in~\ref{sssec:acg-sem}, the constants of the semantic signature
+    $\Sigma_{Sem}$ contained predicates for the common nouns $man$ and
+    $woman$ and for the verb $loves$ and some common logical
+    furniture. However, it did not contain any constants which would
+    correspond to the determiners $every$ and $some$.
+  \item[Partial function of lexical entry] We could fix the issue above
+    by using a partial function. This accounts for cases when a lexical
+    entry has no constants to represent it in a signature. Nevertheless,
+    this only fixes half of the problem. We will consider the single
+    lexical entry which represents e.g. the 3rd person singular present
+    tense form $loves$ of the transitive verb $love$. A legitimate
+    account of subject/object scope ambiguity would be to consider two
+    constants in our abstract syntactic signature that have distinct
+    images in some semantic lexicon, one giving the outer scope to the
+    subject and the other to the object. This means that in order to
+    define such a signature, we would need to link a single lexical
+    entry in our database to more than one constant in the signature.
+  \item[Relation between lexical entry and constant] Finally,
+    considering all the above common scenarios, the only mathematical
+    model general enough to handle all of the above cases is that of a
+    relation. In our system, this will correspond exactly to a relation
+    that will be provided by the grammar author.
+\end{description}
+
+We have established that lexicons will be defined by a relation, a
+relation between a lexical entry (a wordform and a hypertag) and a
+constant (an identity\footnote{The identity of a constant is simply what
+  distinguishes it from other constants of the same signature having the
+  same type.} and a type). The identity of a lexical constant also has a
+complex structure. We know that the lexical constants we define using
+the relation described above are always linked to a lexical entry. This
+lexical entry at least partially identifies the constant. For cases
+where we have more than one constant per lexical entry (such as the
+example of the two different scope readings of $loves$), we need some
+extra piece of information to specify which constant we are referring to
+(we call this extra piece of information a \emph{specifier}). This
+specifier can have any shape that the grammar author desires. We can see
+an example of a lexical constant in Figure~\ref{fig:lex-const}.
+
+\begin{figure}
+  % TODO: Center this.
+  \centering
+  \begin{verbatim}
+{:type [-> NP [-> NP S]]
+ :id {:lex-entry {:wordform "loves"
+                  :hypertag ...}
+      :spec {:scope :subject-wide}}}
+  \end{verbatim}
+  \caption{\label{fig:lex-const} An example of a lexical constant from a
+    hypothetical syntactic signature (the hypertag is elided for brevity).}
+\end{figure}
+
+The system takes care of wiring up the relations and assembling the
+signature. The grammar author's duty is to provide a 4-ary relation that
+links the four parts of a lexical constant: the wordform, the hypertag,
+the specifier and the type. This relation can be thought of as a
+multi-valued ``function'' that receives as input a wordform and a
+hypertag (that is, a single lexical entry) and outputs (possibly
+multiple) pairs of specifiers and types. Since we are working in a
+functional programming language that supports manipulation of
+higher-order functions, we can provide helper functions which construct
+these 4-ary relations for the grammar author in some simple cases. Our
+library thus provides functions like \texttt{unitypedr}, which expects a
+type and returns the 4-ary relation that assigns to every lexical item a
+single constant whose specifier is $nil$ and whose type is the supplied
+type, or \texttt{ht->typer}, which expects a mapping from hypertag
+patterns to types and returns the 4-ary relation which tries to map the
+hypertag against the patterns and yields constants with the
+corresponding types and $nil$ specifiers. When other patterns emerge,
+the grammar author is completely free to implement her new abstractions
+using the full power of the functional programming language. See
+Figure~\ref{fig:lex-sig-impl} for an example of implementing a
+lexicalized version of the $\Sigma_{Synt}$ signature
+from~\ref{sssec:example-sig} using the \texttt{ht->typer} abstraction.
+
+\begin{figure}
+  \centering
+  \begin{verbatim}
+(ht->typer {{:head {:cat "n"}}      'N
+            {:head {:cat "v"
+                    :trans "true"}} (-> 'NP 'NP 'S)
+            {:head {:cat "det"}}    (-> 'N (-> 'NP 'S) 'S)})
+  \end{verbatim}
+  \caption{\label{fig:lex-sig-impl} A lexicalized version of the
+    $\Sigma$%_{Synt} TODO TODO TODO
+ signature from~\ref{sssec:example-sig}.}
+\end{figure}
+
+In the above paragraphs, we have been referring to the constants that we
+were defining as \emph{lexical constants}. That was to distinguish them
+from the \emph{non-lexical constants} that we will introduce now. The
+reason for having non-lexical constants is that not every constant of
+every signature is linked to (generated by) some item of our lexical
+database. Consider, for example, the empty string $\epsilon$ and the
+string concatenation operator $+$ of the $\Sigma_{String}$ signature we
+gave in~\ref{sssec:example-sig} or the quantifiers and logical
+connectives of the $\Sigma_{Sem}$ signature in~\ref{sssec:acg-sem}.
+
+
+
+\subsection{Testing signatures and lexicons}

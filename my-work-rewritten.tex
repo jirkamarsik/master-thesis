@@ -292,7 +292,7 @@ from~\ref{sssec:example-sig} using the \texttt{ht->typer} abstraction.
   \end{verbatim}
   \caption{\label{fig:lex-sig-impl} A lexicalized version of the
     $\Sigma$%_{Synt} TODO TODO TODO
- signature from~\ref{sssec:example-sig}.}
+    signature from~\ref{sssec:example-sig}.}
 \end{figure}
 
 In the above paragraphs, we have been referring to the constants that we
@@ -304,6 +304,76 @@ database. Consider, for example, the empty string $\epsilon$ and the
 string concatenation operator $+$ of the $\Sigma_{String}$ signature we
 gave in~\ref{sssec:example-sig} or the quantifiers and logical
 connectives of the $\Sigma_{Sem}$ signature in~\ref{sssec:acg-sem}.
+These constants are not associated to any lexical entry or specifier and
+therefore their representation differs. See
+Figure~\ref{fig:nonlex-const} for an example of an non-lexicalized
+constant from a semantic signature.
+
+\begin{figure}
+  \centering
+  \begin{verbatim}
+{:type [-> T [-> T T]]
+ :id {:constant-name and?}}
+  \end{verbatim}
+  \caption{\label{fig:nonlex-const} An example of the representation of
+    a non-lexicalized constant (the conjunction operator in a semantic
+    signature).}
+\end{figure}
+
+Signatures of non-lexical constants can be simply defined by a mapping
+from the constant names to their types as
+in~\ref{fig:nonlex-sig-impl}. Such signatures will generally not be
+sufficient by themselves and will need to be complemented by other
+signatures which contain the lexical constants. Since we represent
+signatures as unary relations, combining them to produce their unions or
+intersections is just a matter of taking their disjunctions or
+conjunctions, respectively. With this, we have enough to fully define
+the other signatures of subsection~\ref{ssec:acg} in a lexicalized
+manner, see Figure~\ref{fig:example-sig-impl}.
+
+\begin{figure}
+  \centering
+  \begin{verbatim}
+(nonlex-sigr {'and?    (-> 'T 'T 'T)
+              'imp?    (-> 'T 'T 'T)
+              'forall? (-> (=> 'E 'T) 'T)
+              'exists? (-> (=> 'E 'T) 'T)})
+  \end{verbatim}
+  \caption{\label{fig:nonlex-sig-impl} A signature of non-lexical
+    constants belonging to $\Sigma$%_{Synt}
+    from~\ref{sssec:acg-sem}. The single arrow \texttt{->} corresponds
+    to linear implication while the double arrow \texttt{=>} corresponds
+    to intuitionistic implication.}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \begin{verbatim}
+(def synt-sig
+  (ht->typer {{:head {:cat "n"}}      'N
+              {:head {:cat "v"
+                      :trans "true"}} (-> 'NP 'NP 'S)
+              {:head {:cat "det"}}    (-> 'N (-> 'NP 'S) 'S)}))
+
+(def string-sig
+  (ors (nonlex-sigr {'++ (-> 'Str 'Str 'Str)})
+       (unitypedr 'Str)))
+
+(def sem-sig
+  (ors (nonlex-sigr {'and?    (-> 'T 'T 'T)
+                     'imp?    (-> 'T 'T 'T)
+                     'forall? (-> (=> 'E 'T) 'T)
+                     'exists? (-> (=> 'E 'T) 'T)})
+       (ht->typer {{:head {:cat "n"}}      (-> 'E 'T)
+                   {:head {:cat "v"
+                           :trans "true"}} (-> 'E 'E 'T)})))
+  \end{verbatim}
+  \caption{\label{fig:example-sig-impl} The definition of the
+    lexicalized versions of the example signatures of
+    subsection~\ref{ssec:acg}.}
+\end{figure}
+
+\subsubsection{Defining lexicons}
 
 
 

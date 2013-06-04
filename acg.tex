@@ -316,9 +316,9 @@ $\mathcal{L}_{sem}$ lexicon.
     x.\ M$ for $\exists\ (\lambda x.\ M)$.}
 \item $\mathcal{L}_{sem}(\synt{some}) = \lambda^{\circ} P Q.\ \exists
   x.\ ((P\ x) \land (Q\ x))$
-\item $\mathcal{L}_{sem}(\synt{love}) = \textbf{love}$
-\item $\mathcal{L}_{sem}(\synt{man}) = \textbf{man}$
-\item $\mathcal{L}_{sem}(\synt{woman}) = \textbf{woman}$
+\item $\mathcal{L}_{sem}(\synt{love}) = \lambda^{\circ} s o. (\textbf{love}\ s\ o)$
+\item $\mathcal{L}_{sem}(\synt{man}) = \lambda^{\circ} x. (\textbf{man}\ x)$
+\item $\mathcal{L}_{sem}(\synt{woman}) = \lambda^{\circ} x. (\textbf{woman}\ x)$
 \end{itemize}
 
 Let us now consider the example terms of the $\Sigma_{Synt}$ signature

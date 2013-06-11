@@ -26,22 +26,37 @@ make a distinction between phrases that contain negative determiners and
 those that do not, we will need to provide different types for both (two
 terms with the same type are indistinguishable w.r.t. syntactic
 composition in a type-logical grammar such as ACGs). Our type for
-$aucun$ will thus end up being $N \limp ((NP\_NEG \limp S) \limp S)$
-instead of the usual $N \limp ((NP \limp S) \limp S)$.\footnote{Strictly
-  following the EPTD for $aucun$ would lead us to give it a type
-  $DET\_NEG$ and then give the two types $DET \limp ((NP \limp S) \limp
-  S)$ and $DET\_NEG \limp ((NP\_NEG \limp S) \limp S)$ to nouns. In this
+$aucun$ will thus end up being $N\_NEG{=}F \limp ((NP\_NEG{=}T \limp S)
+\limp S)$ instead of the usual $N \limp ((NP \limp S) \limp
+S)$.\footnote{Strictly following the EPTD for $aucun$ would lead us to
+  give it a type $DET\_NEG{=}F$ and then give the two types
+  $DET\_NEG{=}F \limp ((NP\_NEG{=}F \limp S) \limp S)$ and $DET\_NEG{=}T
+  \limp ((NP\_NEG{=}T \limp S) \limp S)$ to nouns. In this
   demonstration, we prefer to align our examples with the treatment
-  which is customary to ACG research.}  The type of $ne$ will be more
-verbose, as it will consume a verb and transform its valency so that it
-demands that exactly one of its $NP$ arguments contains a negative
-determiner.
+  which is customary to ACG research.} The type for $le$ will need to be
+able handle cases where its argument noun either already contains a
+negative determiner or not.
 
 $$
-N_{ne_{tv_1}} : (NP \limp NP \limp S) \limp (NP\_NEG \limp NP \limp S)
+N_{aucun} : N\_NEG{=}F \limp ((NP\_NEG{=}T \limp S) \limp S)
 $$
 $$
-N_{ne_{tv_2}} : (NP \limp NP \limp S) \limp (NP \limp NP\_NEG \limp S)
+N_{le_1} : N\_NEG{=}F \limp ((NP\_NEG{=}F \limp S) \limp S)
+$$
+$$
+N_{le_2} : N\_NEG{=}T \limp ((NP\_NEG{=}T \limp S) \limp S)
+$$
+
+
+The type of $ne$ will be more verbose, as it will consume a verb and
+transform its valency so that it demands that exactly one of its $NP$
+arguments contains a negative determiner.
+
+$$
+N_{ne_{tv_1}} : (NP\_NEG{=}F \limp NP\_NEG{=}F \limp S) \limp (NP\_NEG{=}T \limp NP\_NEG{=}F \limp S)
+$$
+$$
+N_{ne_{tv_2}} : (NP\_NEG{=}F \limp NP\_NEG{=}F \limp S) \limp (NP\_NEG{=}F \limp NP\_NEG{=}T \limp S)
 $$
 
 Furthermore, we could add the case when both the subject and the object
@@ -56,7 +71,7 @@ syntactic valencies.
 \end{exe}
 
 $$
-N_{ne_{tv_3}} : (NP \limp NP \limp S) \limp (NP\_NEG \limp NP\_NEG \limp S)
+N_{ne_{tv_3}} : (NP\_NEG{=}F \limp NP\_NEG{=}F \limp S) \limp (NP\_NEG{=}T \limp NP\_NEG{=}T \limp S)
 $$
 
 \begin{figure}
@@ -86,19 +101,19 @@ need to take into account the presence of negative determiners in both
 their complements and the phrases they modify.
 
 $$
-N_{que_1} : (NP \limp S) \limp N \limp N
+N_{que_1} : (NP\_NEG{=}F \limp S) \limp N\_NEG{=}F \limp N\_NEG{=}F
 $$
 $$
-N_{que_2} : (NP \limp S) \limp N\_NEG \limp N\_NEG
+N_{que_2} : (NP\_NEG{=}F \limp S) \limp N\_NEG{=}T \limp N\_NEG{=}T
 $$
 $$
-N_{de_1} : NP \limp N \limp N
+N_{de_1} : NP\_NEG{=}F \limp N\_NEG{=}F \limp N\_NEG{=}F
 $$
 $$
-N_{de_2} : NP \limp N\_NEG \limp N\_NEG
+N_{de_2} : NP\_NEG{=}F \limp N\_NEG{=}T \limp N\_NEG{=}T
 $$
 $$
-N_{de_3} : NP\_NEG \limp N \limp N\_NEG
+N_{de_3} : NP\_NEG{=}T \limp N\_NEG{=}F \limp N\_NEG{=}T
 $$
 
 If we suppose the presence of the appropriate lexical items typed as in
@@ -115,29 +130,29 @@ two noun phrases that contain no negative determiners.
 
 In sentence (\ref{ex:bad-neg-rel}), there are multiple problems with
 typing. First, $N_{chasse}$ requires its first argument to be of type
-$NP$, a noun phrase with no negative determiner. This means that
-$\lambda^{\circ} x.\ N_{chasse}\ x\ y$ has type $NP \limp S$ which makes
-it an invalid argument for the function $N_{aucun}\ N_{loup}$, which has
-type $(NP\_NEG \limp S) \limp S$. Even supposing that we would be able
-to type the relative clause with $NP \limp S$, the complementizer $que$
-would map $N_{le}\ N_{tatou}$ from type $NP$ to type $NP$, preserving
-the property that the noun phrase does not contain a negative
-determiner. This would then make it incompatible with
-$N_{ne_{iv}}\ N_{court}$ which expects its argument to be an
-$NP\_NEG$. By misplacing the paired grammatical words, both the main
-clause and the relative clause become untypable.
+$NP\_NEG{=}F$, a noun phrase with no negative determiner. This means
+that $\lambda^{\circ} x.\ N_{chasse}\ x\ y$ has type $NP\_NEG{=}F \limp
+S$ which makes it an invalid argument for the function
+$N_{aucun}\ N_{loup}$, which has type $(NP\_NEG{=}T \limp S) \limp
+S$. Even if we were able to assign it a type compatible with
+$N_{que_1}$, the final relative clause would map $N_{tatou}$ to another
+term of type $N\_NEG{=}F$, which has no ``free'' negative
+determiners. $N_{le_1}$ will map this to a term typed $(NP\_NEG{=}F
+\limp S) \limp S$. Finally, this term is not capable of taking
+$(\lambda^{\circ} x.\ N_{ne_{iv}}\ N_{court}\ x)$ as its argument, since
+its type is $NP\_NEG{=}T \limp S$.
 
 \begin{exe}
   \ex \label{ex:good-neg-double} Aucune fourmi n'aime aucun tatou. \\
       $(N_{aucune}\ N_{fourmi})\ (\lambda^{\circ} x.\ (N_{aucun}\ N_{tatou})\ (\lambda^{\circ} y.\ N_{ne_{tv_3}}\ N_{aime}\ x\ y))$
   \ex \label{ex:good-neg-embed} Jean n'aime l'odeur d'aucun tatou. \\
-      $(N_{le}\ (N_{de_3}\ (N_{aucun}\ N_{tatou})\ N_{odeur}))\ (\lambda^{\circ} y.\ N_{ne_{tv_2}}\ N_{aime}\ N_{Jean}\ y)$
+      $(N_{le_2}\ (N_{de_3}\ (N_{aucun}\ N_{tatou})\ N_{odeur}))\ (\lambda^{\circ} y.\ N_{ne_{tv_2}}\ N_{aime}\ N_{Jean}\ y)$
   \ex \label{ex:good-neg-rel} Le tatou qu'aucun loup ne chasse court. \\
-      $(N_{le}\ (N_{que}\ (\lambda^{\circ} y.\ (N_{aucun}\ N_{loup})\ (\lambda^{\circ} x.\ N_{ne_{tv_1}}\ N_{chasse}\ x\ y))\ N_{tatou}))\ (\lambda^{\circ} x.\ N_{court}\ x)$
+      $(N_{le_1}\ (N_{que_1}\ (\lambda^{\circ} y.\ (N_{aucun}\ N_{loup})\ (\lambda^{\circ} x.\ N_{ne_{tv_1}}\ N_{chasse}\ x\ y))\ N_{tatou}))\ (\lambda^{\circ} x.\ N_{court}\ x)$
   \ex * \label{ex:bad-neg-noneg} Jean n'aime le tatou. \\
-      ? $(N_{le}\ N_{tatou})\ (\lambda^{\circ} y.\ N_{ne_{tv_?}}\ N_{aime}\ N_{Jean}\ y)$
+      * $(N_{le_1}\ N_{tatou})\ (\lambda^{\circ} y.\ N_{ne_{tv_?}}\ N_{aime}\ N_{Jean}\ y)$
   \ex * \label{ex:bad-neg-rel} Le tatou qu'aucun loup chasse ne court. \\
-      ? $(N_{le}\ (N_{que}\ (\lambda^{\circ} y.\ (N_{aucun}\ N_{loup})\ (\lambda^{\circ} x.\ N_{chasse_?}\ x\ y))\ N_{tatou}))\ (\lambda^{\circ} x.\ N_{ne_{iv_?}}\ N_{court}\ x)$
+      * $(N_{le_1}\ (N_{que}\ (\lambda^{\circ} y.\ (N_{aucun}\ N_{loup})\ (\lambda^{\circ} x.\ N_{chasse}\ x\ y))\ N_{tatou}))\ (\lambda^{\circ} x.\ N_{ne_{iv}}\ N_{court}\ x)$
 \end{exe}
 
 There are two things that we would like to highlight about this
@@ -169,15 +184,15 @@ dependent types as they are not essential to this specific constraint.
 
 The key idea in the treatment presented below is to give a special type
 to extracted constituents. We will thus have two types for noun phrases:
-$NP\_VAR$, which stands for ``empty'' noun phrases introduced by
-extraction, and $NP$, which stands for the other noun phrases, i.e.
-proper names and nouns with determiners. The grammar gives no constant
-capable of constructing a value of type $NP\_VAR$. The only way to
-obtain a term with this type is to abstract over a variable having the
-type. Then, the types of relative pronouns end up being $(NP\_VAR \limp
-S) \limp N \limp N$, ensuring that the relative clause given as the
-first argument is a $\lambda$-abstraction whose argument has type
-$NP\_VAR$.
+$NP\_VAR{=}T$, which stands for ``empty'' noun phrases introduced by
+extraction, and $NP\_VAR{=}F$, which stands for the other noun phrases,
+i.e.  proper names and nouns with determiners. The grammar gives no
+constant capable of constructing a value of type $NP\_VAR{=}T$. The only
+way to obtain a term with this type is to abstract over a variable
+having the type. Then, the types of relative pronouns end up being
+$(NP\_VAR{=}T \limp S) \limp N \limp N$, ensuring that the incomplete
+clause given as the first argument is a $\lambda$-abstraction whose
+argument has type $NP\_VAR{=}T$.
 
 Once we have this kind of information in the type system, we can start
 distinguishing clauses containing rooted extraction, where a subject or
@@ -188,77 +203,103 @@ values of type $S$ will be sensitive to the presence of extracted
 variables in their noun phrase and clausal arguments.
 
 $$
-E_{dort_1} : NP \limp S
+E_{dort_1} : NP\_VAR{=}F \limp S\_EXT{=}NO
 $$
 $$
-E_{dort_2} : NP\_VAR \limp S\_ROOT
+E_{dort_2} : NP\_VAR{=}T \limp S\_EXT{=}ROOT
 $$
 $$
-E_{aime_1} : NP \limp NP \limp S
+E_{aime_1} : NP\_VAR{=}F \limp NP\_VAR{=}F \limp S\_EXT{=}NO
 $$
 $$
-E_{aime_2} : NP\_VAR \limp NP \limp S\_ROOT
+E_{aime_2} : NP\_VAR{=}T \limp NP\_VAR{=}F \limp S\_EXT{=}ROOT
 $$
 $$
-E_{aime_3} : NP \limp NP\_VAR \limp S\_ROOT
+E_{aime_3} : NP\_VAR{=}F \limp NP\_VAR{=}T \limp S\_EXT{=}ROOT
 $$
 $$
-E_{dit\ que_1} : NP \limp S \limp S
+E_{dit\ que_1} : NP\_VAR{=}F \limp S\_EXT{=}NO \limp S\_EXT{=}NO
 $$
 $$
-E_{dit\ que_2} : NP\_VAR \limp S \limp S\_ROOT
+E_{dit\ que_2} : NP\_VAR{=}T \limp S\_EXT{=}NO \limp S\_EXT{=}ROOT
 $$
 $$
-E_{dit\ que_3} : NP \limp S\_ROOT \limp S\_EMB
+E_{dit\ que_3} : NP\_VAR{=}F \limp S\_EXT{=}ROOT \limp S\_EXT{=}EMB
 $$
 $$
-E_{dit\ que_4} : NP \limp S\_EMB \limp S\_EMB
+E_{dit\ que_4} : NP\_VAR{=}F \limp S\_EXT{=}EMB \limp S\_EXT{=}EMB
 $$
 
 Now all of the infrastructure is in place for us to express the type of
 the relative pronouns $qui$ and $que$.
 
 $$
-E_{qui} : (NP\_VAR \limp S\_ROOT) \limp N \limp N
+E_{qui} : (NP\_VAR{=}T \limp S\_EXT{=}ROOT) \limp N \limp N
 $$
 $$
-E_{que_1} : (NP\_VAR \limp S\_ROOT) \limp N \limp N
+E_{que_1} : (NP\_VAR{=}T \limp S\_EXT{=}ROOT) \limp N \limp N
 $$
 $$
-E_{que_2} : (NP\_VAR \limp S\_EMB) \limp N \limp N
+E_{que_2} : (NP\_VAR{=}T \limp S\_EXT{=}EMB) \limp N \limp N
 $$
 
 The above types ensure that the abstracted variables corresponding to
-traces of extracted constituents will be given the type $NP\_VAR$, that
-$qui$ can only be used to extract constituents from root positions while
-$que$ allows for extraction from both root and embedded
+traces of extracted constituents will be given the type $NP\_VAR{=}T$,
+that $qui$ can only be used to extract constituents from root positions
+while $que$ allows for extraction from both root and embedded
 positions.\footnote{NB: The constraint that $qui$ can only extract
   subjects and that $que$ can only extract objects is not enforced
   here. Likewise, this fragment does not handle multiple extraction.}
 
-Given this type system, we can assign the type $S$ to the term
+We also note that the splitting of the clause type $S$ into three finer
+types $S\_EXT={NO}$, $S\_EXT{=}ROOT$ and $S\_EXT{=}EMB$ means that types
+that work with $S$ regardless of its extraction status will have to
+provide alternatives for all the possible variants.
+
+$$
+E_{le_1} : N \limp ((NP\_VAR{=}F \limp S\_EXT{=}NO) \limp S\_EXT{=}NO)
+$$
+$$
+E_{le_2} : N \limp ((NP\_VAR{=}F \limp S\_EXT{=}ROOT) \limp S\_EXT{=}ROOT)
+$$
+$$
+E_{le_3} : N \limp ((NP\_VAR{=}F \limp S\_EXT{=}EMB) \limp S\_EXT{=}EMB)
+$$
+
+While we have introduced the notion of an $NP\_VAR{=}T$ for describing
+traces, we can cover another element of our fragment, the preposition
+$de$, and enforce the constraint that $qui$/$que$ cannot extract
+prepositional complements.
+
+$$
+E_{de} : NP\_VAR{=}F \limp N \limp N
+$$
+
+Given this type system, we can assign the type $S\_EXT{=}NO$ to the term
 expressing the syntactic structure of (\ref{ex:good-ext}) but we cannot
 a find a typable term for sentence (\ref{ex:bad-ext}), where $qui$ is
-used to extract a subject from a clause embedded in the relative clause.
+used to extract a subject from a clause embedded in a relative clause.
 The problem with sentence (\ref{ex:bad-ext}) is that the type of the
-relative clause is $NP\_VAR \limp S\_EMB$ which is not a valid argument
-for any constant representing the relative pronoun $qui$. Typing the
-variable $t$ with $NP$ instead of $NP\_VAR$ and using $E_{aime_1}$
-instead of $E_{aime_2}$ would not help, since the resulting relative
-clause would then have type $NP \limp S$, which would not admitted by
-any relative pronoun.
+relative clause is $NP\_VAR{=}T \limp S\_EXT{=}EMB$ which is not a valid
+argument for any constant representing the relative pronoun
+$qui$. Typing the variable $t$ with $NP\_VAR{=}F$ instead of
+$NP\_VAR{=}T$ and using $E_{aime_1}$ instead of $E_{aime_2}$ would not
+help, since the resulting relative clause would then have type
+$NP\_VAR{=}F \limp S\_EXT{=}NO$, which would not be admitted by any
+relative pronoun.
 
 \begin{exe}
   \ex * \label{ex:bad-ext} Le tatou qui Jean dit que \_ aime Marie dort. \\
-      ? $(E_{le}\ (E_{qui_?}\ (\lambda^{\circ} t.\ E_{dit\ que_3}\ E_{Jean}\ (E_{aime_2}\ t\ E_{Marie}))\ E_{tatou}))\ (\lambda^{\circ} x.\ E_{dort_1}\ x)$
+      * $(E_{le_1}\ (E_{qui_?}\ (\lambda^{\circ} t.\ E_{dit\ que_3}\ E_{Jean}\ (E_{aime_2}\ t\ E_{Marie}))\ E_{tatou}))\ (\lambda^{\circ} x.\ E_{dort_1}\ x)$
   \ex \label{ex:good-ext} Le tatou que Jean dit que Marie aime \_ dort. \\
-      $(E_{le}\ (E_{que_2}\ (\lambda^{\circ} t.\ E_{dit\ que_3}\ E_{Jean}\ (E_{aime_3}\ E_{Marie}\ t))\ E_{tatou}))\ (\lambda^{\circ} x.\ E_{dort_1}\ x)$
+      $(E_{le_1}\ (E_{que_2}\ (\lambda^{\circ} t.\ E_{dit\ que_3}\ E_{Jean}\ (E_{aime_3}\ E_{Marie}\ t))\ E_{tatou}))\ (\lambda^{\circ} x.\ E_{dort_1}\ x)$
 \end{exe}
 
 As was the case with our treatment of negation, we refined our familiar
 types by tacking on new kinds of information and defined rules for how
 these pieces of information percolate up the parse tree all the way to
-the topmost level still pertinent for ensuring grammaticality.
+the topmost level still pertinent for ensuring grammaticality. We will
+now look at another similar example.
 
 
 \subsection{Agreement}
@@ -268,72 +309,72 @@ motivates a straightforward refinement of our types, where all noun and
 noun phrase types carry number information.
 
 $$
-A_{Marie} : NP\_SG
+A_{Marie} : NP\_NUM{=}SG
 $$
 $$
-A_{tatou} : N\_SG
+A_{tatou} : N\_NUM{=}SG
 $$
 $$
-A_{tatous} : N\_PL
+A_{tatous} : N\_NUM{=}PL
 $$
 $$
-A_{le} : N\_SG \limp ((NP\_SG \limp S) \limp S)
+A_{le} : N\_NUM{=}SG \limp ((NP\_NUM{=}SG \limp S) \limp S)
 $$
 $$
-A_{les} : N\_PL \limp ((NP\_PL \limp S) \limp S)
+A_{les} : N\_NUM{=}PL \limp ((NP\_NUM{=}PL \limp S) \limp S)
 $$
 $$
-A_{dort} : NP\_SG \limp S
+A_{dort} : NP\_NUM{=}SG \limp S
 $$
 $$
-A_{dorment} : NP\_PL \limp S
+A_{dorment} : NP\_NUM{=}PL \limp S
 $$
 $$
-A_{aime_1} : NP\_SG \limp NP\_SG \limp S
+A_{aime_1} : NP\_NUM{=}SG \limp NP\_NUM{=}SG \limp S
 $$
 $$
-A_{aime_2} : NP\_SG \limp NP\_PL \limp S
+A_{aime_2} : NP\_NUM{=}SG \limp NP\_NUM{=}PL \limp S
 $$
 $$
-A_{aiment_1} : NP\_PL \limp NP\_SG \limp S
+A_{aiment_1} : NP\_NUM{=}PL \limp NP\_NUM{=}SG \limp S
 $$
 $$
-A_{aiment_2} : NP\_PL \limp NP\_PL \limp S
+A_{aiment_2} : NP\_NUM{=}PL \limp NP\_NUM{=}PL \limp S
 $$
 $$
-A_{qui_1} : (NP\_SG \limp S) \limp N\_SG \limp N\_SG
+A_{qui_1} : (NP\_NUM{=}SG \limp S) \limp N\_NUM{=}SG \limp N\_NUM{=}SG
 $$
 $$
-A_{qui_2} : (NP\_PL \limp S) \limp N\_PL \limp N\_PL
+A_{qui_2} : (NP\_NUM{=}PL \limp S) \limp N\_NUM{=}PL \limp N\_NUM{=}PL
 $$
 $$
-A_{de_1} : NP\_SG \limp N\_SG \limp N\_SG
+A_{de_1} : NP\_NUM{=}SG \limp N\_NUM{=}SG \limp N\_NUM{=}SG
 $$
 $$
-A_{de_2} : NP\_PL \limp N\_SG \limp N\_SG
+A_{de_2} : NP\_NUM{=}PL \limp N\_NUM{=}SG \limp N\_NUM{=}SG
 $$
 $$
-A_{de_3} : NP\_SG \limp N\_PL \limp N\_PL
+A_{de_3} : NP\_NUM{=}SG \limp N\_NUM{=}PL \limp N\_NUM{=}PL
 $$
 $$
-A_{de_4} : NP\_PL \limp N\_Pl \limp N\_PL
+A_{de_4} : NP\_NUM{=}PL \limp N\_Pl \limp N\_NUM{=}PL
 $$
 
 
 Given the above signature, we can assign the type $S$ to the syntactic
 term of sentence (\ref{ex:good-agr}) but not to the one of sentence
 (\ref{ex:bad-agr}). In the latter sentence, the type of the variable $t$
-has to be $NP\_SG$ since it is used as an argument to $A_{dort}$. This
-means that the relative clause $dort$ has type $NP\_SG \limp
+has to be $NP\_NUM{=}SG$ since it is used as an argument to $A_{dort}$. This
+means that the relative clause $dort$ has type $NP\_NUM{=}SG \limp
 S$. However, there is no type for $qui$ which would allow us to modify
-the plural noun $A_{tatous}$ of type $N\_PL$ by a relative clause with a
-missing singular noun phrase, which has the type $NP\_SG \limp S$.
+the plural noun $A_{tatous}$ of type $N\_NUM{=}PL$ by a relative clause with a
+missing singular noun phrase, which has the type $NP\_NUM{=}SG \limp S$.
 
 \begin{exe}
   \ex \label{ex:good-agr} Les tatous de Marie dorment. \\
       $(A_{les}\ (A_{de}\ A_{Marie}\ A_{tatous}))\ (\lambda^{\circ} x.\ A_{dorment}\ x)$
   \ex * \label{ex:bad-agr} Marie aime les tatous qui dort. \\
-      ? $(A_{les}\ (A_{qui_?}\ (\lambda^{\circ} t.\ A_{dort}\ t)\ A_{tatous}))\ (\lambda^{\circ} y.\ A_{aime_2}\ A_{Marie}\ y)$
+      * $(A_{les}\ (A_{qui_?}\ (\lambda^{\circ} t.\ A_{dort}\ t)\ A_{tatous}))\ (\lambda^{\circ} y.\ A_{aime_2}\ A_{Marie}\ y)$
 \end{exe}
 
 Once again, we have expressed a linguistic constraint by refining our

@@ -1,4 +1,7 @@
-all: thesis.pdf
+all: thesis.pdf deploy
+
+deploy:
+	cp thesis.pdf ~/Dropbox/Public/rapport.pdf
 
 thesis.pdf: thesis.tex motivation.tex acg.tex ig.tex my-work-rewritten.tex\
             the-last-part.tex\

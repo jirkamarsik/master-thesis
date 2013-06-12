@@ -7,5 +7,5 @@
 
 * Add types for $le$ in the subsection on extraction. CHECK
 
-* Mention the type of $de$ when $NP\_VAR{=}T$ is available, perhaps in
-  the intersection grammar section.
+* Mention the type of $de$ when $NP\_VAR$ is available, perhaps in the
+  intersection grammar section.

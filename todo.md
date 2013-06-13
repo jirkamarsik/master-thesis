@@ -9,3 +9,5 @@
 
 * Mention the type of $de$ when $NP\_VAR$ is available, perhaps in the
   intersection grammar section.
+
+* Add link to the software.

@@ -391,6 +391,7 @@ handles a wide variety of such phenomena.
 
 
 \section{Putting It All Together}
+\label{sec:together}
 
 In a grammar that handles negation, extraction and agreement, our types
 will need to carry all of the refinements we introduced before. To
@@ -917,12 +918,12 @@ arborescence.
       defines the extrinsic language $L$.
 
     \item Let $L_1$ and $L_2$ be two extrinsic languages defined by the
-      nodes $u_1$ and $u_2$ respectively belonging to two graphical
-      ACGs. We can construct a new graphical ACG by taking the union of
-      the two ACGs (union of graphs (union of vertices and edges) and
-      unions of the labelings).\footnote{Assuming, without loss of
-        generality, that the sets of vertices of the two graphs are
-        disjoint.} We then add a new node $v$ which will define the
+      nodes $u_1$ and $u_2$, respectively, and belonging to some two
+      graphical ACGs. We can construct a new graphical ACG by taking the
+      union of the two ACGs (union of graphs (union of vertices and
+      edges) and unions of the labelings).\footnote{Assuming, without
+        loss of generality, that the sets of vertices of the two graphs
+        are disjoint.} We then add a new node $v$ which will define the
       language $L_1 \cap L_2$.
 
       The signature labeling $v$ will be the union of the two signatures
@@ -976,6 +977,13 @@ arborescence.
       &= \mathcal{L}(\mathcal{E}_{\mathcal{G}}(u)) \\
       &= \mathcal{L}(L)
     \end{align*}
+
+    The facts used here are in turn: the inclusion of
+    $\mathcal{I}_{\mathcal{G}'}(v)$ in
+    $\mathcal{L}(\mathcal{E}_{\mathcal{G}'}(u))$, the observation that
+    modifying our graphical grammar did not change the extrinsic
+    language of $u$ and the assumption that $L$ is the extrinsic
+    language of $u$.
   \end{itemize}
 \end{proof}
 
@@ -985,3 +993,86 @@ arborescence.
   set of object languages definable by ACGs is closed under
   intersection.
 \end{corollary}
+
+We conclude this subsubsection with a few words to motivate the need we
+feel for this (possibly) more expressive formalism. We believe that in
+order to manage the development of wide-coverage grammars, the grammars
+need to be kept as simple as possible, which means, among other things,
+that independent constraints should be implemented separately and not
+complected together (we saw the difficulties caused by this already on a
+microscopic fragment in section~\ref{sec:together}). This means that if
+we were to define, e.g., a partial grammar in which we would only
+enforce agreement and another one in which we would only enforce the
+proper use of relative pronouns, we would like the language in which
+both agreement and proper use of relative pronouns are respected to be
+expressible in our formalism and on top of that, we would like this
+language to be easily expressed in terms of the two grammars for the
+individual constraints. We now have a requirement on the formalism in
+which we would write such grammars, we want a formalism where the set of
+all the ``useful'' definable languages is closed on intersection. If the
+object languages of ACGs are indeed closed on intersection, then our
+extension is just a convenience for expressing intersection more
+easily. However, if they are not, we believe our extension adds a
+critical level of expressivity needed for simple and modular
+wide-coverage grammars.
+
+
+\subsubsection{On the Decidability of Graphical ACGs}
+
+We turn to the problem of parsing with graphical ACGs. Parsing with ACGs
+is a problem on the limits of decidability. When we consider ACGs whose
+abstract signatures only contain types of order 2 or less, parsing is
+possible in polynomial type for both linear \cite{salvati2005problemes}
+and non-linear \cite{kanazawa2007parsing} type systems (such as the one
+we introduced in~\ref{sec:acg}). If the order of the abstract signature
+exceeds 2, the membership problem for linear ACGs becomes decidable if
+and only if the satisfiability problem in the multiplicative exponential
+fragment linear logic is decidable \cite{de2004vector}, which is an open
+problem. On the other hand, by extending the type system to include
+dependent types, parsing can become undecidable too since type checking
+in such a system is itself undecidable.
+
+Our intent here is to show that by extending the formalism, we have not
+made the problem of parsing with the grammar more difficult, at least in
+terms of decidability if not in terms of complexity. Let us imagine a
+graphical ACG where every edge (two signatures, distinguished types and
+a lexicon) is an ACG for which there is an effective parsing algorithm
+and all type checking is decidable in all the signatures. Then we can
+build a simple effective parsing algorithm for any of the extrinsic
+languages defined in the graphical ACG.
+
+We will be testing whether the term $\gamma$ belongs to the extrinsic
+language of some node $v$. Our algorithm first checks whether $\gamma$
+belongs to the intrinsic language of $v$ by checking its type. If it
+does, it proceeds to verify that it is also in the extrinsic language by
+finding antecedents in all of its abstract predecessors $u_i$, if there
+are any. We can use the presupposed parsing algorithm for the ACG
+$\mathopen{<} \Sigma_{u_i}, \Sigma_v, \mathcal{L}_{(u_i,v)},
+S_{u_i}\mathclose{>}$ to find all the abstract terms $\alpha_{i,j}$
+having type $S_{u_i}$ and being antecedents to $\gamma$ w.r.t. the
+lexicon $\mathcal{L}_{(u_i,v)}$. Such terms belong to the intrinsic
+language of $u_i$ but we are interested only in antecedents coming from
+the extrinsic language. Therefore, what we have to do is to recursively
+apply our parsing algorithm to all of the antecedent-candidates
+$\{\alpha_{i,j} \mid \forall j\}$ until we find one which belongs to the
+extrinsic language of $u_i$. Since the graph is acyclic, we are
+guaranteed that this recursive traversal will terminate. We repeat this
+for all the predecessors $u_i$ and if we succeed to find antecedents in
+all of them, we have confirmed the membership of $\gamma$ in
+$\mathcal{E}_{\mathcal{G}}(v)$ and also built its abstract
+antecedent(s).
+
+
+\subsubsection{On Grammar Engineering with Graphical ACGs}
+
+
+
+
+%% \subsubsection{On Alternative Interpretations of Graphical ACGs}
+%
+% Mention the example with the levels of linguistic representations
+% linked by many-to-many transductions and explain how a different
+% theory of graphs defining languages might be suitable to that
+% architecture.
+%
+% Also point out the weirdness of the diamond shape.

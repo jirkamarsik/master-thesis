@@ -14,3 +14,4 @@ thesis.pdf: thesis.tex motivation.tex acg.tex ig.tex my-work-rewritten.tex\
 
 clean:
 	rm -f *.aux *.bbl *.blg *.log *.out *.toc
+	rm thesis.pdf

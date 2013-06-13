@@ -680,7 +680,7 @@ section.\footnote{Incidentally, this was not the reason for the way we
   together the information in a more natural way. We approach signatures
   as descriptions of domains (strings, syntax, semantics), each one
   being associated with a distinguished type telling us which objects
-  the domain set out to describe (strings, sentences, truth
+  the domain has set out to describe (strings, sentences, truth
   values). Having distinguished types directly attached to signatures
   allows us to omit them from the ACG quadruples. However, this only
   leaves us with triples containing the two signatures and the lexicon
@@ -697,7 +697,11 @@ sharing the same abstract signature). However, since these two grammars
 are very closely related, we would prefer to reason about our grammar as
 \emph{one} system/graph of signatures and lexicons which defines
 multiple languages instead of talking about \emph{multiple} grammars
-which share some similarities.}
+which share some similarities.
+
+TODO: Somehow express that its nice to have the links between the
+signatures and lexicons that are shown in diagrams \emph{explicit}
+rather than having them \emph{implicit}.}
 
 Before we turn to our proposal, we will quickly recall some of the other
 styles of composition used in ACGs (a more detailed exposition can be
@@ -733,7 +737,7 @@ level. This is due to the condition that a lexicon has to be a
 homomorphism and thus it must, among other things, always map well-typed
 terms to well-typed terms. To illustrate the problem, imagine a
 structure such as the one on (TODO) that handles some different
-constraints in each of the vertically stacked signatures including
+constraint in each of the vertically stacked signatures, including
 e.g. agreement. If we tried to add a new abstract signature at the top
 to implement another constraint, we would have to ensure that all the
 terms we licence in our new abstract signature have a well-typed
@@ -741,8 +745,8 @@ counterpart in the existing abstract language. However, this means that
 our new signature must make sure that the terms it approves do not break
 agreement or any of the previously established constraints. Effectively,
 our new signature would be forced to reimplement all of the existing
-constraints, rendering vain all our effort to split up the constraints
-into multiple signatures.
+constraints, rendering in vain all our effort to split up the
+constraints into multiple signatures.
 
 What we would like instead is to put the signatures side-by-side such
 that they do not depend on each other (as on diagram TODO). However, how
@@ -778,11 +782,11 @@ using our graphical model. Given a grammar $\mathcal{G} =
 \mathopen{<}\Sigma_A, \Sigma_O, \mathcal{L}, S\mathclose{>}$, we just
 produce a tree whose root has the signature $\Sigma_A$ and distinguished
 type $S$ and which is connected to a single child node having the
-signature $\Sigma_O$ by the lexicon $\mathcal{L}$. Then the two nodes of
-our tree define both the abstract and the object language defined by
-$\mathcal{G}$.
+signature $\Sigma_O$ by an edge labelled by the lexicon
+$\mathcal{L}$. Then the two nodes of our tree define both the abstract
+and the object language defined by $\mathcal{G}$.
 
-We have now given some formal account about how we can read language
+We have now given some formal account of how we can read language
 definitions in diagrams. Still, we have kept our analysis to the tree
 diagrams used in current ACG literature, where every node has at most
 one parent. To make the generalization more visible, we will switch from
@@ -815,3 +819,161 @@ TODO: Use the correct term arborescence in the above paragraphs!
 
 We will now turn to a formal definition of this generalized graph-based
 formalism and discuss some its values and properties.
+
+\subsubsection{Graphical Abstract Categorial Grammars}
+
+We define a \emph{graphical abstract categorial grammar} as a quadruple
+$\mathcal{G} = \mathopen{<} G, \Sigma, S, {\mathcal{L}} \mathclose{>}$
+where $G$ is a directed graph with vertices $V(G)$ and edges $E(G)$,
+$\Sigma$ and $S$ are labelings assigning signatures and distinguished
+types, respectively, to the vertices in $V$ and ${\mathcal{L}}$ is a
+labeling assigning lexicons to the edges in $E$. Furthermore, a
+well-formed graphical ACG satisfies the following conditions:
+
+\begin{itemize}
+\item $G$ is a directed acyclic graph.
+\item For all $(u,v) \in E(G)$, $\mathcal{L}_{(u,v)} : \Sigma_u \to
+  \Sigma_v$.
+\item For all $(u,v) \in E(G)$, $\mathcal{L}_{(u,v)}(S_u) = S_v$.
+\end{itemize}
+
+We will say that a node $u$ is \emph{more abstract} than a node $v$
+whenever $(u,v)$ belongs to the strict partial order induced by the
+edges of $G$ (i.e. there is a path from $u$ to $v$).
+
+We let the nodes in a graphical ACG $\mathcal{G} = \mathopen{<} G,
+\Sigma, S, \mathcal{L} \mathclose{>}$ define two kinds of
+languages. The \emph{intrinsic languages} $\mathcal{I}_{\mathcal{G}}$,
+which are constrained only by the type signature described in the node
+itself, and the \emph{extrinsic languages} $\mathcal{E}_{\mathcal{G}}$,
+which are also constrained by type systems in more abstract nodes of the
+graph. These two notions correspond to those of abstract languages and
+object languages in ACGs.
+
+$$
+\mathcal{I}_{\mathcal{G}}(v) = \{t \in \Lambda(\Sigma_v)
+\mid\ \vdash_{\Sigma_u} t : S_v\}
+$$
+$$
+\mathcal{E}_{\mathcal{G}}(v) = \mathcal{I}_{\mathcal{G}}(v) \cap
+\bigcap_{(u,v) \in E} \mathcal{L}_{(u,v)}(\mathcal{E}_{\mathcal{G}}(u)).
+$$
+
+From the above definition, we see that the ACG diagrams we introduced
+before are a special case of graphical ACGs where the graph is an
+arborescence.
+
+\subsubsubsection{Formal Properties of Graphical ACGs}
+
+Observation: The set of intrinsic languages definable by graphical ACGs
+is the same as the set of abstract languages definable by ACGs.
+
+Theorem: The set of extrinsic languages definable by graphical ACGs is
+the set of object languages definable by ACGs closed under intersection
+and transformation by a lexicon.
+
+Proof:
+
+First, we prove that an extrinsic language can be always constructed
+from object languages by intersections and transformations by
+lexicons. Let us consider any graphical ACG $\mathcal{G} = \mathopen{<}
+G, \Sigma, S, \mathcal{L} \mathclose{>}$ and any topological ordering
+$v_1, \ldots, v_n$ of the nodes of $G$ (an ordering such that more
+abstract nodes always precede less abstract ones). Before we start, we
+will just note that the all the intrinsic languages defined by $v_i$ are
+abstract languages which are a special case of object languages.
+
+\begin{itemize}
+\item For $v_1$, the case is trivial since its extrinsic language is
+  just its intrinsic language as the node $v_1$ has no predecessors in
+  $G$.
+\item For any other node $v_n$, we look at the definition of an
+  extrinsic language and remark that the only operators are intersection
+  and application of a lexicon with the operands being the intrinsic
+  language of $v_n$ and the extrinsic languages of more abstract
+  nodes. By induction hypothesis, we have that all of the operands have
+  been constructed from object languages using intersections and
+  transformations by lexicons and therefore even the extrinsic language
+  defined by $v_n$ has this property.
+\end{itemize}
+
+
+Now we have to prove the converse. We do so by showing that extrinsic
+languages contain object languages and are closed under intersection and
+transformation by a lexicon.
+
+\begin{itemize}
+\item Let $L$ be an object language defined by the ACG $\mathopen{<}
+  \Sigma_A, \Sigma_O, \mathcal{L}, S\mathclose{>}$. We take the graph
+  $G$ with $V(G) = \{A, O\}$ and $E(G) = \{(A,O)\}$, we label the nodes
+  $A$ and $O$ with $\Sigma_A$ and $\Sigma_O$ as signatures and $S$ and
+  $\mathcal{L}(S)$ as distinguished types respectively. Finally, we
+  label the edge $(A,O)$ with $\mathcal{L}$ and we have a graphical ACG
+  in which the node $O$ defines the extrinsic language $L$.
+
+\item Let $L_1$ and $L_2$ be two extrinsic languages defined by the
+  nodes $u_1$ and $u_2$ respectively belonging to two graphical ACGs. We
+  can construct a new graphical ACG by taking the union of the two ACGs
+  (union of graphs (union of vertices and edges) and unions of the
+  labelings).\footnote{Assuming, without loss of generality, that the
+    sets of vertices of the two graphs are disjoint.} We then add a new
+  node $v$ which will define the language $L_1 \cap L_2$.
+
+  The signature labeling $v$ will be the union of the two signatures
+  labeling $u_1$ and $u_2$ such that the intrinsic language of $v$ will
+  be a superset of the intrinsic languages, and by extension the
+  extrinsic languages, of both $u_1$ and $u_2$. Either of the two
+  distinguished types that label $u_1$ or $u_2$ can be used to label $v$
+  (if they are actually different, then the intersection is trivially
+  empty). Finally, we will add two edges leading from $u_1$ and $u_2$ to
+  $v$, both labeled with the identity lexicon. We will now show that
+  the extrinsic language of $v$ in the newly formed graphical ACG
+  $\mathcal{G}'$ is $L_1 \cap L_2$.
+
+  \begin{align*}
+    \mathcal{E}_{\mathcal{G}'}(v) &= \mathcal{I}_{\mathcal{G}'}(v) \cap
+    \mathcal{L}_{(u_1,v)}(\mathcal{E}_{\mathcal{G}'}(u_1)) \cap
+    \mathcal{L}_{(u_2,v)}(\mathcal{E}_{\mathcal{G}'}(u_2)) \\ &=
+    \mathcal{I}_{\mathcal{G}'}(v) \cap \mathcal{E}_{\mathcal{G}'}(u_1) \cap
+    \mathcal{E}_{\mathcal{G}'}(u_2) \\ &= \mathcal{E}_{\mathcal{G}'}(u_1)
+    \cap \mathcal{E}_{\mathcal{G}'}(u_2) \\ &=
+    \mathcal{E}_{\mathcal{G}}(u_1) \cap \mathcal{E}_{\mathcal{G}}(u_2) \\ &=
+    L_1 \cap L_2
+  \end{align*}
+
+  The simplifications use the facts that: the two new lexicons are
+  identities, that the intrinsic language of $v$ is a superset of the
+  extrinsic languages of $u_1$ and $u_2$, that the extrinsic languages
+  of $u_1$ and $u_2$ are the same in the new graphical ACG as in the two
+  original graphical ACGs and finally that $L_1$ and $L_2$ are the
+  extrinsic languages defined by $u_1$ and $u_2$.
+
+\item Let $L \subset \Lambda(\Sigma_A)$ be an extrinsic language and
+  $\mathcal{L} : \Sigma_A \to \Sigma_O$ a lexicon from its signature
+  $\Sigma_A$ to the signature $\Sigma_O$. We will show that the language
+  $\mathcal{L}(L) \subset \Lambda(\Sigma_O)$ is also an extrinsic
+  language. Let $u$ be the node that defines the extrinsic language $L$
+  in some graphical ACG $\mathcal{G}$. We construct a new graphical ACG
+  by adding a new vertex $v$ to $\mathcal{G}$ labeled with the signature
+  $\Sigma_O$ and the distinguished type $\mathcal{L}(S)$ where $S$ is
+  the distinguished type labeling $u$. To this graph, we conjoin the
+  edge $(u,v)$ and label it with $\mathcal{L}$. Now we verify that the
+  extrinsic language of $v$ is the language $\mathcal{L}(L).$
+
+  \begin{align*}
+    \mathcal{E}_{\mathcal{G}'}(v) &= \mathcal{I}_{\mathcal{G}'}(v) \cap
+    \mathcal{L}(\mathcal{E}_{\mathcal{G}'}(u)) \\
+    &= \mathcal{L}(\mathcal{E}_{\mathcal{G}'}(u)) \\
+    &= \mathcal{L}(\mathcal{E}_{\mathcal{G}}(u)) \\
+    &= \mathcal{L}(L)
+  \end{align*}
+
+
+\end{itemize}
+
+
+
+Corollary: The set of extrinsic languages definable by graphical ACGs is
+the same as the set of object languages definable by ACGs if and only if
+the set of object languages definable by ACGs is closed under
+intersection.

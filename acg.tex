@@ -1,12 +1,12 @@
-\subsection{Abstract Categorial Grammars}
-\label{ssec:acg}
+\section{Abstract Categorial Grammars}
+\label{sec:acg}
 
 We present the grammatical framework in which we will develop our
 system. Abstract categorial grammars are built upon two mathematical
 structures, \emph{(higher-order) signatures} and \emph{lexicons}.
 
-\subsubsection{Higher-order signatures}
-\label{sssec:sig}
+\subsection{Higher-order signatures}
+\label{ssec:sig}
 
 A \textbf{higher-order signature} is a set of elements that we call
 \emph{constants}, each of which is associated with a type. Formally, it
@@ -75,8 +75,8 @@ useful, we often focus ourselves only on terms that have a specific
 constants and some distinguished type, we can describe languages of,
 e.g. tree-like (and by extension string-like), lambda terms.
 
-\subsubsection{Example signature}
-\label{sssec:example-sig}
+\subsection{Example signature}
+\label{ssec:example-sig}
 
 Let us take a look at an example from
 \cite{pogodalla2007generalizing}. We will start with a very simple
@@ -112,7 +112,7 @@ to terms having the type $\textsc{String}$, we get the set of
 expressions which denote strings (a set that contains terms like $t_1$
 but not $t_2$).
 
-\subsubsection{Lexicons}
+\subsection{Lexicons}
 
 The idea of a signature is coupled with that of a \textbf{lexicon},
 which is a mapping between two different signatures (mapping the
@@ -146,13 +146,13 @@ matter of inverting the surface lexicon to get the abstract term and
 then applying to it the logical lexicon. Generation is symmetric, we
 simply invert the logical lexicon and apply the surface lexicon.
 
-\subsubsection{Example lexicon}
-\label{sssec:example-lex}
+\subsection{Example lexicon}
+\label{ssec:example-lex}
 
 \newcommand{\synt}[1]{C_{\textrm{#1}}}
 
 To illustrate the ideas of a lexicon and an abstract categorial grammar,
-we will expand our example from \ref{sssec:example-sig}. We will
+we will expand our example from \ref{ssec:example-sig}. We will
 consider another signature, $\Sigma_{Synt}$, which will describe the
 syntax of quantified noun phrases in the style of Montague
 \cite{montague1973proper}. The atomic types $A_{Synt}$ will consist of
@@ -274,12 +274,12 @@ such that its image given by the lexicon yields the same object term,
 i.e. it contains only terms which denote strings that spell out
 sentences of our fragment of English.
 
-\subsubsection{Example semantic lexicon}
-\label{sssec:acg-sem}
+\subsection{Example semantic lexicon}
+\label{ssec:acg-sem}
 
 One perk of working with abstract categorial grammars is that one
 abstract term can be interpreted multiple ways, using different
-lexicons. In the previous section, we considered the abstract terms of
+lexicons. In the previous chapter, we considered the abstract terms of
 the $\Sigma_{Synt}$ signature and interpreted them as computations on
 strings. Now we will take the same abstract terms, but try to intepret
 them as computations on entities and truth values.
@@ -322,7 +322,7 @@ $\mathcal{L}_{sem}$ lexicon.
 \end{itemize}
 
 Let us now consider the example terms of the $\Sigma_{Synt}$ signature
-from \ref{sssec:example-lex}. $t_3 = \synt{some}\ \synt{woman}$ will be
+from \ref{ssec:example-lex}. $t_3 = \synt{some}\ \synt{woman}$ will be
 interpreted as $\mathcal{L}_{sem}(t_3) =_{\beta} \lambda^{\circ}
 Q.\ \exists x.\ ((\textbf{woman}\ x) \land (Q\ x))$ having type $(e \limp
 t) \limp t$. It is a function that expects some predicate function and

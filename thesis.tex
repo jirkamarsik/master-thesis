@@ -1,7 +1,8 @@
-\documentclass{article}
+\documentclass{report}
 
 %% \usepackage{sdrt}
 \usepackage{amsmath}
+\usepackage{amsthm}
 \usepackage{xcolor}
 \usepackage{graphicx}
 \usepackage{gb4e}
@@ -13,6 +14,10 @@
 %% https://groups.google.com/forum/?fromgroups=#!topic/comp.text.tex/0B4C3F_BsVI
 \def\limp {\mathbin{{-}\mkern-3.5mu{\circ}}}
 
+\newtheorem*{observation}{Observation}
+\newtheorem*{theorem}{Theorem}
+\newtheorem*{corollary}{Corollary}
+
 \begin{document}
 
 \author{Ji\v{r}\'{i} Mar\v{s}\'{i}k}
@@ -23,7 +28,7 @@
 
 \tableofcontents
 
-\section{Preliminaries}
+\chapter{Preliminaries}
 
 \input{motivation}
 

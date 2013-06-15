@@ -11,3 +11,5 @@
   intersection grammar section.
 
 * Add link to the software.
+
+* Define what is transduction somewhere?

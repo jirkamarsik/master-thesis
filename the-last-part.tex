@@ -6,6 +6,7 @@ issues this brings up and propose some solutions to them.
 
 
 \section{Negation}
+\label{sec:negation}
 
 We will start with an account of the paired grammatical words mechanism
 for negation in French. Recall the EPTDs we have seen
@@ -304,6 +305,7 @@ now look at another similar example.
 
 
 \section{Agreement}
+\label{sec:agreement}
 
 Finally, we will cover the phenomenon of number agreement. This
 motivates a straightforward refinement of our types, where all noun and
@@ -607,6 +609,7 @@ $$
 
 
 \section{Intersections of Languages}
+\label{sec:sects-of-langs}
 
 We will now turn to another solution to the complexity of grammars
 implementing multiple independent mechanisms.
@@ -786,6 +789,8 @@ type $S$ and which is connected to a single child node having the
 signature $\Sigma_O$ by an edge labelled by the lexicon
 $\mathcal{L}$. Then the two nodes of our tree define both the abstract
 and the object language defined by $\mathcal{G}$.
+TODO: Prove here that the modes and patterns of composition in ACG have
+the predictable semantics as well.
 
 We have now given some formal account of how we can read language
 definitions in diagrams. Still, we have kept our analysis to the tree
@@ -1065,14 +1070,251 @@ antecedent(s).
 
 \subsubsection{On Grammar Engineering with Graphical ACGs}
 
+Having covered some of the formal properties of graphical ACGs, we will
+get back to building grammars. Armed with this formalism, we can solve
+the puzzle of incorporating the three constraints of sections
+\ref{sec:negation}, \ref{sec:extraction} and \ref{sec:agreement}. Our
+graph $G$ will consist of 6 nodes, $V(G) = \{Neg, Ext, Agr, Synt, Str,
+Sem\}$ with edges going from $Neg$, $Ext$ and $Agr$ to $Synt$ and from
+$Synt$ to $Str$ and $Sem$ (see Figure~TODO). The signatures for the
+first three named vertices are exactly those that have been presented in
+their dedicated sections and it is the case also for the distinguished
+types. The lexicons for the edges connecting these constraint nodes to
+$Synt$ all behave according to the scheme below:
+
+\begin{align*}
+  \mathcal{L}_{(constraint,Synt)}(X_{wordform_{subscript}}) &= C_{wordform} \\
+  \mathcal{L}_{(constraint,Synt)}(TYPE\_FEATURES)     &= TYPE
+\end{align*}
+
+The $Synt$-$Str$-$Sem$ subgraph is identical to the pair of ACGs
+displayed in \ref{sec:acg} except for some additions that need to be
+made so that the fragment covers the wordforms that we introduced when
+discussing the constraints (prepositions, relative pronouns, the
+negative particle $ne$\ldots). However, their types will not be tied to
+any of the constraints.
+
+\begin{align*}
+  C_{de} &: NP \limp N \limp N \\
+  C_{qui} &: (NP \limp S) \limp N \limp N \\
+  C_{dit\ que} &: NP \limp S \limp S \\
+  C_{dorment} &: NP \limp S \\
+  C_{ne_{tv}} &: (NP \limp NP \limp S) \limp (NP \limp NP \limp S) \\
+  C_{ne_{iv}} &: (NP \limp S) \limp (NP \limp S) \\
+  C_{ne_{cv}} &: (NP \limp S \limp S) \limp (NP \limp S \limp S)
+\end{align*}
+
+This lets us describe the high-level combinatorics of language that are
+of interest to the categorial grammarian in a manner which is idiomatic
+in academic literature (simple focused types $N$, $NP$ and $S$). At the
+same time, we can actually use this textbook grammar as a basis for a
+more realistic grammar which handles constraints such as agreement and
+extraction islands. Furthermore, these additional constraints are also
+defined in a manner that has its precedent in existing research. When
+the authors of \cite{pogodalla2012controlling} decided to put the
+constraints of extraction under a microscope and try to encode them in
+ACGs, they defined their constraints in the same way as our architecture
+does. This graphical architecture lets us write the syntactic kernel and
+the additional constraints independently and using two different styles
+that have both been shown useful by their own merits, which we see as
+indicative of enabling modularity.
+
+In the above approach, we have defined a language by providing a grammar
+which provides us with useful structures but which licences
+incorrect/ungrammatical structures. We have then refined this grammar by
+tacking on constraints ``on the side''. This approach is generally
+useful and can be seen e.g. in \cite{van2004concepts} to define the
+formal programming language kernel on which a formal semantics is
+established. In our case, we are interested in having intelligible
+syntactic structures too as we would like to compute their semantic
+representations. The syntax-semantics interface already presents a
+significant challenge and having less-than-ideal syntactic structures to
+start with does not make formalizing it any easier.
+
+We can imagine a scenario in which graphical ACGs become indispensable
+to have a clean syntax-semantics interface. In
+\ref{sec:sects-of-langs}(TODO: put here a more specific label after
+splitting up the section into subsections), we have seen a pattern of
+composing ACGs wherein ambiguities which are of a semantic nature are
+moved to a more abstract signature (i.e. the syntactic terms are
+transduced to the semantic terms). But there is also another pattern,
+that of adding a new abstract signature to constrain the syntactic
+terms. Since in classical ACGs, one does not define languages by
+providing more than one abstract signature, the two abstract signatures
+would have to be stacked on top of each other.
+
+Consider the case when we first add the abstract signature to constrain
+our syntactic terms. If we then try to transduce the terms of this new
+abstract signature, we will have to deal with the whole medley of types
+that were introduced in the constraining signature. This problem occurs
+since in our type-logical grammar the type system of the syntactic
+signature does not provide just the interface of the syntactic layer,
+but also its implementation. By putting the constraining signature in a
+different subgraph, aside from the syntax-semantics transducer, we can
+shield the syntax-semantics interface from the gnarly implementation
+details of the rules of syntax. This in turn gives us an answer as to
+what level of information should be expressed in the syntactic signature
+itself and which other constraints should be tucked away in hidden
+abstract signatures: the syntactic signature to which the
+syntax-semantics transducer is connected should only contain information
+relevant to the syntax-semantics interface. (TODO: Think about this some
+more, about whether there is any important difference to the
+syntax-semantics interface when the syntactic signature does not enforce
+anything, e.g..)
+
+As for the other case where we first build the syntax-semantics
+transducer and than constrain its abstract signature with a more
+abstract one is not much better. Now we have a converse problem where
+the implementation of the syntactic constraints is complected with bits
+of semantics since the constraining signature will have to map onto a
+signature built around types combining both syntax and semantics. (TODO:
+Go to bed.)
+
+% We could have talked here about making the graph of constraints deeper
+% to ``reuse'' common concepts and types. However due to the need for
+% more abstract signatures to enforce and basically reimplement the
+% constraints in less abstract signatures this would not be so
+% useful.
+
+% We could also talk about how constraints could be added to semantic or
+% morphological signatures, but we have nothing interesting to say about
+% that.
+
+\subsubsection{On Alternative Interpretations of Graphical ACGs}
+
+Our definitions of intrinsic and extrinsic have consequences which might
+be counter-intuitive and not correspond to the grammarian's intent. We
+will describe what these consequences are and propose an alternative
+notion of a language defined by a graphical ACG which aims to reconcile
+them.
+
+The first scenario which can be tricky is when two paths from nodes
+$u_1$ and $u_2$ converge on a single node $v$. If we then take a term
+$\alpha$ from $\mathcal{E}_{\mathcal{G}}(u_1)$, the term
+$\mathcal{L}_{(u_1,v)}(\alpha)$ belongs to
+$\mathcal{I}_{\mathcal{G}}(v)$ but not necessarily to
+$\mathcal{E}_{\mathcal{G}}(v)$ since it might be the case that there is
+no antecedent for $\mathcal{L}_{(u_1,v)}(\alpha)$ in
+$\mathcal{E}_{\mathcal{G}}(u_2)$. To sum up, mapping a member of some
+$\mathcal{E}_{\mathcal{G}}(u)$ using some $\mathcal{L}_{(u,v)}$ does not
+guarantee that the result belongs to $\mathcal{E}_{\mathcal{G}}(v)$,
+which is contrary to the case of object languages in ACGs.
+
+This highlights some limitations of our notion of an extrinsic
+language. Consider the graphical ACG of Figure~TODO. We have more than
+one path converging to $Synt$. We will consider a term $\alpha$ of
+$\mathcal{E}_{\mathcal{G}}(Sem)$. $\alpha$ has an antecedent in
+$\mathcal{E}_{\mathcal{G}}(SyntSem)$ which has a descendant $\beta$ in
+$\mathcal{I}_{\mathcal{G}}(Synt)$. However, because of the constraints
+on $Synt$ ($Neg$, $Ext$ and $Agr$), $\beta$ can be syntactic term
+violating one of these constraints which yields an ungrammatical
+sentence. Therefore, the notion of an extrinsic language is insufficient
+to express the set of meaning terms from $\Lambda(\Sigma_{Sem})$ which
+are expressible by grammatical sentences. Such definitions would be
+useful in an example like the one in Figure~TODO where we have a chain
+of signatures representing the different levels of linguistic
+description whose terms are in many-to-many relationships expressed
+through transducers. In such a scenario, it would be desirable to be
+able to express the set of descriptions belonging to one level,
+e.g. morphology, that are related to valid descriptions on all the other
+levels.
+
+Compared to ACG object languages, we lose another guarantee. In ACGs,
+the central role of the root abstract-most signature guarantees us that
+whenever a term belongs to an object language, we can find terms in all
+the other object languages that all share the same abstract-most
+term. On the other hand in the intrinsic and extrinsic languages we
+defined on graphical ACGs, having a term in an extrinsic language of
+some node $v$ only guarantees the presence of corresponding terms in the
+extrinsic languages of its ancestors and the intrinsic languages of
+their descendants.
+
+The second puzzling scenario is the diamond shape on Figure~TODO. If we
+consider a term $\delta$ of $\mathcal{E}_{\mathcal{G}}(Bottom)$, we know
+that there exist antecedents $\beta$ and $\gamma$ in
+$\mathcal{E}_{\mathcal{G}}(Left)$ and
+$\mathcal{E}_{\mathcal{G}}(Right)$. And while there definitely exist
+antecedents $\alpha$ and $\alpha'$ to both $\beta$ and $\gamma$ in
+$\mathcal{E}_{\mathcal{G}}(Top)$, these antecedents can be different
+disjoint, meaning there does not have to be a single $\alpha \in
+\mathcal{E}_{\mathcal{G}}(Top)$ which yields $\beta \in
+\mathcal{E}_{\mathcal{G}}(Left)$ and $\gamma \in
+\mathcal{E}_{\mathcal{G}}(Right)$ such that they both yield
+$\delta$. This means that the result of parsing a term in some
+$\mathcal{E}_{\mathcal{G}}(v)$ is a collection of abstract terms with
+one term not just for every node $u$ that is more abstract than $v$ but
+for every path leading to $v$. Parsing in our diamond grammar would thus
+produce four terms $\beta$, $\gamma$, $\alpha$ and $\alpha'$
+corresponding to the four paths $(Left,Bottom)$, $(Right,Bottom)$,
+$(Top,Left,Bottom)$ and $(Top,Right,Bottom)$, respectively. We contrast
+this again with the case of ACGs where the result of parsing can be
+represented by associating a term to every signature in the
+arborescence.\footnote{One could also say that the result of parsing in
+  an ACG is just the antecedent in the abstract-most signature and that
+  the other terms can then be easily computed by application of
+  lexicons. Similarly, we could say that the result of parsing in a
+  general graphical ACG is a collection of abstract terms for every
+  \emph{maximal} path leading to the node defining the language in
+  question. What might be more intuitive, though, is to have some theory
+  of graphical ACGs where the result of parsing is a collection of
+  antecedents in all the abstract-most nodes.}
+
+We will propose a new way of assigning languages to nodes in a graphical
+ACG that will conserve some of the intuitive behavior we are accustomed
+to from ACGs. We need not modify the definition of graphical ACGs to do
+so since it is only considered with the structure of the graph and its
+decoration with ACG paraphernalia, we only define a new kind of
+languages.
+
+Let $\mathcal{G} = \mathopen{<} G, \Sigma, S, \mathcal{L} \mathclose{>}$
+be a graphical ACG. We define the \emph{pangraphical language} of node
+$u$, $\mathcal{P}_{\mathcal{G}}(u)$, to be the set of terms $t$ such
+that there exists a labeling of nodes with terms $T$ satisfying the
+following conditions:
+
+\begin{itemize}
+  \item $T_u = t$.
+  \item For all $v \in V(G)$, $\vdash_{\Sigma_v} T_v : S_v$.
+  \item For all $(v,w) \in E(G)$, $\mathcal{L}_{(v,w)}(T_v) = T_w$.
+\end{itemize}
+
+TODO!: Show that the pangraphical languages solve all the problems
+outlined above.
+
+TODO: $\mathcal{P}_{\mathcal{G}}(u) \subset \mathcal{E}_{\mathcal{G}}(u)
+\subset \mathcal{I}_{\mathcal{G}}(u)$
+
+TODO: On arborescences, $\mathcal{P}_{\mathcal{G}}(u) =
+\mathcal{E}_{\mathcal{G}}(u)$.
+
+TODO?: Show that extrinsic languages are included in pangraphical
+languages.
+
+TODO?: Are pangraphical languages also included in extrinsic languages?
+
+TODO?: Write a parsing algorithm for pangraphical languages similar to
+the one for extrinsic languages.
 
 
+\subsubsection{On the Practical Consequences of Graphical ACGs}
 
-%% \subsubsection{On Alternative Interpretations of Graphical ACGs}
-%
-% Mention the example with the levels of linguistic representations
-% linked by many-to-many transductions and explain how a different
-% theory of graphs defining languages might be suitable to that
-% architecture.
-%
-% Also point out the weirdness of the diamond shape.
+TODO: The trivial lexicons we have for our constraints can be
+effectively inverted, giving us effective constraint verification. Using
+filtering and/or supertagging could also make it efficient.
+
+TODO: Constraint signatures can use specific type extensions, their
+added complexity is then contained within the constraint. Furthermore,
+we can treat the constraint signature as a black box and in the context
+of an implementation, we replace it with a special purpose procedure
+which verifies the constraint efficiently.
+
+TODO?: Practical applications: robustness by being able to parse
+sentences which violate some constraints, fine-grained syntax checking
+(pinpoint the constraint that is being violated).
+
+TODO?: We will need to define a lot of signatures which look exactly
+like some other signature but with some small refinements. The ways we
+will refine the signature will hopefully not be so diverse and we would
+hope to develop some tools to make formulating these refinements
+feasible compared to having to restate the entire grammar every time we
+add a new constraint.

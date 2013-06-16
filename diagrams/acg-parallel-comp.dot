@@ -1,0 +1,6 @@
+strict digraph "acg-parallel-comp" {
+  node [shape="circle",style="filled",fillcolor="lightblue"]
+  edge [style="bold"]
+  "\\Sigma_1,S_1" -> "\\Sigma_2,S_2" [label="\\mathcal{L}_{12}"]
+  "\\Sigma_1,S_1" -> "\\Sigma_3,S_3" [label="\\mathcal{L}_{13}"]
+}

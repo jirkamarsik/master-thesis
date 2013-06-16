@@ -1,0 +1,28 @@
+strict digraph "transducer-grammar" {
+  node [shape="circle",style="filled",fillcolor="lightblue"];
+  edge [style="bold"];
+  "PhonMorph" -> "Phon";
+  "PhonMorph" -> "Morph";
+  "MorphSynt" -> "Morph";
+  "MorphSynt" -> "Synt";
+  "SyntSem" -> "Synt";
+  "SyntSem" -> "Sem";
+  "PhonConstr" -> "Phon";
+  "MorphConstr" -> "Morph";
+  "SyntConstr" -> "Synt";
+  "SemConstr" -> "Sem";
+  { rank="source";
+    "PhonConstr";
+    "MorphConstr";
+    "SyntConstr";
+    "SemConstr"; };
+  { rank="same";
+    "PhonMorph";
+    "MorphSynt";
+    "SyntSem"; };
+  { rank="sink"
+    "Phon";
+    "Morph";
+    "Synt";
+    "Sem"; };
+}

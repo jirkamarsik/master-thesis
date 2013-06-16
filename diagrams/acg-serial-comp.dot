@@ -1,0 +1,7 @@
+strict digraph "acg-serial-comp" {
+  node [shape="circle",style="filled",fillcolor="lightblue"]
+  edge [style="bold"]
+  "\\Sigma_1,S_1" -> "\\Sigma_2,S_2" [label="\\mathcal{L}_{12}"]
+  "\\Sigma_2,S_2" -> "\\Sigma_3,S_3" [label="\\mathcal{L}_{23}"]
+  "\\Sigma_1,S_1" -> "\\Sigma_3,S_3" [label="\\mathcal{L}_{13} = \\mathcal{L}_{23} \circ \\mathcal{L}_{12}",style="dotted"]
+}

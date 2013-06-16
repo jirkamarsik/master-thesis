@@ -1,0 +1,6 @@
+strict digraph "diamond-grammar" {
+  node [shape="circle",style="filled",fillcolor="lightblue"];
+  edge [style="bold"];
+  "Top" -> "Left" -> "Bottom";
+  "Top" -> "Right" -> "Bottom";
+}

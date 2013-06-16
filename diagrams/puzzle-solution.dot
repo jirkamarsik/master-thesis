@@ -1,0 +1,9 @@
+strict digraph "puzzle-solution" {
+  node [shape="circle",style="filled",fillcolor="lightblue"]
+  edge [style="bold"]
+  "Neg" -> "Synt"
+  "Ext" -> "Synt"
+  "Agr" -> "Synt"
+  "Synt" -> "String"
+  "Synt" -> "Sem"
+}

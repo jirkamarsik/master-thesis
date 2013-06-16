@@ -4,3 +4,4 @@
 
 * Decide whether to make overviews of (sub*)sections at their
   beginnings, at the ends of previous subsections or both.
+  * At the beginnings, mostly.

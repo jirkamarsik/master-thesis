@@ -12,4 +12,6 @@
 
 * Add link to the software.
 
-* Define what is transduction somewhere?
+* Define what is transduction somewhere? CHECK
+
+* Thank the ping-pong table.

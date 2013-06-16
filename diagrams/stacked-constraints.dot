@@ -1,0 +1,9 @@
+strict digraph "stacked-constraints" {
+  node [shape="circle",style="filled",fillcolor="lightblue"]
+  edge [style="bold"]
+  "Constr_{1 \land 2}" -> "Constr_1" [label="\\mathcal{L}_{Constr_2}"]
+  "Constr_1" -> "Synt" [label="\\mathcal{L}_{Constr_1}"]
+  "Constr_{1 \land 2}" -> "Synt" [label="\\mathcal{L}_{Constr_1} \circ \\mathcal{L}_{Constr_2}",style="dashed"]
+  "Synt" -> "String" [label="\\mathcal{L}_{Syntax}"]
+  "Synt" -> "Sem" [label="\\mathcal{L}_{Sem}"]
+}

@@ -1,8 +1,8 @@
 strict digraph "constraints-side-by-side" {
   node [shape="circle",style="filled",fillcolor="lightblue"]
   edge [style="bold"]
-  "Constr_1" -> "Synt" [label="\\mathcal{L}_{Constr_1}"]
-  "Constr_2" -> "Synt" [label="\\mathcal{L}_{Constr_2}"]
-  "Synt" -> "String" [label="\\mathcal{L}_{Syntax}"]
-  "Synt" -> "Sem" [label="\\mathcal{L}_{Sem}"]
+  "Constr_1" -> "Synt" [label="\\mathcal{L}_{constr_1}"]
+  "Constr_2" -> "Synt" [label="\\mathcal{L}_{constr_2}"]
+  "Synt" -> "String" [label="\\mathcal{L}_{syntax}"]
+  "Synt" -> "Sem" [label="\\mathcal{L}_{sem}"]
 }

@@ -1,0 +1,540 @@
+\chapter{Treatment of Multiple Linguistic Constraints}
+\label{chap:constraints}
+
+In this chapter, we will attempt to incorporate accounts of several
+linguistic phenomena in a single framework, highlight the modularity
+issues this brings up.
+
+\section{Negation}
+\label{sec:negation}
+
+We will start with an account of the paired grammatical words mechanism
+for negation in French, specifically the interaction between negative
+noun phrases and the particle \emph{ne}. Recall the EPTDs we have seen
+in~\ref{ssec:frigram}, repeated here on Figure~\ref{fig:ig-neg-rep}.
+
+\begin{figure}
+  \centering
+  \includegraphics[scale=0.25]{images/ig-neg.pdf}
+  \caption{\label{fig:ig-neg-rep} Frigram EPTDs for a negative
+    determiner and the paired grammatical word \emph{ne}.}
+\end{figure}
+
+At a basic level, \emph{aucun} functions like any other determiner and
+\emph{ne} as any verb modifier. However, we want to encode the
+constraint that whenever a verb is modified by \emph{ne}, the modified
+verb will demand that one of its arguments contains a negative
+determiner. Since we need to make a distinction between phrases that
+contain negative determiners and those that do not, we will need to
+provide different types for both (two terms with the same type are
+indistinguishable w.r.t. syntactic composition in a type-logical grammar
+such as ACGs). Our type for \emph{aucun} will thus end up
+being\footnote{Strictly following the EPTD for \emph{aucun} would lead
+  us to give it a type $DET\_NEG{=}F$ and then give the two types
+  $DET\_NEG{=}F \limp ((NP\_NEG{=}F \limp S) \limp S)$ and $DET\_NEG{=}T
+  \limp ((NP\_NEG{=}T \limp S) \limp S)$ to nouns. In this
+  demonstration, we prefer to align our examples with the treatment
+  which is customary to ACG research.} $$N\_NEG{=}F \limp ((NP\_NEG{=}T
+\limp S) \limp S)$$ instead of the usual $$N \limp ((NP \limp S) \limp
+S)$$ The type for \emph{le} will need to be able handle cases where its
+argument noun either already contains a negative determiner or not.
+
+\begin{align*}
+N_{aucun} &: N\_NEG{=}F \limp ((NP\_NEG{=}T \limp S) \limp S) \\
+N_{le_1} &: N\_NEG{=}F \limp ((NP\_NEG{=}F \limp S) \limp S) \\
+N_{le_2} &: N\_NEG{=}T \limp ((NP\_NEG{=}T \limp S) \limp S) \\
+\end{align*}
+
+The type of \emph{ne} will be more verbose, as it will consume a verb
+and transform its valency so that it demands that exactly one of its
+$NP$ arguments contains a negative determiner.
+
+\begin{align*}
+N_{ne_{tv_1}} &: (NP\_NEG{=}F \limp NP\_NEG{=}F \limp S) \limp (NP\_NEG{=}T \limp NP\_NEG{=}F \limp S) \\
+N_{ne_{tv_2}} &: (NP\_NEG{=}F \limp NP\_NEG{=}F \limp S) \limp (NP\_NEG{=}F \limp NP\_NEG{=}T \limp S)
+\end{align*}
+
+Furthermore, we could add the case when both the subject and the object
+contain negative determiners, such as in~(\ref{ex:aucun2}). This case is
+currently not covered by Frigram (though it could be), but is considered
+grammatical by French speakers. Finally, in a complete grammar,
+\emph{ne} would have to provide types capable of transforming all the
+other syntactic valencies.
+
+\begin{exe}
+  \ex \label{ex:aucun2} Aucune fourmi n'aime aucun tatou.
+\end{exe}
+
+\begin{align*}
+N_{ne_{tv_3}} &: (NP\_NEG{=}F \limp NP\_NEG{=}F \limp S) \limp (NP\_NEG{=}T \limp NP\_NEG{=}T \limp S)
+\end{align*}
+
+\begin{figure}
+  \centering
+  \includegraphics[scale=0.25]{images/parse-aucun.pdf}
+  \caption{\label{fig:parse-aucun} One of the parse trees assigned to
+    sentence (\ref{ex:aucun-obj}) by Frigram/Leopar.}
+\end{figure}
+
+However, this is not the only change we have to effect on our grammar in
+order to properly handle the paired grammatical words for
+negation. Consider the example sentence (\ref{ex:aucun-obj}) and the
+parse tree assigned to it by Frigram on Figure~\ref{fig:parse-aucun}. It
+is not enough that the embedded noun phrase \emph{aucun tatou} has a
+type that tells us it contains a negative determiner. We need this bit
+of internal information also at the level of the enclosing noun phrase
+\emph{l'odeur d'aucun tatou} in which the former noun phrase is embedded
+since this is a property of the enclosing noun phrase that is crucial to
+its syntactic combinatorics. This presupposes the existence of a
+mechanism for propagating this kind of information up the parse tree. In
+the case of our ACG, this means that all the functions which modify
+phrases must be aware whether or not their argument contains a negative
+determiner and to convey this information in its result type as
+well. Moreover, since the negative determiner can also come from a
+complement of a prepositional phrase, the types of prepositions will
+need to take into account the presence of negative determiners in both
+their complements and the phrases they modify.
+
+\begin{align*}
+N_{que_1} &: (NP\_NEG{=}F \limp S) \limp N\_NEG{=}F \limp N\_NEG{=}F \\
+N_{que_2} &: (NP\_NEG{=}F \limp S) \limp N\_NEG{=}T \limp N\_NEG{=}T \\
+N_{de_1} &: NP\_NEG{=}F \limp N\_NEG{=}F \limp N\_NEG{=}F \\
+N_{de_2} &: NP\_NEG{=}F \limp N\_NEG{=}T \limp N\_NEG{=}T \\
+N_{de_3} &: NP\_NEG{=}T \limp N\_NEG{=}F \limp N\_NEG{=}T
+\end{align*}
+
+In the above types, we not only propagate information about the presence
+of a negative determiner, we also introduce a constraint in the
+mechanism stating that it cannot be the case that there is a negative
+determiner both in the modified noun and in its noun phrase complement
+(i.e. phrases like \emph{aucun tatou d'aucun homme} are not acceptable).
+
+If we suppose the presence of the appropriate lexical items typed as in
+the examples of~\ref{sec:acg}, we have a type system in which we can
+type the syntactic terms corresponding to the sentences
+(\ref{ex:good-neg-double}), (\ref{ex:good-neg-embed}) and
+(\ref{ex:good-neg-rel}) while making it impossible to type the
+structures corresponding to sentences (\ref{ex:bad-neg-noneg}) and
+({\ref{ex:bad-neg-rel}}).
+
+In sentence (\ref{ex:bad-neg-noneg}), we have no constant
+$N_{ne_{tv_?}}$ for \emph{ne} which would yield a verb capable of
+consuming two noun phrases that contain no negative determiners.
+
+In sentence (\ref{ex:bad-neg-rel}), there are multiple problems with
+typing. First, $N_{chasse}$ requires its first argument to be of type
+$NP\_NEG{=}F$, a noun phrase with no negative determiner. This means
+that $\lambda^{\circ} x.\ N_{chasse}\ x\ y$ has type $NP\_NEG{=}F \limp
+S$ which makes it an invalid argument for the function
+$N_{aucun}\ N_{loup}$, which has type $(NP\_NEG{=}T \limp S) \limp
+S$. Even if we were able to assign it a type compatible with
+$N_{que_1}$, the final relative clause would map $N_{tatou}$ to another
+term of type $N\_NEG{=}F$, which has no ``free'' negative
+determiners. $N_{le_1}$ will map this to a term typed $(NP\_NEG{=}F
+\limp S) \limp S$. Finally, this term is not capable of taking
+$(\lambda^{\circ} x.\ N_{ne_{iv}}\ N_{court}\ x)$ as its argument, since
+its type is $NP\_NEG{=}T \limp S$.
+
+\begin{exe}
+  \ex \label{ex:good-neg-double} Aucune fourmi n'aime aucun tatou. \\
+      $(N_{aucune}\ N_{fourmi})\ (\lambda^{\circ} x.\ (N_{aucun}\ N_{tatou})\ (\lambda^{\circ} y.\ N_{ne_{tv_3}}\ N_{aime}\ x\ y))$
+  \ex \label{ex:good-neg-embed} Jean n'aime l'odeur d'aucun tatou. \\
+      $(N_{le_2}\ (N_{de_3}\ (N_{aucun}\ N_{tatou})\ N_{odeur}))\ (\lambda^{\circ} y.\ N_{ne_{tv_2}}\ N_{aime}\ N_{Jean}\ y)$
+  \ex \label{ex:good-neg-rel} Le tatou qu'aucun loup ne chasse court. \\
+      $(N_{le_1}\ (N_{que_1}\ (\lambda^{\circ} y.\ (N_{aucun}\ N_{loup})\ (\lambda^{\circ} x.\ N_{ne_{tv_1}}\ N_{chasse}\ x\ y))\ N_{tatou}))\ (\lambda^{\circ} x.\ N_{court}\ x)$
+  \ex * \label{ex:bad-neg-noneg} Jean n'aime le tatou. \\
+      * $(N_{le_1}\ N_{tatou})\ (\lambda^{\circ} y.\ N_{ne_{tv_?}}\ N_{aime}\ N_{Jean}\ y)$
+  \ex * \label{ex:bad-neg-rel} Le tatou qu'aucun loup chasse ne court. \\
+      * $(N_{le_1}\ (N_{que}\ (\lambda^{\circ} y.\ (N_{aucun}\ N_{loup})\ (\lambda^{\circ} x.\ N_{chasse}\ x\ y))\ N_{tatou}))\ (\lambda^{\circ} x.\ N_{ne_{iv}}\ N_{court}\ x)$
+\end{exe}
+
+There are two things that we would like to highlight about this
+grammatical treatment. First off, we had to refine our types to make
+them convey more than one piece of information in a single type
+(e.g. something is a noun phrase and at the same time it is something
+that contains a negative determiner). Second, a property that we wish to
+express in the type of a term may be due to one of its subconstituents
+and it is therefore necessary to encode the propagation of this property
+up the parse tree in the types of all the intervening operators. In our
+case, it meant that handling negative determiners and the paired
+grammatical word for negation required us to not only define and type
+constants for these two categories, but to also change the types of noun
+modifiers (\emph{que ...}) and prepositions (\emph{de}).
+
+
+\section{Extraction}
+\label{sec:extraction}
+
+We will now turn to another phenomenon, extraction in relative clauses,
+focus on one of its properties, the fact that subjects can be extracted
+using \emph{qui} only from the relative clause itself whereas objects
+can be extracted using \emph{que} from embedded clauses contained
+therein, and present an implementation of this constraint by way of
+types in an ACG. The solution that we will show was published in
+\cite{pogodalla2012controlling}. Our presentation is slightly adapted to
+conform to the patterns seen in previous examples and it does not use
+dependent types as they are not essential to this specific constraint.
+
+The key idea in the treatment presented below is to give a special type
+to extracted constituents. We will thus have two types for noun phrases:
+$NP\_VAR{=}T$, which stands for ``empty'' noun phrases introduced by
+extraction, and $NP\_VAR{=}F$, which stands for the other noun phrases,
+i.e.  proper names and nouns with determiners. The grammar gives no
+constant capable of constructing a value of type $NP\_VAR{=}T$. The only
+way to obtain a term with this type is to abstract over a variable
+having the type. Then, the types of relative pronouns end up being
+$(NP\_VAR{=}T \limp S) \limp N \limp N$, ensuring that the incomplete
+clause given as the first argument is a $\lambda$-abstraction whose
+argument has type $NP\_VAR{=}T$.
+
+Once we have this kind of information in the type system, we can start
+distinguishing clauses containing rooted extraction, where a subject or
+object is extracted directly from the relative clause, embedded
+extraction, where an object is extracted from a clause embedded inside
+the relative clause, or no extraction. Types of functions which produce
+values of type $S$ will be sensitive to the presence of extracted
+variables in their noun phrase and clausal arguments.
+
+\begin{align*}
+E_{dort_1} &: NP\_VAR{=}F \limp S\_EXT{=}NO \\
+E_{dort_2} &: NP\_VAR{=}T \limp S\_EXT{=}ROOT \\
+E_{aime_1} &: NP\_VAR{=}F \limp NP\_VAR{=}F \limp S\_EXT{=}NO \\
+E_{aime_2} &: NP\_VAR{=}T \limp NP\_VAR{=}F \limp S\_EXT{=}ROOT \\
+E_{aime_3} &: NP\_VAR{=}F \limp NP\_VAR{=}T \limp S\_EXT{=}ROOT \\
+E_{dit\ que_1} &: NP\_VAR{=}F \limp S\_EXT{=}NO \limp S\_EXT{=}NO \\
+E_{dit\ que_2} &: NP\_VAR{=}T \limp S\_EXT{=}NO \limp S\_EXT{=}ROOT \\
+E_{dit\ que_3} &: NP\_VAR{=}F \limp S\_EXT{=}ROOT \limp S\_EXT{=}EMB \\
+E_{dit\ que_4} &: NP\_VAR{=}F \limp S\_EXT{=}EMB \limp S\_EXT{=}EMB
+\end{align*}
+
+Now all of the infrastructure is in place for us to express the type of
+the relative pronouns \emph{qui} and \emph{que}.
+
+\begin{align*}
+E_{qui} &: (NP\_VAR{=}T \limp S\_EXT{=}ROOT) \limp N \limp N \\
+E_{que_1} &: (NP\_VAR{=}T \limp S\_EXT{=}ROOT) \limp N \limp N \\
+E_{que_2} &: (NP\_VAR{=}T \limp S\_EXT{=}EMB) \limp N \limp N
+\end{align*}
+
+The above types ensure that the abstracted variables corresponding to
+traces of extracted constituents will be given the type $NP\_VAR{=}T$,
+that \emph{qui} can only be used to extract constituents from root
+positions while \emph{que} allows for extraction from both root and
+embedded positions.\footnote{NB: The constraint that \emph{qui} can only
+  extract subjects and that \emph{que} can only extract objects is not
+  enforced here. Likewise, this fragment does not handle multiple
+  extraction.}
+
+We also note that the splitting of the clause type $S$ into three finer
+types $S\_EXT={NO}$, $S\_EXT{=}ROOT$ and $S\_EXT{=}EMB$ means that types
+that work with $S$ regardless of its extraction status will have to
+provide alternatives for all the possible variants.
+
+\begin{align*}
+E_{le_1} &: N \limp ((NP\_VAR{=}F \limp S\_EXT{=}NO) \limp S\_EXT{=}NO) \\
+E_{le_2} &: N \limp ((NP\_VAR{=}F \limp S\_EXT{=}ROOT) \limp S\_EXT{=}ROOT) \\
+E_{le_3} &: N \limp ((NP\_VAR{=}F \limp S\_EXT{=}EMB) \limp S\_EXT{=}EMB)
+\end{align*}
+
+While we have introduced the notion of an $NP\_VAR{=}T$ for describing
+traces, we can cover another element of our running fragment, the
+preposition \emph{de}, and enforce the constraint that
+\emph{qui}/\emph{que} cannot extract prepositional complements by
+providing only a single type for \emph{de} that accepts only unmoved
+noun phrases as complements.
+
+\begin{align*}
+E_{de} &: NP\_VAR{=}F \limp N \limp N
+\end{align*}
+
+Given this type system, we can assign the type $S\_EXT{=}NO$ to the term
+expressing the syntactic structure of (\ref{ex:good-ext}) but we cannot
+a find a typable term for sentence (\ref{ex:bad-ext}), where \emph{qui}
+is used to extract a subject from a clause embedded in a relative
+clause.  The problem with sentence (\ref{ex:bad-ext}) is that the type
+of the relative clause is $NP\_VAR{=}T \limp S\_EXT{=}EMB$ which is not
+a valid argument for any constant representing the relative pronoun
+\emph{qui}. Typing the variable $t$ with $NP\_VAR{=}F$ instead of
+$NP\_VAR{=}T$ and using $E_{aime_1}$ instead of $E_{aime_2}$ would not
+help, since the resulting relative clause would then have type
+$NP\_VAR{=}F \limp S\_EXT{=}NO$, which would not be admitted by any
+relative pronoun.
+
+\begin{exe}
+  \ex * \label{ex:bad-ext} Le tatou qui Jean dit que \_ aime Marie dort. \\
+      * $(E_{le_1}\ (E_{qui_?}\ (\lambda^{\circ} t.\ E_{dit\ que_3}\ E_{Jean}\ (E_{aime_2}\ t\ E_{Marie}))\ E_{tatou}))\ (\lambda^{\circ} x.\ E_{dort_1}\ x)$
+  \ex \label{ex:good-ext} Le tatou que Jean dit que Marie aime \_ dort. \\
+      $(E_{le_1}\ (E_{que_2}\ (\lambda^{\circ} t.\ E_{dit\ que_3}\ E_{Jean}\ (E_{aime_3}\ E_{Marie}\ t))\ E_{tatou}))\ (\lambda^{\circ} x.\ E_{dort_1}\ x)$
+\end{exe}
+
+As was the case with our treatment of negation, we refined our familiar
+types by tacking on new kinds of information and defined rules for how
+these pieces of information percolate up the parse tree all the way to
+the topmost level still pertinent for ensuring grammaticality.
+
+
+\section{Agreement}
+\label{sec:agreement}
+
+Finally, we will look at another example of implementing a linguistic
+constraint in ACGs by covering the phenomenon of number
+agreement.
+
+Number agreement motivates a straightforward refinement of our types,
+where all noun and noun phrase types carry number information.
+
+\begin{align*}
+A_{Marie} &: NP\_NUM{=}SG \\
+A_{tatou} &: N\_NUM{=}SG \\
+A_{tatous} &: N\_NUM{=}PL \\
+A_{le} &: N\_NUM{=}SG \limp ((NP\_NUM{=}SG \limp S) \limp S) \\
+A_{les} &: N\_NUM{=}PL \limp ((NP\_NUM{=}PL \limp S) \limp S) \\
+A_{dort} &: NP\_NUM{=}SG \limp S \\
+A_{dorment} &: NP\_NUM{=}PL \limp S \\
+A_{aime_1} &: NP\_NUM{=}SG \limp NP\_NUM{=}SG \limp S \\
+A_{aime_2} &: NP\_NUM{=}SG \limp NP\_NUM{=}PL \limp S \\
+\end{align*}
+\begin{align*}
+A_{aiment_1} &: NP\_NUM{=}PL \limp NP\_NUM{=}SG \limp S \\
+A_{aiment_2} &: NP\_NUM{=}PL \limp NP\_NUM{=}PL \limp S \\
+A_{qui_1} &: (NP\_NUM{=}SG \limp S) \limp N\_NUM{=}SG \limp N\_NUM{=}SG \\
+A_{qui_2} &: (NP\_NUM{=}PL \limp S) \limp N\_NUM{=}PL \limp N\_NUM{=}PL \\
+A_{de_1} &: NP\_NUM{=}SG \limp N\_NUM{=}SG \limp N\_NUM{=}SG \\
+A_{de_2} &: NP\_NUM{=}PL \limp N\_NUM{=}SG \limp N\_NUM{=}SG \\
+A_{de_3} &: NP\_NUM{=}SG \limp N\_NUM{=}PL \limp N\_NUM{=}PL \\
+A_{de_4} &: NP\_NUM{=}PL \limp N\_NUM{=}PL \limp N\_NUM{=}PL
+\end{align*}
+
+Given the above signature, we can assign the type $S$ to the syntactic
+term of sentence (\ref{ex:good-agr}) but not to the one of sentence
+(\ref{ex:bad-agr}). In the latter sentence, the type of the variable $t$
+has to be $NP\_NUM{=}SG$ since it is used as an argument to
+$A_{dort}$. This means that the relative clause \emph{dort} has type
+$NP\_NUM{=}SG \limp S$. However, there is no type for \emph{qui} which
+would allow us to modify the plural noun $A_{tatous}$ of type
+$N\_NUM{=}PL$ by a relative clause with a missing singular noun phrase,
+which has the type $NP\_NUM{=}SG \limp S$.
+
+\begin{exe}
+  \ex \label{ex:good-agr} Les tatous de Marie dorment. \\
+      $(A_{les}\ (A_{de}\ A_{Marie}\ A_{tatous}))\ (\lambda^{\circ} x.\ A_{dorment}\ x)$
+  \ex * \label{ex:bad-agr} Marie aime les tatous qui dort. \\
+      * $(A_{les}\ (A_{qui_?}\ (\lambda^{\circ} t.\ A_{dort}\ t)\ A_{tatous}))\ (\lambda^{\circ} y.\ A_{aime_2}\ A_{Marie}\ y)$
+\end{exe}
+
+Once again, we have expressed a linguistic constraint by refining our
+types, augmenting them with a new bit of information, we constrained the
+arguments of functions using these new types and we have described how
+this new type information propagates from the given arguments to the
+produced values.
+
+
+\section{Putting It All Together}
+\label{sec:together}
+
+In this section, we will see what it takes to enforce all of the
+constraints introduced in the preceding sections (negation, extraction
+and agreement) at the same time, which will give us some idea on how to
+go about building a grammar which handles a wide variety of such
+phenomena.
+
+In a grammar that handles negation, extraction and agreement, our types
+will need to carry all of the refinements we introduced before. To
+recapitulate, $NP$ will be parameterized by whether or not it contains a
+negative determiner ($\_\textcolor{red}{NEG{=}T}$ and
+$\_\textcolor{red}{NEG{=}F}$ respectively), whether or not it is a trace
+from an extraction ($\_\textcolor{green}{VAR{=}T}$ and
+$\_\textcolor{green}{VAR{=}F}$) and its number
+($\_\textcolor{blue}{NUM{=}SG}$ or $\_\textcolor{blue}{NUM{=}PL}$). For
+$N$, we have the same refinements except for $\textcolor{green}{VAR}$
+since extraction only moves $NP$s. Clauses, of type $S$, will be
+discriminated based on the level of extraction within them
+($\_\textcolor{green}{EXT{=}NO}$, $\_\textcolor{green}{EXT{=}ROOT}$ and
+$\_\textcolor{green}{EXT{=}EMB}$).
+
+The individual types will have to respect all of the constraints at the
+same time, each one being a complete specification of a possible
+situation (complete w.r.t. the features listed above). To see and
+appreciate what this means in practice, we give the types for the
+preposition \emph{de}:
+
+\begin{align*}
+C_{de_1} &: (NP\_\textcolor{red}{NEG{=}F}\_\textcolor{green}{VAR{=}F}\_\textcolor{blue}{NUM{=}SG}) \limp (N\_\textcolor{red}{NEG{=}F}\_\textcolor{blue}{NUM{=}SG}) \limp
+(N\_\textcolor{red}{NEG{=}F}\_\textcolor{blue}{NUM{=}SG}) \\
+C_{de_2} &: (NP\_\textcolor{red}{NEG{=}F}\_\textcolor{green}{VAR{=}F}\_\textcolor{blue}{NUM{=}SG}) \limp (N\_\textcolor{red}{NEG{=}F}\_\textcolor{blue}{NUM{=}PL}) \limp
+(N\_\textcolor{red}{NEG{=}F}\_\textcolor{blue}{NUM{=}PL}) \\
+C_{de_3} &: (NP\_\textcolor{red}{NEG{=}F}\_\textcolor{green}{VAR{=}F}\_\textcolor{blue}{NUM{=}SG}) \limp (N\_\textcolor{red}{NEG{=}T}\_\textcolor{blue}{NUM{=}SG}) \limp
+(N\_\textcolor{red}{NEG{=}T}\_\textcolor{blue}{NUM{=}SG}) \\
+C_{de_4} &: (NP\_\textcolor{red}{NEG{=}F}\_\textcolor{green}{VAR{=}F}\_\textcolor{blue}{NUM{=}SG}) \limp (N\_\textcolor{red}{NEG{=}T}\_\textcolor{blue}{NUM{=}PL}) \limp
+(N\_\textcolor{red}{NEG{=}T}\_\textcolor{blue}{NUM{=}PL}) \\
+C_{de_5} &: (NP\_\textcolor{red}{NEG{=}T}\_\textcolor{green}{VAR{=}F}\_\textcolor{blue}{NUM{=}SG}) \limp (N\_\textcolor{red}{NEG{=}F}\_\textcolor{blue}{NUM{=}SG}) \limp
+(N\_\textcolor{red}{NEG{=}T}\_\textcolor{blue}{NUM{=}SG}) \\
+C_{de_6} &: (NP\_\textcolor{red}{NEG{=}T}\_\textcolor{green}{VAR{=}F}\_\textcolor{blue}{NUM{=}SG}) \limp (N\_\textcolor{red}{NEG{=}F}\_\textcolor{blue}{NUM{=}PL}) \limp
+(N\_\textcolor{red}{NEG{=}T}\_\textcolor{blue}{NUM{=}PL}) \\
+C_{de_7} &: (NP\_\textcolor{red}{NEG{=}F}\_\textcolor{green}{VAR{=}F}\_\textcolor{blue}{NUM{=}PL}) \limp (N\_\textcolor{red}{NEG{=}F}\_\textcolor{blue}{NUM{=}SG}) \limp
+(N\_\textcolor{red}{NEG{=}F}\_\textcolor{blue}{NUM{=}SG}) \\
+C_{de_8} &: (NP\_\textcolor{red}{NEG{=}F}\_\textcolor{green}{VAR{=}F}\_\textcolor{blue}{NUM{=}PL}) \limp (N\_\textcolor{red}{NEG{=}F}\_\textcolor{blue}{NUM{=}PL}) \limp
+(N\_\textcolor{red}{NEG{=}F}\_\textcolor{blue}{NUM{=}PL}) \\
+C_{de_9} &: (NP\_\textcolor{red}{NEG{=}F}\_\textcolor{green}{VAR{=}F}\_\textcolor{blue}{NUM{=}PL}) \limp (N\_\textcolor{red}{NEG{=}T}\_\textcolor{blue}{NUM{=}SG}) \limp
+(N\_\textcolor{red}{NEG{=}T}\_\textcolor{blue}{NUM{=}SG}) \\
+C_{de_{10}} &: (NP\_\textcolor{red}{NEG{=}F}\_\textcolor{green}{VAR{=}F}\_\textcolor{blue}{NUM{=}PL}) \limp (N\_\textcolor{red}{NEG{=}T}\_\textcolor{blue}{NUM{=}PL}) \limp
+(N\_\textcolor{red}{NEG{=}T}\_\textcolor{blue}{NUM{=}PL}) \\
+C_{de_{11}} &: (NP\_\textcolor{red}{NEG{=}T}\_\textcolor{green}{VAR{=}F}\_\textcolor{blue}{NUM{=}PL}) \limp (N\_\textcolor{red}{NEG{=}F}\_\textcolor{blue}{NUM{=}SG}) \limp
+(N\_\textcolor{red}{NEG{=}T}\_\textcolor{blue}{NUM{=}SG}) \\
+C_{de_{12}} &: (NP\_\textcolor{red}{NEG{=}T}\_\textcolor{green}{VAR{=}F}\_\textcolor{blue}{NUM{=}PL}) \limp (N\_\textcolor{red}{NEG{=}F}\_\textcolor{blue}{NUM{=}PL}) \limp
+(N\_\textcolor{red}{NEG{=}T}\_\textcolor{blue}{NUM{=}PL})
+\end{align*}
+
+This highlights two important problems with the current approach. One is
+the untenable complexity. Even though the three mechanisms are
+completely independent of each other, here we are forced to refer to all
+of them in every type. It is no longer easy to glance at the types
+assigned to \emph{de} and see how it behaves with respect to, for
+example, the mechanism of negation (compare with the type assignments we
+gave to \emph{de} in previous subsections). Another cause of
+unreadability of this signature is due to the sheer number of types on
+display, which leads us to our second issue.
+
+The signature demonstrates an exponential growth in the number of typed
+constants included. In cases where the behaviors of a wordform across
+the different mechanisms are independent, the complete type signature
+will need to provide a type for every combination of situations in all
+of the mechanisms. Assuming that every mechanism will assign on average
+more than one type to every wordform, the number of the wordform's types
+in the final signature will be exponential w.r.t. the number of
+different mechanisms handled.
+
+We can try making the enumeration of these types easier for the grammar
+author by introducing metavariables for the values of the features. This
+means that we could write the following 3 templates instead of the 12
+types above:
+
+$$
+\forall \textcolor{blue}{x}, \textcolor{blue}{y} \in \{\textcolor{blue}{SG}, \textcolor{blue}{PL}\}
+$$
+\begin{align*}
+C_{de_{1(\textcolor{blue}{x}, \textcolor{blue}{y})}} &: (NP\_\textcolor{red}{NEG{=}F}\_\textcolor{green}{VAR{=}F}\_\textcolor{blue}{NUM{=}x}) \limp (N\_\textcolor{red}{NEG{=}F}\_\textcolor{blue}{NUM{=}y}) \limp (N\_\textcolor{red}{NEG{=}F}\_\textcolor{blue}{NUM{=}y}) \\
+C_{de_{2(\textcolor{blue}{x}, \textcolor{blue}{y})}} &: (NP\_\textcolor{red}{NEG{=}F}\_\textcolor{green}{VAR{=}F}\_\textcolor{blue}{NUM{=}x}) \limp (N\_\textcolor{red}{NEG{=}T}\_\textcolor{blue}{NUM{=}y}) \limp (N\_\textcolor{red}{NEG{=}T}\_\textcolor{blue}{NUM{=}y}) \\
+C_{de_{3(\textcolor{blue}{x}, \textcolor{blue}{y})}} &: (NP\_\textcolor{red}{NEG{=}T}\_\textcolor{green}{VAR{=}F}\_\textcolor{blue}{NUM{=}x}) \limp (N\_\textcolor{red}{NEG{=}F}\_\textcolor{blue}{NUM{=}y}) \limp (N\_\textcolor{red}{NEG{=}T}\_\textcolor{blue}{NUM{=}y})
+\end{align*}
+
+This is getting more concise and easier to comprehend. We can take this
+approach further by not only quantifying over variables but also
+computing some of the values using functions:
+
+$$
+\forall \textcolor{blue}{x}, \textcolor{blue}{y} \in\{\textcolor{blue}{SG}, \textcolor{blue}{PL}\}, \forall \textcolor{red}{p}, \textcolor{red}{q} \in \{\textcolor{red}{F}, \textcolor{red}{T}\}, \textcolor{red}{p \land q} \neq \textcolor{red}{T}
+$$
+\begin{align*}
+C_{de(\textcolor{blue}{x}, \textcolor{blue}{y}, \textcolor{red}{p}, \textcolor{red}{q})} &: (NP\_\textcolor{red}{NEG{=}p}\_\textcolor{green}{VAR{=}F}\_\textcolor{blue}{NUM{=}x}) \limp (N\_\textcolor{red}{NEG{=}q}\_\textcolor{blue}{NUM{=}y}) \limp (N\_\textcolor{red}{NEG{=}(p \lor q)}\_\textcolor{blue}{NUM{=}y})
+\end{align*}
+
+The above is vastly more concise and manages to convey the intent more
+clearly (the intent being that it cannot be the case that there are
+negative determiners in both the complement noun phrase and the modified
+noun and that the value of the result's \textcolor{red}{NEG} feature is
+always the disjunction of the \textcolor{red}{NEG} features of the two
+arguments).
+
+As of right now, we have introduced this kind of rule only as
+meta-notation. This means that the real underlying grammar that will end
+up being used by some algorithm still suffers from the same exponential
+cardinality of the signature. Fortunately, there exists a well-studied
+construction in type theory that lets us assign to terms generic types
+such as the one defined in the template above. This construction is the
+\emph{dependent product} and its utility in ACGs has already been
+noted.\footnote{See \cite{de2007two} for its introduction into the
+  domain of ACGs, \cite{de2007type} for a small example grammar, which
+  handles the interaction between number and gender agreement and
+  coordination, and finally see \cite{pogodalla2012controlling} for
+  using dependent types to handle several constraints regarding
+  extraction (including the one we covered in~\ref{sec:extraction}).}
+
+While extending the type system by including dependent types is
+definitely useful and it helps to solve the problem of having our
+signatures grow exponentially in size, it does not solve our problem
+with the complexity of the new grammar. Granted, the new meta-type
+written in the dependent style is more readable and easier to reason
+about than the enumeration of 12 basic types we presented at the
+beginning of this section, however, the result is still complex in that
+it forces us to describe the behavior of three independent mechanisms in
+one place. This one place happens to be a wordform which has seemingly
+little connection to these mechanisms, the preposition \emph{de}. We can
+therefore imagine that it will participate in many other phenomena and
+that the type we assign to it will grow beyond our abilities to reason
+about it effectively.
+
+Furthermore, the current notation does not even make it obvious that
+these are independent mechanisms. One has to examine the type to make
+sure that there is no interaction.
+
+TODO: Change this after splitting the chapters.
+
+In the rest of this chapter, we will devote ourselves to investigating
+ways of disentangling these.
+
+\section{Intersections of Types}
+
+Our goal is to split the types into smaller parts that only talk about
+features belonging to one of the three mechanisms covered above. This
+means that we would like to take some phrase about which we know a lot
+of disparate pieces of information (presence of negative determiner,
+trace status, number\ldots), having type
+e.g. $NP\_\textcolor{red}{NEG{=}T}\_\textcolor{green}{VAR{=}F}\_\textcolor{blue}{NUM{=}PL}$,
+and use it as an argument for some function which only cares about one
+channel of information and would have a type like
+$NP\_\textcolor{red}{NEG{=}T} \limp N\_\textcolor{red}{NEG{=}F} \limp
+N\_\textcolor{red}{NEG{=}T}$. To make a type such as
+$NP\_\textcolor{red}{NEG{=}T}\_\textcolor{green}{VAR{=}F}\_\textcolor{blue}{NUM{=}PL}$
+be a legal argument to a function which expects an argument of type
+$NP\_\textcolor{red}{NEG{=}T}$, we will need to introduce some notion of
+\emph{subtyping}.
+
+The types we have been showing up to now propose a very straightforward
+notion of subtyping. All of the types can be seen as conjunctions of
+properties where $\_$ (underscore) is the conjunction operator. A type
+$\tau$ can then be seen as a subtype of type $\sigma$ whenever the
+conjuncts of $\tau$ form a superset of the conjuncts of $\sigma$. This
+is not unlike the structural typing of records in OCaml (CITE SOME OCAML
+SPEC HERE), where a record type is a subtype of another record type if
+the former provides, among others, all the fields provided by the latter
+and gives them the same type. In our case, one type is a subtype of
+another if the former gives, among others, all the properties given by
+the latter. This notion of subtyping can be expressed by adding the rule
+of inference in Figure~\ref{fig:type-superset} to our type
+system.\footnote{In the rule \ldots (talk about $\land$ instead of $\_$
+  (underscore) here...)}
+
+\begin{figure}
+  \begin{prooftree}
+    \AxiomC{$\Gamma_l; \Gamma_i \vdash_\Sigma M : A_1 \land \ldots A_{i-1} \land A_i \land A_{i+1} \ldots \land A_n$}
+    \RightLabel{(subtype)}
+    \UnaryInfC{$\Gamma_l; \Gamma_i \vdash_\Sigma M : A_1 \land \ldots A_{i-1} \land A_{i+1} \ldots \land A_n$}
+  \end{prooftree}
+  \caption{\label{fig:type-superset} A rule of inference giving us
+    subtyping for conjunctions of atomic types. For readability, we use
+    $\land$ instead of $\_$ (underscore) to designate the conjunction of
+    properties.}
+\end{figure}
+
+(Talk about whether or not this is a conservative extension...)
+
+With the new subtyping rule, we can
+
+$$
+S_{tatou} : N \land NEG{=}F \land NUM{=}SG
+$$
+$$
+S_{le_{NEG_1}} : (N \land NEG{=}F) \limp (((NP \land NEG{=}F) \limp S) \limp S)
+$$
+$$
+S_{le_{NEG_2}} : (N \land NEG{=}T) \limp (((NP \land NEG{=}T) \limp S) \limp S)
+$$
+$$
+S_{le_{NUM}} : (N \land NUM{=}SG) \limp (((NP \land NUM{=}SG) \limp S) \limp S)
+$$
+$$
+S_{le_{VAR}} : N \limp (((NP \land VAR{=}F) \limp S) \limp S)
+$$
+
+\ldots

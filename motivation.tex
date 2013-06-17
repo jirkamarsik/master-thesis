@@ -4,7 +4,7 @@ To develop applications capable of understanding natural language, we
 have to analyze the discourse as a complex structure. The structure of
 the discourse and the rhetorical relations between its constituent
 propositions have shown to have an important effect on anaphora and on
-the semantic content of the discourse.
+the semantic content of the discourse \cite{asher2003logics}.
 
 Let us consider these examples from \cite{asher2003logics}.
 
@@ -27,44 +27,44 @@ proposition (\ref{narxexp-nar-b}) serves as a narrative continuation of
 to what we can infer from these two discourse excerpts. In the case of
 (\ref{narxexp-nar}), we can infer that the event described in
 (\ref{narxexp-nar-b}) occurred after the event described in
-(\ref{narxexp-nar-a}). In the latter case (\ref{narxexp-exp}), we can
-conversely infer that the events happened in the opposite order. We feel
-that a complete understanding of the two examples above entails
-inferring the correct temporal order and we would welcome a principled
-way to make this kind of decisions.
+(\ref{narxexp-nar-a}). In (\ref{narxexp-exp}), we can conversely infer
+that the events happened in the opposite order. We feel that a complete
+understanding of the two examples above presupposes correctly inferring
+the temporal order of the events described and we would thus welcome a
+principled way to handle these distinctions.
 
 \begin{exe}
   \ex \label{salmon} \begin{xlist}
-    \ex Max had a lovely evening last night.
-    \ex He had a great meal.
-    \ex \label{salmon-here} He ate salmon.
-    \ex He devoured lots of cheese.
-    \ex He then won a dancing competition.
+    \ex \label{salmon-evening} Max had a lovely evening last night.
+    \ex \label{salmon-meal} He had a great meal.
+    \ex \label{salmon-ate} He ate salmon.
+    \ex \label{salmon-cheese} He devoured lots of cheese.
+    \ex \label{salmon-competition} He then won a dancing competition.
   \end{xlist}
 \end{exe}
 
-%% \sdrtree{
-%%  &                      & \LAB{Max had a lovely evening} \\
-%%           & \LAB{He had a great meal} & & \LAB{He won a dancing competition} \\
-%% \LAB{He ate salmon} &     & \LAB{He devoured cheese}
-%% }
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{diagrams/sdrt.pdf}
+  \caption{\label{fig:sdrt-discourse} The SDRT structure of the
+    discourse in \ref{salmon}.}
+\end{figure}
 
-The discourse in (\ref{salmon}) and its structure in (TODO) demonstrate
-another feature of discourse structures. First off, seeing the
-hierarchical structure of the discourse gives us important information
-about the granularity of the descriptions given in the individual
-propositions, information that could be useful for performing tasks such
-as text summarization.
+The discourse in (\ref{salmon}) and the representation of its structure
+on Figure~\ref{fig:sdrt-discourse} demonstrate another feature of
+discourse structures. First off, seeing the hierarchical structure of
+the discourse gives us important information about the granularity of
+the description employed in the individual propositions, information
+that could be useful for performing tasks such as text summarization.
 
 Furthermore, the discourse structure has grammatical consequences. It is
 thanks to our knowledge of the discourse structure that we can predict
 that a proposition like ``It was a beautiful pink.''  could not
 coherently follow our excerpt. SDRT, \cite{asher2003logics}, the theory
-of discourse structure that we adhere to, would not license a discourse
-structure in which the new proposition connects to (\ref{salmon-here})
-as its \emph{Elaboration}. As a consequence, it states that the pronoun
-``it'' cannot have the salmon as its antecedent, which is a constraint
-that is not enforced by prior theories of discourse such as DRT.
+of discourse structure that we will adhere to, would not license a
+discourse structure in which the new proposition connects to
+(\ref{salmon-ate}) as its \emph{Elaboration}. As a consequence, it
+states that the pronoun ``it'' cannot have the salmon as its antecedent.
 
 \begin{exe}
   \ex \label{diaimp} \begin{xlist}
@@ -94,12 +94,12 @@ to the theories of DRT \cite{kamp1993discourse} and SDRT
 \cite{asher2003logics}.
 
 The grammatical formalism of our choice for this task will be the
-Abstract Categorial Grammars (ACG) \cite{de2001towards}. This framework
+abstract categorial grammars (ACGs) \cite{de2001towards}. This framework
 lets use lambda calculus to express the syntax-semantics interface in a
 fashion similar to Montague's. Furthermore, elegant techniques for using
-ACGs to implemenent DRT and SDRT using continuations have been
-discovered \cite{de2006towards} \cite{asher2011sdrt}
-\cite{asher2011montagovian}.
+ACGs to implement DRT and SDRT using continuations have been
+discovered (see \cite{de2006towards}, \cite{asher2011sdrt} and
+\cite{asher2011montagovian}).
 
 However, abstract categorial grammars are quite young and no significant
 grammar has been developed under this framework. To facilitate the
@@ -112,6 +112,7 @@ when designing our own grammar thanks to the close ties between the
 formalisms of interaction grammars and abstract categorial grammars
 \cite{perrier1999intuitionistic}.
 
-Finally, our work will be supported by the existence of a corpus
+Finally, our work will be motivated by the existence of a corpus
 annotated with the rhetorical relations of SDRT, the Annodis corpus
-\cite{afantenos2012empirical}.
+\cite{afantenos2012empirical}, which would allow evaluation of the final
+grammar.

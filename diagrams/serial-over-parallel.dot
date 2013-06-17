@@ -1,7 +1,7 @@
 strict digraph "serial-over-parallel" {
   node [shape="circle",style="filled",fillcolor="lightblue"]
   edge [style="bold"]
-  "Constr" -> "Synt" [label="\\mathcal{L}_{Constr}"]
-  "Synt" -> "String" [label="\\mathcal{L}_{Syntax}"]
-  "Synt" -> "Sem" [label="\\mathcal{L}_{Sem}"]
+  "Constr" -> "Synt" [label="\\mathcal{L}_{constr}"]
+  "Synt" -> "String" [label="\\mathcal{L}_{syntax}"]
+  "Synt" -> "Sem" [label="\\mathcal{L}_{sem}"]
 }

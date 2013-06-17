@@ -1,0 +1,6 @@
+strict digraph "double-acg" {
+  node [shape="circle",style="filled",fillcolor="lightblue"]
+  edge [style="bold"]
+  "\\Sigma_{Synt}" -> "\\Sigma_{String}" [label="\\mathcal{L}_{syntax}"]
+  "\\Sigma_{Synt}" -> "\\Sigma_{Sem}" [label="\\mathcal{L}_{sem}"]
+}

@@ -1,7 +1,5 @@
 \documentclass{report}
 
-%% \usepackage{sdrt}
-\usepackage{tikz}
 \usepackage{amsmath}
 \usepackage{amsthm}
 \usepackage{xcolor}
@@ -9,10 +7,9 @@
 \usepackage{gb4e}
 \usepackage{bussproofs}
 \usepackage{hyperref}
-\usepackage{subcaption}
+\usepackage[labelformat=simple]{subcaption}
+\renewcommand\thesubfigure{(\alph{subfigure})}
 \usepackage{cancel}
-\usepackage[yyyymmdd,hhmmss]{datetime}
-
 
 %% Linear implication from Alessio Guglielmi
 %% https://groups.google.com/forum/?fromgroups=#!topic/comp.text.tex/0B4C3F_BsVI
@@ -22,27 +19,25 @@
 \newtheorem*{theorem}{Theorem}
 \newtheorem*{corollary}{Corollary}
 
-\begin{document}
+\input{front-page}
 
-\author{Ji\v{r}\'{i} Mar\v{s}\'{i}k}
-\title{Master Thesis}
-\maketitle
-
-\currenttime
+\input{abstract}
 
 \tableofcontents
 
 \chapter{Preliminaries}
-
 \input{motivation}
-
+\input{outline}
 \input{acg}
-
 \input{ig}
 
-\input{my-work-rewritten}
+\input{implementation}
 
-\input{the-last-part}
+\input{constraints}
+
+\input{gacg}
+
+\input{conclusion}
 
 \bibliographystyle{plain}
 \bibliography{biblio}

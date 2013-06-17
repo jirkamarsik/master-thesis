@@ -1,0 +1,16 @@
+strict digraph "sdrt" {
+  d2toptions="--texmode raw";
+  node [shape="rectangle"];
+  "(3a) Max had a lovely evening last night." -> "(3b) He had a great meal." [label="$Elaboration$"];
+  "(3a) Max had a lovely evening last night." -> "(3e) He then won a dancing competition." [label="$Elaboration$"];
+  "(3b) He had a great meal." -> "(3e) He then won a dancing competition." [label="$Narration$"];
+  "(3b) He had a great meal." -> "(3c) He ate salmon." [label="$Elaboration$"];
+  "(3b) He had a great meal." -> "(3d) He devoured lots of cheese." [label="$Elaboration$"];
+  "(3c) He ate salmon." -> "(3d) He devoured lots of cheese." [label="$Narration$"];
+  { rank=same;
+    "(3b) He had a great meal.";
+    "(3e) He then won a dancing competition."; }
+  { rank=same;
+    "(3c) He ate salmon.";
+    "(3d) He devoured lots of cheese."; }
+}

@@ -1,0 +1,5 @@
+strict digraph "simple-acg" {
+  node [shape="circle",style="filled",fillcolor="lightblue"]
+  edge [style="bold"]
+  "\\Sigma_1" -> "\\Sigma_2" [label="\\mathcal{L}"]
+}

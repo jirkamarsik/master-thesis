@@ -1,0 +1,12 @@
+strict digraph "proof-lexicon" {
+  node [shape="circle",style="filled",fillcolor="lightblue"];
+  edge [style="bold"];
+  subgraph "cluster_G" {
+    label = "G";
+    "u[\\Sigma_A, S]";
+    node [label=""];
+    "x_1" -> "u[\\Sigma_A, S]";
+    "x_2" -> "u[\\Sigma_A, S]";
+  };
+  "u[\\Sigma_A, S]" -> "v[\\Sigma_O, \\mathcal{L}(S)]" [label="\\mathcal{L}"];
+}

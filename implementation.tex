@@ -130,10 +130,10 @@ another goal of our system, the one which distinguishes it from the
 original ACG toolkit. We believe that using a declarative programming
 system such as miniKanren with the ability to extend it using a
 practical functional programming language presents an empowering way of
-defining metagrammars. This allows the grammar designer to compose his
-grammar in any way he sees fit and to use the metaprogramming facilities
-of the underlying programming language to transcribe the grammar in a
-way that makes the most sense in her case.
+defining metagrammars. This allows the grammar designer to compose her
+grammar in any way she sees fit and to use the metaprogramming
+facilities of the underlying programming language to transcribe the
+grammar in a way that makes the most sense in her case.
 
 Finally, some of the structures that we will encounter in our domain are
 more directly modelled in mathematics as relations rather than
@@ -244,7 +244,7 @@ part of the lexical database and some part of our signature?
     considering all the above scenarios, the only mathematical model
     general enough to handle all of these cases is a relation. In our
     system, this will correspond exactly to a specific relation that
-    will be provided by the grammar author.
+    will be provided by the grammar designer.
 \end{description}
 
 \subsubsection{Representing Constants and Defining Signatures}
@@ -262,7 +262,7 @@ entry, such as in the example of the two different scope readings of
 \emph{loves}, we need some extra piece of information to specify exactly
 which of the two constants we are referring to (we call this extra piece
 of information a \emph{specifier}). This specifier can have any shape
-that the grammar author desires. We can see an example of a lexical
+that the grammar designer desires. We can see an example of a lexical
 constant in Figure~\ref{fig:lex-const}.
 
 \begin{figure}
@@ -278,16 +278,16 @@ constant in Figure~\ref{fig:lex-const}.
 \end{figure}
 
 The system takes care of wiring up the relations and assembling the
-signature. The grammar author's duty is to provide a 4-ary relation that
-links the four parts of a lexical constant: the wordform, the hypertag,
-the specifier and the type. This relation can be thought of as a
-multi-valued ``function'' that receives as input a wordform and a
+signature. The grammar designer's duty is to provide a 4-ary relation
+that links the four parts of a lexical constant: the wordform, the
+hypertag, the specifier and the type. This relation can be thought of as
+a multi-valued ``function'' that receives as input a wordform and a
 hypertag (that is, a single lexical entry) and outputs (possibly
 multiple) pairs of specifiers and types.
 
 Since we are working in a functional programming language that supports
 manipulation of higher-order functions, we can provide helper functions
-which construct these 4-ary relations for the grammar author in some
+which construct these 4-ary relations for the grammar designer in some
 simple cases. Our library thus provides functions like
 \texttt{unitypedr}, which expects a type and returns the 4-ary relation
 that assigns to every lexical item a single constant whose specifier is
@@ -295,8 +295,8 @@ $nil$ and whose type is the supplied type, or \texttt{ht->typer}, which
 expects a mapping from hypertag patterns to types and returns the 4-ary
 relation which tries to map the hypertag against the patterns and yields
 constants with the corresponding types and $nil$ specifiers. When other
-patterns emerge, the grammar author is completely free to implement her
-new abstractions using the full power of the functional programming
+patterns emerge, the grammar designer is completely free to implement
+her new abstractions using the full power of the functional programming
 language.
 
 See Figure~\ref{fig:lex-sig-impl} for an example of implementing a
@@ -398,6 +398,7 @@ Figure~\ref{fig:example-sig-impl}.
 
 
 \subsection{Defining Lexicons}
+\label{ssec:def-lex}
 
 We have explained how we can use elements of our lexical database to
 define signatures. Now, we will turn to lexicons. Similar to how we
@@ -425,8 +426,8 @@ the same lexical entry that generated the abstract constant.
 Our representation of lexical constants was purposefully engineered so
 as to make the lexical entry directly accessible to the lexicon
 implementation. Since the lexicon is directly implemented by the grammar
-author as a binary relation between constants and terms, the grammar
-author can inspect the abstract constant and directly access the
+designer as a binary relation between constants and terms, the grammar
+designer can inspect the abstract constant and directly access the
 hypertag and wordform of the lexical entry that generated it, the
 specifier that was assigned to it and the type of the constant and then
 express the object term assigned to the constant using any combination
@@ -438,7 +439,7 @@ The above is already enough to define any lexicon. However, our toolkit
 presents convenience facilities that capture common forms of
 lexicons. With these, we will be able to define lexicalized versions of
 the lexicons of section~\ref{sec:acg} in a concise point-free
-style. Furthermore, the grammar author is not limited to the convenience
+style. Furthermore, the grammar designer is not limited to the convenience
 facilities we have provided and is completely free to use the same
 programming language we have used to build on our abstractions and build
 her own right within her grammar definition.
@@ -511,4 +512,78 @@ the lexicons of section~\ref{sec:acg} in a concise and elegant
 manner. See Figure~\ref{fig:lex-impl} for the definitions.
 
 
-\section{Testing Signatures and Lexicons}
+\section{Checking Signatures and Lexicons}
+
+Since we let the grammar designer define signatures and lexicons using
+arbitrary relations, she can also end up defining relations which cannot
+be interpreted as well-formed signatures or lexicons. For this reason,
+our toolkit provides a set of testing facilities which help check that
+the signatures and lexicons are well-defined.
+
+\subsection{Checking Properties of Large Structures}
+
+As opposed to the existing \textbf{ACG development toolkit}, we cannot
+easily enumerate all of the elements in a given signature or lexicon and
+check that they are all consistent. The size of the lexicalized grammar
+is too large to make this approach practical.
+
+We solve this problem by demanding that the grammar designer names some
+subset of the structure and testing is done only on that subset. In our
+case, the most practical solution has been to let the designer just list
+wordforms that generate a sufficient subset of the structure, i.e. the
+designer lists one wordform per every category she has handled in her
+grammar.
+
+A more comfortable solution, which would also be more technically
+involved, would be to have the system test the grammar on an
+automatically deduced selection of constants such that they are
+guaranteed to cover all the cases and code paths in the grammar
+designer's definitions. Implementing such a system could still be
+manageable given the small number of primitives the relational
+programming system is built upon.
+
+\subsection{Checking Signatures}
+\label{ssec:check-sig}
+
+The crucial property that we need to check for in signatures is that the
+relation between constant identities and their types is a function. This
+simply reduces to querying the system for the number of typed constants
+belonging to the signature and having some specific identity. If this
+number is one for all of our test cases, we have verified that (the
+tested subset of) the signature assigns exactly one type to every one of
+its constants.
+
+\subsection{Checking Lexicons}
+
+For lexicons, we check the three following properties:
+
+\begin{description}
+\item[The lexicon is a function,] assigning exactly one object term to
+  each abstract constant. The verification proceeds analogously to the
+  case of checking signatures (subsection \ref{ssec:check-sig}).
+
+\item[The lexicon assigns only well-typed object terms.] This is a
+  consequence of the homomorphism property of lexicons. We verify it by
+  checking whether we can infer some type for every object term assigned
+  to a constant in the test set.
+
+\item[The lexicon has the homomorphism property.] We use the process
+  that we described in subsection~\ref{ssec:def-lex} for inferring the
+  type mapping of a lexicon from its term mapping.
+
+  We first enumerate the pairs of abstract constants belonging to the
+  test set and the object terms assigned to them by the lexicon. We then
+  take the types of these pairs. Finally, we state, by using
+  unification, that this set of pairs is a subset of the homomorphic
+  extension of some mapping of atomic abstract types and let the
+  relational programming system find us that mapping. If it succeeds, we
+  have verified the homomorphism property of the lexicon.
+\end{description}
+
+The above technique of verifying the signature and lexicon definitions
+by automated tests is not only useful for checking their
+well-formedness. The grammar designer can go further and implement new
+tests which demonstrate grammar-specific properties, an example of which
+would be the $cat$-$funct$ principle in Frigram that imposes constraints
+on the relationship between the $cat$ and $funct$ features in the EPTDs
+of the grammar.

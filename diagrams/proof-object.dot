@@ -1,0 +1,5 @@
+strict digraph "proof-object" {
+  node [shape="circle",style="filled",fillcolor="lightblue"];
+  edge [style="bold"];
+  "A[\\Sigma_A, S]" -> "O[\\Sigma_O, \\mathcal{L}(S)]" [label="\\mathcal{L}"];
+}

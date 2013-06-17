@@ -1,0 +1,20 @@
+strict digraph "proof-intersection" {
+  node [shape="circle",style="filled",fillcolor="lightblue"];
+  edge [style="bold"];
+  subgraph "cluster_G_2" {
+    label = "G_2";
+    "u_2[\\Sigma_2, S_2]";
+    node [label=""];
+    "y_1" -> "u_2[\\Sigma_2, S_2]";
+    "y_2" -> "u_2[\\Sigma_2, S_2]";
+  };
+  subgraph "cluster_G_1" {
+    label = "G_1";
+    "u_1[\\Sigma_1, S_1]";
+    node [label=""];
+    "x_1" -> "u_1[\\Sigma_1, S_1]";
+    "x_2" -> "u_1[\\Sigma_1, S_1]";
+  };
+  "u_1[\\Sigma_1, S_1]" -> "v[\\Sigma_1 \\cup \\Sigma_2, S_1]" [label="id"];
+  "u_2[\\Sigma_2, S_2]" -> "v[\\Sigma_1 \\cup \\Sigma_2, S_1]" [label="id"];
+}

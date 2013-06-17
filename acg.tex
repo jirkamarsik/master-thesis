@@ -87,7 +87,7 @@ type, $A_{String} = \{\textsc{String}\}$. Our constants will be the
 wordforms of our example fragment (\emph{every}, \emph{some},
 \emph{man}, \emph{woman}, \emph{loves}), the empty string $\epsilon$ and
 the string concatenation operator, $+$. $\tau_{String}$ assigns the type
-$\textsc{String}$ to all the wordforms and to $\epsilon$ and the type
+$\textsc{String}$ to all the wordforms and to $\epsilon$, and the type
 $\textsc{String} \limp \textsc{String} \limp
 \textsc{String}$\footnote{As a convention, whenever we omit parentheses
   in a type, we presume the $\limp$ and $\to$ type constructors always
@@ -134,7 +134,9 @@ such that:
 \item $F$ and $G$ are compatible, meaning that for any $c \in C_1$, we
   have $\vdash_{\Sigma_2} G(c) : \hat{F}(\tau_1(c))$ (we will be using
   $\hat{F}$ and $\hat{G}$ to refer to the homomorphic extensions of $F$
-  and $G$ to $\mathcal{T}(A_1)$ and $\Lambda(\Sigma_1)$ respectively).
+  and $G$ to $\mathcal{T}(A_1)$ and $\Lambda(\Sigma_1)$
+  respectively). This property will be referred to as the
+  \emph{homomorphism property} of a lexicon.
 \end{itemize}
 
 See Figure~\ref{fig:single-acg} for the kind of diagram we will be using
@@ -236,7 +238,7 @@ $\Lambda(\Sigma_{Synt})$ as abstract computations, the lexicon will
 instantiate this abstraction by providing an implementation for the
 constants of $\Sigma_{Synt}$. This way we can map an abstract
 computation representing a phrase into a more specific object
-computation that computes the string representing the phrase.
+computation which calculates the string representation.
 
 So, how does our lexicon $\mathcal{L}_{syntax}$ look like? It will map
 all the atomic types of $\Sigma_{Synt}$ into
@@ -253,13 +255,13 @@ $\textsc{String}$.\footnote{Whenever we talk about some lexicon, we will
 \mathcal{L}_{syntax}(S) &= \textsc{String}
 \end{align*}
 
-Given the above mappings, we can use the homomorphic properties of our
-type mapping to arrive at the object-level interpretations of complex
-abstract types, such as the type of predicates, $NP \limp S$, which
-becomes a unary string function, $\textsc{String} \limp
-\textsc{String}$, or the type of quantified noun phrases, $(NP \limp S)
-\limp S$, which becomes a higher-order string function,
-$(\textsc{String} \limp \textsc{String}) \limp \textsc{String}$.
+We can construct the homomorphic extension of the above type mapping
+which can give us the object-level interpretations of complex abstract
+types, such as the type of predicates, $NP \limp S$, which becomes a
+unary string function, $\textsc{String} \limp \textsc{String}$, or the
+type of quantified noun phrases, $(NP \limp S) \limp S$, which becomes a
+higher-order string function, $(\textsc{String} \limp \textsc{String})
+\limp \textsc{String}$.
 
 With the types out of the way, we can give the interpretation of the
 individual constants of $\Sigma_{Synt}$.

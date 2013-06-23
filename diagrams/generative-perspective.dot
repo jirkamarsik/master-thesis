@@ -1,0 +1,18 @@
+strict digraph "generative-perspective" {
+  node [shape="circle",style="filled",fillcolor="lightblue"];
+  edge [style="bold"];
+  ordering="in";
+
+  "A" [label="t_A"]
+  "B" [label="t_B"]
+  "C" [label="t_C"]
+  "A'" [label="\\mathcal{L}_1(t_A)"];
+  "B int C" [label="\\mathcal{L}_2(t_B) = \\mathcal{L}_3(t_C)"];
+  "A int B int C" [label="\\mathcal{L}_4(\\mathcal{L}_1(t_A)) = \\mathcal{L}_5(\\mathcal{L}_2(t_B)) = \\mathcal{L}_5(\\mathcal{L}_3(t_C))"];
+
+  "A" -> "A'" [label="\\mathcal{L}_1"];
+  "B" -> "B int C" [label="\\mathcal{L}_2"];
+  "C" -> "B int C" [label="\\mathcal{L}_3"];
+  "A'" -> "A int B int C" [label="\\mathcal{L}_4"];
+  "B int C" -> "A int B int C" [label="\\mathcal{L}_5"];
+}

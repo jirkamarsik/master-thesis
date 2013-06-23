@@ -1,0 +1,6 @@
+strict graph "ptd" {
+  node [shape="circle"];
+  "N+" -> "N-" [style="dashed"];
+  "N+" -> "S-" [style="dashed"];
+  "S-" -> "NP+";
+}

@@ -4,6 +4,8 @@
 
 \definecolor{darkgreen}{rgb}{0., 0.6, 0.}
 \definecolor{darkgold}{rgb}{8., 0.6, 0.}
+\definecolor{limegreen}{RGB}{175, 255, 175}
+\definecolor{limeblue}{RGB}{200, 200, 235}
 
 \hypersetup{pdfstartview={Fit}}
 \def\limp {\mathbin{{-}\mkern-3.5mu{\circ}}}
@@ -48,29 +50,29 @@
 \begin{frame}
   \frametitle{Towards a Wide-Coverage Grammar}
 
-  We want to build discourse representations in a compositional manner
-  by using ACGs. Therefore, we need a wide-coverage ACG grammar.
+  \textbf{Objective:} Build discourse representations using ACGs: \\a
+  wide-coverage ACG grammar.
 
-  \vspace{3 mm}
+  \vfill
 
-  Requirements for building a wide-coverage grammar:
+  \begin{itemize}
+  \item Having linguistic resources to build upon
     \begin{itemize}
-    \item Having linguistic resources to build upon
-      \begin{itemize}
-      \item Frilex, a formalism-independent lexical database
-      \item Frigram, a French interaction grammar
-      \end{itemize}
-    \item Debugging the grammar
-      \begin{itemize}
-        \item A toolkit for formulating ACGs as simple metagrammars, for
-          examining how they work and for checking their consistency.
-      \end{itemize}
-    \item Using a formalism that allows for a simple grammar
-      \begin{itemize}
-      \item The need to express multiple independent constraints led us
-        to graphical abstract categorial grammars.
-      \end{itemize}
+    \item Frilex, a formalism-independent lexical database
+    \item Frigram, a French interaction grammar
     \end{itemize}
+    \vfill
+  \item Debugging the grammar
+    \begin{itemize}
+    \item A toolkit for formulating ACGs as simple metagrammars, for
+      examining how they work and for checking their consistency.
+    \end{itemize}
+    \vfill
+  \item Using a formalism that allows for a simple grammar
+    \begin{itemize}
+    \item Express multiple independent constraints \\ $\implies$ graphical abstract categorial grammars.
+    \end{itemize}
+  \end{itemize}
 \end{frame}
 
 
@@ -80,7 +82,8 @@
   \begin{itemize}
   \item ACGs are based on types (IILL formulas).
   \item IGs are based on polarized tree descriptions.
-  \item Perrier has linked the two.
+    \vfill
+  \item[$\Rightarrow$] Perrier has linked the two.
 
     \vspace{2 mm}
     \begin{columns}[c]
@@ -95,8 +98,8 @@
       \end{column}
       \begin{column}{0.25\textwidth}\end{column}
     \end{columns}
-  \item The IG of Frigram use different constraints in tree
-    descriptions.
+    \vfill
+  \item IG of Frigram use different constraints in tree descriptions.
     \begin{itemize}
     \item The deductive syntactic model of IGs is built on a wider range
       of linear logic primitives ($\otimes$, $\&$).
@@ -111,9 +114,12 @@
 
 \begin{frame}
   \begin{block}{Abstract languages}
-    Languages of (abstract) terms constrained by the constants they are
-    built on and their types. Defined by a \textcolor{red}{signature}
-    and a \textcolor{darkgreen}{type}.
+    %% Languages of (abstract) terms constrained by the constants they are
+    %% built on and their types. Defined by a \textcolor{red}{signature}
+    %% and a \textcolor{darkgreen}{type}.
+
+    Lambda terms constrained by the types of constants. \\ Defined by a
+    \textcolor{red}{signature} and a \textcolor{darkgreen}{type}.
 
     \begin{columns}[t]
       \begin{column}{0.5\textwidth}
@@ -169,7 +175,7 @@
       \item Instead of referring to the two ACGs $\mathopen{<}
         \Sigma_{Synt}, \Sigma_{String}, \mathcal{L}_{syntax}, S
         \mathclose{>}$ and $\mathopen{<} \Sigma_{Synt}, \Sigma_{Sem},
-        \mathcal{L}_{sem}, S \mathclose{>}$, we refer to this single
+        \mathcal{L}_{sem}, S \mathclose{>}$, refer to this single
         diagram.
       \end{itemize}
     \end{column}
@@ -209,15 +215,14 @@
 \begin{frame}
   \frametitle{Composing ACG Patterns I}
 
-  In order to stay in the scope of ACGs, our diagrams must be shaped as
-  arborescences (at most one parent per node).
+  ACG diagrams are arborescences.
 
   \begin{columns}[c]
     \begin{column}{0.25\textwidth}
       {\small Syntax-semantics interface deals with syntactic
         constraints.}
 
-      $\implies$ Complex.
+      \onslide<2->{$\implies$ Complex.}
     \end{column}
     \begin{column}{0.25\textwidth}
       \begin{center}
@@ -228,7 +233,7 @@
       {\small Syntactic constraints deal with the syntax-semantics
         interface.}
 
-      $\implies$ Complex.
+      \onslide<3->{$\implies$ Complex.}
     \end{column}
     \begin{column}{0.25\textwidth}
       \begin{center}
@@ -239,20 +244,17 @@
 \end{frame}
 
 
-
-
-
 \begin{frame}
   \frametitle{Composing ACG Patterns II}
 
-  We will need to be able to specify constraints independently if we are
-  to write a manageably simple wide-coverage grammar.
+  Writing a simple wide-coverage grammar implies specifying constraints
+  independently.
 
   \begin{columns}[c]
     \begin{column}{0.25\textwidth}
       Second constraint reimplements first constraint.
 
-      $\implies$ Ineffective.
+      \onslide<2->{$\implies$ Ineffective.}
     \end{column}
     \begin{column}{0.25\textwidth}
       \begin{center}
@@ -262,7 +264,7 @@
     \begin{column}{0.25\textwidth}
       Third constraint reimplements first and second constraint.
 
-      $\implies$ Ineffective.
+      \onslide<3->{$\implies$ Ineffective.}
     \end{column}
     \begin{column}{0.25\textwidth}
       \begin{center}
@@ -274,10 +276,7 @@
 
 
 \begin{frame}
-  \frametitle{Composing ACG Patterns III}
-
-  Therefore, we would like to able to do something like this (i.e., not
-  an arborescence).
+  \frametitle{Graphical Abstract Categorial Grammars (G-ACGs)}
 
   \begin{columns}[c]
     \begin{column}{0.6\textwidth}
@@ -285,13 +284,10 @@
         \includegraphics[height=0.7\textheight]{../diagrams/final.pdf}
       \end{center}
     \end{column}
+
+    \pause
+
     \begin{column}{0.4\textwidth}
-      How do we assign languages to nodes of the graph? \\
-      $\implies$ Graphical Abstract Categorial Grammars (G-ACGs)
-
-      \vspace{5 mm}
-
-      Formally, we have:
         \begin{itemize}
         \item A DAG.
         \item Nodes labelled with:
@@ -309,27 +305,29 @@
 \end{frame}
 
 
-\section{Incompatible Intuitions in G-ACGs}
+
+
+\section{Semantics of G-ACGs Nodes}
 
 \begin{frame}
   \frametitle{Two Intuitions for G-ACGs}
 
+  \setbeamercolor{block title}{bg=limeblue}
+  \setbeamercolor{block body}{bg=limeblue}
   \begin{block}{Algebraic Perspective}
     \begin{itemize}
-    \item Every node is a language.
-    \item An arrow means that a language is produced from another by
-      mapping through a lexicon.
-    \item Two arrows converging on a node mean an intersection of
-      languages.
+    \item Nodes as \emph{languages}.
+    \item Edges define \emph{languages} in terms of other
+      \emph{languages} using lexicons and intersections.
     \end{itemize}
   \end{block}
+  \setbeamercolor{block title}{bg=limegreen}
+  \setbeamercolor{block body}{bg=limegreen}
   \begin{block}{Generative Perspective}
     \begin{itemize}
-    \item Every node is a term.
-    \item An arrow means that a term is produced from another by
-      applying a lexicon.
-    \item Two arrows converging on a node mean that the two (abstract)
-      terms yield the same (object) term.
+    \item Nodes as \emph{terms}.
+    \item Edges describe how \emph{terms} are obtained from other
+      \emph{terms} by applying lexicons.
     \end{itemize}
   \end{block}
 \end{frame}
@@ -340,13 +338,17 @@
 
   \begin{columns}[c]
     \begin{column}{0.7\textwidth}
-      \begin{itemize}
-      \item Every node is a language.
-      \item An arrow means that a language is produced from another by
-        mapping through a \textcolor{darkgreen}{lexicon}.
-      \item Two arrows converging on a node mean an
-        \textcolor{red}{intersection} of languages.
-      \end{itemize}
+      \setbeamercolor{block title}{bg=limeblue}
+      \setbeamercolor{block body}{bg=limeblue}
+      \begin{block}{}
+        \begin{itemize}
+        \item Every node is a language.
+        \item An arrow means that a language is produced from another by
+          mapping through a \textcolor{darkgreen}{lexicon}.
+        \item Two arrows converging on a node mean an
+          \textcolor{red}{intersection} of languages.
+        \end{itemize}
+      \end{block}
 
 $$
 \mathcal{I}_{\mathcal{G}}(v) = \{t \in \Lambda(\Sigma_v)
@@ -371,13 +373,17 @@ $$
 
   \begin{columns}[t]
     \begin{column}{0.5\textwidth}
-      \includegraphics[height=0.6\textheight]{../diagrams/both-patterns.pdf}
+      \begin{center}
+        \includegraphics[height=0.6\textheight]{../diagrams/both-patterns.pdf}
+      \end{center}
 
-      How do we get the languages of meanings expressible only by
+      How do we get the language of meanings expressible only by
       syntactically correct sentences?
     \end{column}
     \begin{column}{0.5\textwidth}
-      \includegraphics[height=0.6\textheight]{../diagrams/diamond-grammar.pdf}
+      \begin{center}
+        \includegraphics[height=0.6\textheight]{../diagrams/diamond-grammar.pdf}
+      \end{center}
 
       How do we express the language of $Bottom$ terms whose $Left$ and
       $Right$ antecedent are generated by the same $Top$ antecedent?
@@ -391,13 +397,17 @@ $$
 
   \begin{columns}[c]
     \begin{column}{0.7\textwidth}
-      \begin{itemize}
-      \item \textcolor{red}{Every node is a term.}
-      \item An arrow means that a term is produced from another by
-        applying a \textcolor{darkgreen}{lexicon}.
-      \item Two arrows converging on a node mean that the two (abstract)
-        terms yield \textcolor{red}{the same} (object) term.
-      \end{itemize}
+      \setbeamercolor{block title}{bg=limegreen}
+      \setbeamercolor{block body}{bg=limegreen}
+      \begin{block}{}
+        \begin{itemize}
+        \item Every node is a \textcolor{red}{term}.
+        \item An arrow means that a term is produced from another by
+          applying a \textcolor{darkgreen}{lexicon}.
+        \item Two arrows converging on a node mean that the two (abstract)
+          terms yield \textcolor{red}{the same} (object) term.
+        \end{itemize}
+      \end{block}
 
       \vspace{3 mm}
 
@@ -418,16 +428,18 @@ $$
 
 
 \begin{frame}
-  \frametitle{Only Different Points of View?}
+  \frametitle{Algebraic and Generative Relations}
 
   \begin{itemize}
-  \item $\forall \, \mathcal{G}, u$ where $\mathcal{G}$ is arborescent,
-    we have $\mathcal{E}_{\mathcal{G}}(u) = \mathcal{P}_{\mathcal{G}}(u)
-    = \mathcal{O}_{\mathcal{G}}(u)$.
+  \item $\forall \, \mathcal{G}, u$ where $\mathcal{G}$ is arborescent:
+    $$\mathcal{E}_{\mathcal{G}}(u) = \mathcal{P}_{\mathcal{G}}(u)
+    = \mathcal{O}_{\mathcal{G}}(u)$$
+    \pause
   \item However, $\exists \, \mathcal{G}, u$ such that
-    $\mathcal{E}_{\mathcal{G}}(u) \neq \mathcal{P}_{\mathcal{G}}(u)$.
-  \item The two different ``perspectives'' lead to different languages.
-    $\implies$ They are not interchangeable points of view.
+    $$\mathcal{E}_{\mathcal{G}}(u) \neq \mathcal{P}_{\mathcal{G}}(u)$$
+    \vfill
+    \pause
+  \item[$\Rightarrow$] They are not interchangeable points of view.
   \end{itemize}
 \end{frame}
 
@@ -445,15 +457,18 @@ $$
     \item {\ldots}increasingly expressive, $\mathcal{I} \subseteq
       \mathcal{E} \subseteq \mathcal{P}$.
     \end{itemize}
+  \vfill
   \item Intrinsic languages are just the abstract languages of ACGs.
     \begin{itemize}
     \item $\mathcal{I} = \mathcal{A}$
     \end{itemize}
+  \vfill
   \item Extrinsic languages are simple extensions of ACGs that add
     intersections.
     \begin{itemize}
     \item $\mathcal{E} = \mathcal{O}^{\mathcal{L}{\cap}}$
     \end{itemize}
+  \vfill
   \item Pangraphical languages are faithful to the generative
     perspective and subsume the previous classes of languages.
     \begin{itemize}
@@ -472,8 +487,10 @@ $$
   \begin{itemize}
   \item Direct embedding of IGs into ACGs based on Perrier's theorem
     conjectured not to be practical.
+  \vfill
   \item Created a toolkit to serve as basis for more explorations or
     implementations.
+  \vfill
   \item Formalized graphical abstract categorial grammars.
     \begin{itemize}
     \item Helps solve multiple constraints elegantly.
@@ -487,16 +504,15 @@ $$
   \frametitle{Future Directions}
 
   \begin{itemize}
-  \item Make a closer examination of the relationship between extrinsic
-    and pangraphical languages in G-ACGs.
-  \item Determine whether ACG object languages are closed on intersection
-    or not.
-  \item Build a wide-coverage G-ACG and study the patterns used in the
-    graphical architecture.
-  \item Try to express the multiple independent polarized features of IGs
-    using G-ACGs.
-  \item Assess the applicability of G-ACG architectures at other levels
-    of description, e.g. discourse structure.
+  \item Are extrinsic languages as expressive as pangraphical
+    ones? $$\mathcal{P} \subseteq \mathcal{E}$$
+  \item Are ACG object languages closed on
+    intersection? $$\mathcal{O}^{\mathcal{L}{\cap}} \subseteq \mathcal{O}^{\mathcal{L}}$$
+  \item Express the multiple polarized features of IGs in G-ACGs.
+    \vfill
+  \item Build and study a wide-coverage G-ACG.
+    \vfill
+  \item Apply G-ACGs to discourse.
   \end{itemize}
 \end{frame}
 

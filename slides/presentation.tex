@@ -213,12 +213,24 @@
   arborescences (at most one parent per node).
 
   \begin{columns}[c]
-    \begin{column}{0.5\textwidth}
+    \begin{column}{0.25\textwidth}
+      {\small Syntax-semantics interface deals with syntactic
+        constraints.}
+
+      $\implies$ Complex.
+    \end{column}
+    \begin{column}{0.25\textwidth}
       \begin{center}
         \includegraphics[height=0.7\textheight]{../diagrams/fail1.pdf}
       \end{center}
     \end{column}
-    \begin{column}{0.5\textwidth}
+    \begin{column}{0.25\textwidth}
+      {\small Syntactic constraints deal with the syntax-semantics
+        interface.}
+
+      $\implies$ Complex.
+    \end{column}
+    \begin{column}{0.25\textwidth}
       \begin{center}
         \includegraphics[height=0.7\textheight]{../diagrams/fail2.pdf}
       \end{center}
@@ -237,12 +249,22 @@
   to write a manageably simple wide-coverage grammar.
 
   \begin{columns}[c]
-    \begin{column}{0.5\textwidth}
+    \begin{column}{0.25\textwidth}
+      Second constraint reimplements first constraint.
+
+      $\implies$ Pointless.
+    \end{column}
+    \begin{column}{0.25\textwidth}
       \begin{center}
         \includegraphics[height=0.7\textheight]{../diagrams/constr-fail-1.pdf}
       \end{center}
     \end{column}
-    \begin{column}{0.5\textwidth}
+    \begin{column}{0.25\textwidth}
+      Third constraint reimplements first and second constraint.
+
+      $\implies$ Pointless.
+    \end{column}
+    \begin{column}{0.25\textwidth}
       \begin{center}
         \includegraphics[height=0.7\textheight]{../diagrams/constr-fail-2.pdf}
       \end{center}

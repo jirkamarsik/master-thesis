@@ -1,0 +1,9 @@
+strict digraph "final" {
+  node [shape="circle",style="filled",fillcolor="lightblue"]
+  edge [style="bold"]
+  "Constr_1" -> "Syntax" [label="\\mathcal{L}_{constr_1}"]
+  "Constr_2" -> "Syntax" [label="\\mathcal{L}_{constr_2}"]
+  "SyntSem" -> "Syntax" [label="\\mathcal{L}_{interSyntax}"]
+  "Syntax" -> "String" [label="\\mathcal{L}_{yield}"]
+  "SyntSem" -> "Sem" [label="\\mathcal{L}_{interSem}"]
+}

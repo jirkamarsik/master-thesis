@@ -1,7 +1,5 @@
 \documentclass{beamer}
 
-\usepackage{cmll}
-
 \hypersetup{pdfstartview={Fit}}
 \def\limp {\mathbin{{-}\mkern-3.5mu{\circ}}}
 
@@ -39,7 +37,10 @@
 \begin{frame}
   \frametitle{Towards a Wide-Coverage Grammar}
 
-TODO: Mention discourse here.
+  We want to build discourse representations in a compositional manner
+  by using ACGs. Therefore, we need a wide-coverage ACG grammar.
+
+  \vspace{3 mm}
 
   Requirements for building a wide-coverage grammar:
     \begin{itemize}
@@ -72,14 +73,14 @@ TODO: Mention discourse here.
 
     \vspace{2 mm}
     \begin{columns}[c]
-      \begin{column}{0.25\textwidth}\end{column}
-      \begin{column}{0.2\textwidth}
-        \includegraphics[height=0.3\textheight]{../diagrams/ptd.pdf}
+      \begin{column}{0.1\textwidth}\end{column}
+      \begin{column}{0.4\textwidth}
+        $$(NP \limp S) \limp N \limp N$$
+        $$N \limp (NP \limp S) \limp N$$
       \end{column}
       \begin{column}{0.1\textwidth}$\to$\end{column}
       \begin{column}{0.2\textwidth}
-        $$(NP \limp S) \limp N \limp N$$
-        $$N \limp (NP \limp S) \limp N$$
+        \includegraphics[height=0.3\textheight]{../diagrams/ptd.pdf}
       \end{column}
       \begin{column}{0.25\textwidth}\end{column}
     \end{columns}
@@ -87,7 +88,7 @@ TODO: Mention discourse here.
     descriptions.
     \begin{itemize}
     \item The deductive syntactic model of IGs is built on a wider range
-      of linear logic primitives ($\otimes$, $\with$).
+      of linear logic primitives ($\otimes$, $\&$).
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -95,11 +96,215 @@ TODO: Mention discourse here.
 
 \section{ACG Preliminaries}
 
-\frame{}
+\newcommand{\synt}[1]{C_{\textrm{#1}}}
+
+\begin{frame}
+  \begin{block}{Abstract languages}
+    Languages of (abstract) terms constrained by the constants they are
+    built on and their types. Defined by a \textcolor{red}{signature}
+    and a \textcolor{green}{type}.
+
+    \begin{columns}[t]
+      \begin{column}{0.5\textwidth}
+        \begin{align*}
+          \synt{tatous} &: \textcolor{red}{N} \\
+          \synt{Laura} &: \textcolor{red}{NP}
+        \end{align*}
+      \end{column}
+      \begin{column}{0.5\textwidth}
+        \begin{align*}
+          \synt{les} &: \textcolor{red}{N \limp NP} \\
+          \synt{aime} &: \textcolor{red}{NP \limp NP \limp S}
+        \end{align*}
+      \end{column}
+    \end{columns}
+
+    $$\synt{aime}\ \synt{Laura}\ (\synt{les}\ \synt{tatous}) :
+    \textcolor{green}{S}$$
+  \end{block}
+
+  \begin{block}{Object languages}
+    Languages of (object) terms which are obtained by replacing the
+    constants in an existing (abstract) term using a \textcolor{blue}{lexicon}.
+
+    \begin{columns}[t]
+      \begin{column}{0.5\textwidth}
+        \begin{align*}
+          \mathcal{L}(\synt{tatous}) &= \textcolor{blue}{tatous} \\
+          \mathcal{L}(\synt{Laura}) &= \textcolor{blue}{Laura}
+        \end{align*}
+      \end{column}
+      \begin{column}{0.5\textwidth}
+        \begin{align*}
+          \mathcal{L}(\synt{les}) &= \textcolor{blue}{\lambda^{\circ} x.\ les + x} \\
+          \mathcal{L}(\synt{aime}) &= \textcolor{blue}{\lambda^{\circ} x y.\ x + aime + y}
+        \end{align*}
+      \end{column}
+    \end{columns}
+
+    $$\mathcal{L}(\synt{aime}\ \synt{Laura}\ (\synt{les}\ \synt{tatous}))
+    =_{\beta} Laura + aime + les + tatous$$
+  \end{block}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{ACG Diagrams}
+
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+      \item Two different lexicons interpret the same abstract terms.
+      \item Instead of referring to the two ACGs $\mathopen{<}
+        \Sigma_{Synt}, \Sigma_{String}, \mathcal{L}_{syntax}, S
+        \mathclose{>}$ and $\mathopen{<} \Sigma_{Synt}, \Sigma_{Sem},
+        \mathcal{L}_{sem}, S \mathclose{>}$, we refer to this single
+        diagram.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \includegraphics[width=\textwidth]{../diagrams/double-acg.pdf}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{ACG Patterns}
+
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Semantic ambiguities}
+        \vspace{2 mm}
+        \begin{center}
+          \includegraphics[height=0.7\textheight]{../diagrams/parallel-over-serial.pdf}
+        \end{center}
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Syntactic constraint}
+        \vspace{2 mm}
+        \begin{center}
+          \includegraphics[height=0.7\textheight]{../diagrams/serial-over-parallel.pdf}
+        \end{center}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
 
 \section{Why Graphical ACGs?}
 
-\frame{}
+\begin{frame}
+  \frametitle{Composing ACG Patterns I}
+
+  In order to stay in the scope of ACGs, our diagrams must be shaped as
+  arborescences (at most one parent per node).
+
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+      \begin{center}
+        \includegraphics[height=0.7\textheight]{../diagrams/fail1.pdf}
+      \end{center}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{center}
+        \includegraphics[height=0.7\textheight]{../diagrams/fail2.pdf}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Multiple Constraints}
+
+  Implementing multiple constraints in a single signature is
+  \textbf{difficult}.
+
+  Agreement:
+    \begin{align*}
+      A_{aime_1} &: NP\_\textcolor{blue}{NUM{=}SG} \limp NP\_\textcolor{blue}{NUM{=}SG} \limp S \\
+      A_{aime_2} &: NP\_\textcolor{blue}{NUM{=}SG} \limp NP\_\textcolor{blue}{NUM{=}PL} \limp S
+    \end{align*}
+
+  Extraction:
+    \begin{align*}
+      E_{aime_1} &: NP\_\textcolor{green}{VAR{=}F} \limp NP\_\textcolor{green}{VAR{=}F} \limp S\_\textcolor{green}{EXT{=}NO} \\
+      E_{aime_2} &: NP\_\textcolor{green}{VAR{=}T} \limp NP\_\textcolor{green}{VAR{=}F} \limp S\_\textcolor{green}{EXT{=}ROOT} \\
+      E_{aime_3} &: NP\_\textcolor{green}{VAR{=}F} \limp NP\_\textcolor{green}{VAR{=}T} \limp S\_\textcolor{green}{EXT{=}ROOT}
+    \end{align*}
+
+  Combined:
+  \begin{small}
+  \begin{align*}
+      C_{aime_1} &: NP\_\textcolor{blue}{NUM{=}SG}\_\textcolor{green}{VAR{=}F} \limp NP\_\textcolor{blue}{NUM{=}SG}\_\textcolor{green}{VAR{=}F} \limp S\_\textcolor{green}{EXT{=}NO} \\
+      C_{aime_2} &: NP\_\textcolor{blue}{NUM{=}SG}\_\textcolor{green}{VAR{=}T} \limp NP\_\textcolor{blue}{NUM{=}SG}\_\textcolor{green}{VAR{=}F} \limp S\_\textcolor{green}{EXT{=}ROOT} \\
+      C_{aime_3} &: NP\_\textcolor{blue}{NUM{=}SG}\_\textcolor{green}{VAR{=}F} \limp NP\_\textcolor{blue}{NUM{=}SG}\_\textcolor{green}{VAR{=}T} \limp S\_\textcolor{green}{EXT{=}ROOT} \\
+      C_{aime_4} &: NP\_\textcolor{blue}{NUM{=}SG}\_\textcolor{green}{VAR{=}F} \limp NP\_\textcolor{blue}{NUM{=}PL}\_\textcolor{green}{VAR{=}F} \limp S\_\textcolor{green}{EXT{=}NO} \\
+      C_{aime_5} &: NP\_\textcolor{blue}{NUM{=}SG}\_\textcolor{green}{VAR{=}T} \limp NP\_\textcolor{blue}{NUM{=}PL}\_\textcolor{green}{VAR{=}F} \limp S\_\textcolor{green}{EXT{=}ROOT} \\
+      C_{aime_6} &: NP\_\textcolor{blue}{NUM{=}SG}\_\textcolor{green}{VAR{=}F} \limp NP\_\textcolor{blue}{NUM{=}PL}\_\textcolor{green}{VAR{=}T} \limp S\_\textcolor{green}{EXT{=}ROOT}
+  \end{align*}
+
+  \end{small}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Composing ACG Patterns II}
+
+  We will need to be able to specify constraints independently if we are
+  to write a manageably simple wide-coverage grammar.
+
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+      \begin{center}
+        \includegraphics[height=0.7\textheight]{../diagrams/constr-fail-1.pdf}
+      \end{center}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{center}
+        \includegraphics[height=0.7\textheight]{../diagrams/constr-fail-2.pdf}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Composing ACG Patterns III}
+
+  Therefore, we would like to able to do something like this (i.e., not
+  an arborescence).
+
+  \begin{columns}[c]
+    \begin{column}{0.6\textwidth}
+      \begin{center}
+        \includegraphics[height=0.7\textheight]{../diagrams/final.pdf}
+      \end{center}
+    \end{column}
+    \begin{column}{0.4\textwidth}
+      How do we assign languages to nodes of the graph? \\
+      $\implies$ Graphical Abstract Categorial Grammars (G-ACGs)
+
+      \vspace{5 mm}
+
+      Formally, we have:
+        \begin{itemize}
+        \item A DAG.
+        \item Nodes labelled with:
+          \begin{itemize}
+          \item Signatures.
+          \item Distinguished types.
+          \end{itemize}
+        \item Edges labelled with:
+          \begin{itemize}
+          \item Lexicons.
+          \end{itemize}
+        \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
 
 
 \section{Incompatible Intuitions in G-ACGs}
@@ -195,7 +400,7 @@ $$
       \vspace{3 mm}
 
       $t$ belongs to $\mathcal{P}_{\mathcal{G}}(u)$ iff \\$\exists T :
-      \textcolor{red}{V(G) \to \Lambda(\Sigma_u)}$ such that:
+      \textcolor{red}{V(G) \to \Lambda}$ such that:
       \begin{itemize}
       \item $T_u = t$.
       \item For all $v \in V(G)$, $\vdash_{\Sigma_v} T_v : S_v$.
@@ -270,7 +475,7 @@ $$
   \item Formalized graphical abstract categorial grammars.
     \begin{itemize}
     \item Helps solve multiple constraints elegantly.
-    \item Facilitates discussion and inquiry into
+    \item Facilitates discussion and inquiry into compositions of ACGs.
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -284,12 +489,13 @@ $$
     and pangraphical languages in G-ACGs.
   \item Determine whether ACG object languages are closed on intersection
     or not.
-  \item Write grammars using the G-ACG constraint architecture. TODO:
-    More specific.
+  \item Build a wide-coverage G-ACG and study the patterns used in the
+    graphical architecture.
   \item Try to express the multiple independent polarized features of IGs
     using G-ACGs.
+  \item Assess the applicability of G-ACG architectures at other levels
+    of description, e.g. discourse structure.
   \end{itemize}
-TODO: Discourse perspective.
 \end{frame}
 
 \end{document}

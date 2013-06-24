@@ -13,6 +13,7 @@
   \begin{frame}
     \frametitle{Outline}
     \tableofcontents[currentsection]
+    \addtocounter{framenumber}{-1}
   \end{frame}
 }
 
@@ -35,7 +36,7 @@
 }
 \date[June 2013]{June 25, 2013}
 
-\frame{\titlepage}
+\frame{\titlepage \setcounter{framenumber}{1}}
 
 \begin{frame}
 \frametitle{Outline}
@@ -226,38 +227,7 @@
 \end{frame}
 
 
-\begin{frame}
-  \frametitle{Multiple Constraints}
 
-  Implementing multiple constraints in a single signature is
-  \textbf{difficult}.
-
-  Agreement:
-    \begin{align*}
-      A_{aime_1} &: NP\_\textcolor{darkgold}{NUM{=}SG} \limp NP\_\textcolor{darkgold}{NUM{=}SG} \limp S \\
-      A_{aime_2} &: NP\_\textcolor{darkgold}{NUM{=}SG} \limp NP\_\textcolor{darkgold}{NUM{=}PL} \limp S
-    \end{align*}
-
-  Extraction:
-    \begin{align*}
-      E_{aime_1} &: NP\_\textcolor{darkgreen}{VAR{=}F} \limp NP\_\textcolor{darkgreen}{VAR{=}F} \limp S\_\textcolor{darkgreen}{EXT{=}NO} \\
-      E_{aime_2} &: NP\_\textcolor{darkgreen}{VAR{=}T} \limp NP\_\textcolor{darkgreen}{VAR{=}F} \limp S\_\textcolor{darkgreen}{EXT{=}ROOT} \\
-      E_{aime_3} &: NP\_\textcolor{darkgreen}{VAR{=}F} \limp NP\_\textcolor{darkgreen}{VAR{=}T} \limp S\_\textcolor{darkgreen}{EXT{=}ROOT}
-    \end{align*}
-
-  Combined:
-  \begin{small}
-  \begin{align*}
-      C_{aime_1} &: NP\_\textcolor{darkgold}{NUM{=}SG}\_\textcolor{darkgreen}{VAR{=}F} \limp NP\_\textcolor{darkgold}{NUM{=}SG}\_\textcolor{darkgreen}{VAR{=}F} \limp S\_\textcolor{darkgreen}{EXT{=}NO} \\
-      C_{aime_2} &: NP\_\textcolor{darkgold}{NUM{=}SG}\_\textcolor{darkgreen}{VAR{=}T} \limp NP\_\textcolor{darkgold}{NUM{=}SG}\_\textcolor{darkgreen}{VAR{=}F} \limp S\_\textcolor{darkgreen}{EXT{=}ROOT} \\
-      C_{aime_3} &: NP\_\textcolor{darkgold}{NUM{=}SG}\_\textcolor{darkgreen}{VAR{=}F} \limp NP\_\textcolor{darkgold}{NUM{=}SG}\_\textcolor{darkgreen}{VAR{=}T} \limp S\_\textcolor{darkgreen}{EXT{=}ROOT} \\
-      C_{aime_4} &: NP\_\textcolor{darkgold}{NUM{=}SG}\_\textcolor{darkgreen}{VAR{=}F} \limp NP\_\textcolor{darkgold}{NUM{=}PL}\_\textcolor{darkgreen}{VAR{=}F} \limp S\_\textcolor{darkgreen}{EXT{=}NO} \\
-      C_{aime_5} &: NP\_\textcolor{darkgold}{NUM{=}SG}\_\textcolor{darkgreen}{VAR{=}T} \limp NP\_\textcolor{darkgold}{NUM{=}PL}\_\textcolor{darkgreen}{VAR{=}F} \limp S\_\textcolor{darkgreen}{EXT{=}ROOT} \\
-      C_{aime_6} &: NP\_\textcolor{darkgold}{NUM{=}SG}\_\textcolor{darkgreen}{VAR{=}F} \limp NP\_\textcolor{darkgold}{NUM{=}PL}\_\textcolor{darkgreen}{VAR{=}T} \limp S\_\textcolor{darkgreen}{EXT{=}ROOT}
-  \end{align*}
-
-  \end{small}
-\end{frame}
 
 
 \begin{frame}
@@ -507,5 +477,44 @@ $$
     of description, e.g. discourse structure.
   \end{itemize}
 \end{frame}
+
+
+\appendix
+\newcounter{finalframe}
+\setcounter{finalframe}{\value{framenumber}}
+
+\begin{frame}
+  \frametitle{Multiple Constraints}
+
+  Implementing multiple constraints in a single signature is
+  \textbf{difficult}.
+
+  Agreement:
+    \begin{align*}
+      A_{aime_1} &: NP\_\textcolor{darkgold}{NUM{=}SG} \limp NP\_\textcolor{darkgold}{NUM{=}SG} \limp S \\
+      A_{aime_2} &: NP\_\textcolor{darkgold}{NUM{=}SG} \limp NP\_\textcolor{darkgold}{NUM{=}PL} \limp S
+    \end{align*}
+
+  Extraction:
+    \begin{align*}
+      E_{aime_1} &: NP\_\textcolor{darkgreen}{VAR{=}F} \limp NP\_\textcolor{darkgreen}{VAR{=}F} \limp S\_\textcolor{darkgreen}{EXT{=}NO} \\
+      E_{aime_2} &: NP\_\textcolor{darkgreen}{VAR{=}T} \limp NP\_\textcolor{darkgreen}{VAR{=}F} \limp S\_\textcolor{darkgreen}{EXT{=}ROOT} \\
+      E_{aime_3} &: NP\_\textcolor{darkgreen}{VAR{=}F} \limp NP\_\textcolor{darkgreen}{VAR{=}T} \limp S\_\textcolor{darkgreen}{EXT{=}ROOT}
+    \end{align*}
+
+  Combined:
+  \begin{small}
+  \begin{align*}
+      C_{aime_1} &: NP\_\textcolor{darkgold}{NUM{=}SG}\_\textcolor{darkgreen}{VAR{=}F} \limp NP\_\textcolor{darkgold}{NUM{=}SG}\_\textcolor{darkgreen}{VAR{=}F} \limp S\_\textcolor{darkgreen}{EXT{=}NO} \\
+      C_{aime_2} &: NP\_\textcolor{darkgold}{NUM{=}SG}\_\textcolor{darkgreen}{VAR{=}T} \limp NP\_\textcolor{darkgold}{NUM{=}SG}\_\textcolor{darkgreen}{VAR{=}F} \limp S\_\textcolor{darkgreen}{EXT{=}ROOT} \\
+      C_{aime_3} &: NP\_\textcolor{darkgold}{NUM{=}SG}\_\textcolor{darkgreen}{VAR{=}F} \limp NP\_\textcolor{darkgold}{NUM{=}SG}\_\textcolor{darkgreen}{VAR{=}T} \limp S\_\textcolor{darkgreen}{EXT{=}ROOT} \\
+      C_{aime_4} &: NP\_\textcolor{darkgold}{NUM{=}SG}\_\textcolor{darkgreen}{VAR{=}F} \limp NP\_\textcolor{darkgold}{NUM{=}PL}\_\textcolor{darkgreen}{VAR{=}F} \limp S\_\textcolor{darkgreen}{EXT{=}NO} \\
+      C_{aime_5} &: NP\_\textcolor{darkgold}{NUM{=}SG}\_\textcolor{darkgreen}{VAR{=}T} \limp NP\_\textcolor{darkgold}{NUM{=}PL}\_\textcolor{darkgreen}{VAR{=}F} \limp S\_\textcolor{darkgreen}{EXT{=}ROOT} \\
+      C_{aime_6} &: NP\_\textcolor{darkgold}{NUM{=}SG}\_\textcolor{darkgreen}{VAR{=}F} \limp NP\_\textcolor{darkgold}{NUM{=}PL}\_\textcolor{darkgreen}{VAR{=}T} \limp S\_\textcolor{darkgreen}{EXT{=}ROOT}
+  \end{align*}
+  \end{small}
+\end{frame}
+
+\setcounter{framenumber}{\value{finalframe}}
 
 \end{document}

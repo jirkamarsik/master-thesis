@@ -1,5 +1,10 @@
 \documentclass{beamer}
 
+\usepackage{xcolor}
+
+\definecolor{darkgreen}{rgb}{0., 0.6, 0.}
+\definecolor{darkgold}{rgb}{8., 0.6, 0.}
+
 \hypersetup{pdfstartview={Fit}}
 \def\limp {\mathbin{{-}\mkern-3.5mu{\circ}}}
 
@@ -102,7 +107,7 @@
   \begin{block}{Abstract languages}
     Languages of (abstract) terms constrained by the constants they are
     built on and their types. Defined by a \textcolor{red}{signature}
-    and a \textcolor{green}{type}.
+    and a \textcolor{darkgreen}{type}.
 
     \begin{columns}[t]
       \begin{column}{0.5\textwidth}
@@ -120,24 +125,24 @@
     \end{columns}
 
     $$\synt{aime}\ \synt{Laura}\ (\synt{les}\ \synt{tatous}) :
-    \textcolor{green}{S}$$
+    \textcolor{darkgreen}{S}$$
   \end{block}
 
   \begin{block}{Object languages}
     Languages of (object) terms which are obtained by replacing the
-    constants in an existing (abstract) term using a \textcolor{blue}{lexicon}.
+    constants in an existing (abstract) term using a \textcolor{darkgold}{lexicon}.
 
     \begin{columns}[t]
       \begin{column}{0.5\textwidth}
         \begin{align*}
-          \mathcal{L}(\synt{tatous}) &= \textcolor{blue}{tatous} \\
-          \mathcal{L}(\synt{Laura}) &= \textcolor{blue}{Laura}
+          \mathcal{L}(\synt{tatous}) &= \textcolor{darkgold}{tatous} \\
+          \mathcal{L}(\synt{Laura}) &= \textcolor{darkgold}{Laura}
         \end{align*}
       \end{column}
       \begin{column}{0.5\textwidth}
         \begin{align*}
-          \mathcal{L}(\synt{les}) &= \textcolor{blue}{\lambda^{\circ} x.\ les + x} \\
-          \mathcal{L}(\synt{aime}) &= \textcolor{blue}{\lambda^{\circ} x y.\ x + aime + y}
+          \mathcal{L}(\synt{les}) &= \textcolor{darkgold}{\lambda^{\circ} x.\ les + x} \\
+          \mathcal{L}(\synt{aime}) &= \textcolor{darkgold}{\lambda^{\circ} x y.\ x + aime + y}
         \end{align*}
       \end{column}
     \end{columns}
@@ -224,26 +229,26 @@
 
   Agreement:
     \begin{align*}
-      A_{aime_1} &: NP\_\textcolor{blue}{NUM{=}SG} \limp NP\_\textcolor{blue}{NUM{=}SG} \limp S \\
-      A_{aime_2} &: NP\_\textcolor{blue}{NUM{=}SG} \limp NP\_\textcolor{blue}{NUM{=}PL} \limp S
+      A_{aime_1} &: NP\_\textcolor{darkgold}{NUM{=}SG} \limp NP\_\textcolor{darkgold}{NUM{=}SG} \limp S \\
+      A_{aime_2} &: NP\_\textcolor{darkgold}{NUM{=}SG} \limp NP\_\textcolor{darkgold}{NUM{=}PL} \limp S
     \end{align*}
 
   Extraction:
     \begin{align*}
-      E_{aime_1} &: NP\_\textcolor{green}{VAR{=}F} \limp NP\_\textcolor{green}{VAR{=}F} \limp S\_\textcolor{green}{EXT{=}NO} \\
-      E_{aime_2} &: NP\_\textcolor{green}{VAR{=}T} \limp NP\_\textcolor{green}{VAR{=}F} \limp S\_\textcolor{green}{EXT{=}ROOT} \\
-      E_{aime_3} &: NP\_\textcolor{green}{VAR{=}F} \limp NP\_\textcolor{green}{VAR{=}T} \limp S\_\textcolor{green}{EXT{=}ROOT}
+      E_{aime_1} &: NP\_\textcolor{darkgreen}{VAR{=}F} \limp NP\_\textcolor{darkgreen}{VAR{=}F} \limp S\_\textcolor{darkgreen}{EXT{=}NO} \\
+      E_{aime_2} &: NP\_\textcolor{darkgreen}{VAR{=}T} \limp NP\_\textcolor{darkgreen}{VAR{=}F} \limp S\_\textcolor{darkgreen}{EXT{=}ROOT} \\
+      E_{aime_3} &: NP\_\textcolor{darkgreen}{VAR{=}F} \limp NP\_\textcolor{darkgreen}{VAR{=}T} \limp S\_\textcolor{darkgreen}{EXT{=}ROOT}
     \end{align*}
 
   Combined:
   \begin{small}
   \begin{align*}
-      C_{aime_1} &: NP\_\textcolor{blue}{NUM{=}SG}\_\textcolor{green}{VAR{=}F} \limp NP\_\textcolor{blue}{NUM{=}SG}\_\textcolor{green}{VAR{=}F} \limp S\_\textcolor{green}{EXT{=}NO} \\
-      C_{aime_2} &: NP\_\textcolor{blue}{NUM{=}SG}\_\textcolor{green}{VAR{=}T} \limp NP\_\textcolor{blue}{NUM{=}SG}\_\textcolor{green}{VAR{=}F} \limp S\_\textcolor{green}{EXT{=}ROOT} \\
-      C_{aime_3} &: NP\_\textcolor{blue}{NUM{=}SG}\_\textcolor{green}{VAR{=}F} \limp NP\_\textcolor{blue}{NUM{=}SG}\_\textcolor{green}{VAR{=}T} \limp S\_\textcolor{green}{EXT{=}ROOT} \\
-      C_{aime_4} &: NP\_\textcolor{blue}{NUM{=}SG}\_\textcolor{green}{VAR{=}F} \limp NP\_\textcolor{blue}{NUM{=}PL}\_\textcolor{green}{VAR{=}F} \limp S\_\textcolor{green}{EXT{=}NO} \\
-      C_{aime_5} &: NP\_\textcolor{blue}{NUM{=}SG}\_\textcolor{green}{VAR{=}T} \limp NP\_\textcolor{blue}{NUM{=}PL}\_\textcolor{green}{VAR{=}F} \limp S\_\textcolor{green}{EXT{=}ROOT} \\
-      C_{aime_6} &: NP\_\textcolor{blue}{NUM{=}SG}\_\textcolor{green}{VAR{=}F} \limp NP\_\textcolor{blue}{NUM{=}PL}\_\textcolor{green}{VAR{=}T} \limp S\_\textcolor{green}{EXT{=}ROOT}
+      C_{aime_1} &: NP\_\textcolor{darkgold}{NUM{=}SG}\_\textcolor{darkgreen}{VAR{=}F} \limp NP\_\textcolor{darkgold}{NUM{=}SG}\_\textcolor{darkgreen}{VAR{=}F} \limp S\_\textcolor{darkgreen}{EXT{=}NO} \\
+      C_{aime_2} &: NP\_\textcolor{darkgold}{NUM{=}SG}\_\textcolor{darkgreen}{VAR{=}T} \limp NP\_\textcolor{darkgold}{NUM{=}SG}\_\textcolor{darkgreen}{VAR{=}F} \limp S\_\textcolor{darkgreen}{EXT{=}ROOT} \\
+      C_{aime_3} &: NP\_\textcolor{darkgold}{NUM{=}SG}\_\textcolor{darkgreen}{VAR{=}F} \limp NP\_\textcolor{darkgold}{NUM{=}SG}\_\textcolor{darkgreen}{VAR{=}T} \limp S\_\textcolor{darkgreen}{EXT{=}ROOT} \\
+      C_{aime_4} &: NP\_\textcolor{darkgold}{NUM{=}SG}\_\textcolor{darkgreen}{VAR{=}F} \limp NP\_\textcolor{darkgold}{NUM{=}PL}\_\textcolor{darkgreen}{VAR{=}F} \limp S\_\textcolor{darkgreen}{EXT{=}NO} \\
+      C_{aime_5} &: NP\_\textcolor{darkgold}{NUM{=}SG}\_\textcolor{darkgreen}{VAR{=}T} \limp NP\_\textcolor{darkgold}{NUM{=}PL}\_\textcolor{darkgreen}{VAR{=}F} \limp S\_\textcolor{darkgreen}{EXT{=}ROOT} \\
+      C_{aime_6} &: NP\_\textcolor{darkgold}{NUM{=}SG}\_\textcolor{darkgreen}{VAR{=}F} \limp NP\_\textcolor{darkgold}{NUM{=}PL}\_\textcolor{darkgreen}{VAR{=}T} \limp S\_\textcolor{darkgreen}{EXT{=}ROOT}
   \end{align*}
 
   \end{small}
@@ -341,7 +346,7 @@
       \begin{itemize}
       \item Every node is a language.
       \item An arrow means that a language is produced from another by
-        mapping through a \textcolor{green}{lexicon}.
+        mapping through a \textcolor{darkgreen}{lexicon}.
       \item Two arrows converging on a node mean an
         \textcolor{red}{intersection} of languages.
       \end{itemize}
@@ -353,7 +358,7 @@ $$
 $$
 \mathcal{E}_{\mathcal{G}}(v) = \mathcal{I}_{\mathcal{G}}(v) \cap
 \textcolor{red}{\bigcap_{(u,v) \in E}}
-\textcolor{green}{\mathcal{L}_{(u,v)}}(\mathcal{E}_{\mathcal{G}}(u)).
+\textcolor{darkgreen}{\mathcal{L}_{(u,v)}}(\mathcal{E}_{\mathcal{G}}(u)).
 $$
     \end{column}
     \begin{column}{0.3\textwidth}
@@ -392,7 +397,7 @@ $$
       \begin{itemize}
       \item \textcolor{red}{Every node is a term.}
       \item An arrow means that a term is produced from another by
-        applying a \textcolor{green}{lexicon}.
+        applying a \textcolor{darkgreen}{lexicon}.
       \item Two arrows converging on a node mean that the two (abstract)
         terms yield \textcolor{red}{the same} (object) term.
       \end{itemize}
@@ -405,7 +410,7 @@ $$
       \item $T_u = t$.
       \item For all $v \in V(G)$, $\vdash_{\Sigma_v} T_v : S_v$.
       \item For all $(v,w) \in E(G)$,
-        $\textcolor{green}{\mathcal{L}_{(v,w)}(T_v) = T_w}$.
+        $\textcolor{darkgreen}{\mathcal{L}_{(v,w)}(T_v) = T_w}$.
       \end{itemize}
     \end{column}
     \begin{column}{0.3\textwidth}

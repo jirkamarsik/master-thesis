@@ -21,7 +21,7 @@ in~\ref{ssec:frigram}, repeated here on Figure~\ref{fig:ig-neg-rep}.
 \end{figure}
 
 At a basic level, \emph{aucun} functions like any other determiner and
-\emph{ne} as any verb modifier. However, we want to encode the
+\emph{ne} as any other verb modifier. However, we want to encode the
 constraint that whenever a verb is modified by \emph{ne}, the modified
 verb will demand that one of its arguments contains a negative
 determiner. Since we need to make a distinction between phrases that
@@ -30,14 +30,14 @@ provide different types for both (two terms with the same type are
 indistinguishable w.r.t. syntactic composition in a type-logical grammar
 such as ACGs). Our type for \emph{aucun} will thus end up
 being\footnote{Strictly following the EPTD for \emph{aucun} would lead
-  us to give it a type $DET\_NEG{=}F$ and then give the two types
+  us to give it a type $DET\_NEG{=}T$ and then give the two types
   $DET\_NEG{=}F \limp ((NP\_NEG{=}F \limp S) \limp S)$ and $DET\_NEG{=}T
   \limp ((NP\_NEG{=}T \limp S) \limp S)$ to nouns. In this
   demonstration, we prefer to align our examples with the treatment
-  which is customary to ACG research.} $$N\_NEG{=}F \limp ((NP\_NEG{=}T
+  which is customary in ACG research.} $$N\_NEG{=}F \limp ((NP\_NEG{=}T
 \limp S) \limp S)$$ instead of the usual $$N \limp ((NP \limp S) \limp
-S)$$ The type for \emph{le} will need to be able handle cases where its
-argument noun either already contains a negative determiner or not.
+S)$$ The type for \emph{le} will need to be able to handle cases where
+its argument noun either already contains a negative determiner or not.
 
 \begin{align*}
 N_{aucun} &: N\_NEG{=}F \limp ((NP\_NEG{=}T \limp S) \limp S) \\
@@ -83,13 +83,13 @@ parse tree assigned to it by Frigram on Figure~\ref{fig:parse-aucun}. It
 is not enough that the embedded noun phrase \emph{aucun tatou} has a
 type that tells us it contains a negative determiner. We need this bit
 of internal information also at the level of the enclosing noun phrase
-\emph{l'odeur d'aucun tatou} in which the former noun phrase is embedded
-since this is a property of the enclosing noun phrase that is crucial to
-its syntactic combinatorics. This presupposes the existence of a
-mechanism for propagating this kind of information up the parse tree. In
-the case of our ACG, this means that all the functions which modify
-phrases must be aware whether or not their argument contains a negative
-determiner and to convey this information in its result type as
+\emph{l'odeur d'aucun tatou}, in which the former noun phrase is
+embedded, since this is a property of the enclosing noun phrase that is
+crucial to its syntactic combinatorics. This presupposes the existence
+of a mechanism for propagating this kind of information up the parse
+tree. In the case of our ACG, this means that all the functions which
+modify phrases must be aware whether or not their argument contains a
+negative determiner and to convey this information in its result type as
 well. Moreover, since the negative determiner can also come from a
 complement of a prepositional phrase, the types of prepositions will
 need to take into account the presence of negative determiners in both
@@ -157,7 +157,7 @@ express in the type of a term may be due to one of its subconstituents
 and it is therefore necessary to encode the propagation of this property
 up the parse tree in the types of all the intervening operators. In our
 case, it meant that handling negative determiners and the paired
-grammatical word for negation required us to not only define and type
+grammatical words for negation required us to not only define and type
 constants for these two categories, but to also change the types of noun
 modifiers (\emph{que ...}) and prepositions (\emph{de}).
 
@@ -226,7 +226,7 @@ embedded positions.\footnote{NB: The constraint that \emph{qui} can only
   extraction.}
 
 We also note that the splitting of the clause type $S$ into three finer
-types $S\_EXT={NO}$, $S\_EXT{=}ROOT$ and $S\_EXT{=}EMB$ means that types
+types $S\_EXT{=}NO$, $S\_EXT{=}ROOT$ and $S\_EXT{=}EMB$ means that types
 that work with $S$ regardless of its extraction status will have to
 provide alternatives for all the possible variants.
 

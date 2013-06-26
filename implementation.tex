@@ -25,7 +25,7 @@ lexicons, to a term and get the $\beta$-normal form of the object term.
 We consider the above capabilities vital for doing any involved grammar
 engineering in the framework of ACGs. However, there are some
 limitations which make it not sufficient for our needs. The foremost of
-those is that the signatures and lexicons are all explicitly realized in
+these is that the signatures and lexicons are all explicitly realized in
 (primary) memory and the toolkit expects them to be given directly in a
 file. The grammars that we would like to develop will cover an
 exhaustive list of wordforms and the size of our grammar definitions
@@ -54,9 +54,8 @@ to interact with it again.
 Furthermore, we could pick a small representative fragment of the
 dictionary and test only on that fragment during the development of our
 grammar, to reduce the time it takes to both generate the direct
-representation of the grammar and the time it takes to load it in the
-toolkit. This would have made developing the grammar already
-tenable.
+representation of the grammar and the time it takes to load it into the
+toolkit. This would have made developing the grammar already tenable.
 
 However, in our approach, we have opted to spend more time on tool
 development to ease subsequent work and we have developed a system which
@@ -66,9 +65,9 @@ of the lexical database to elements of signatures and lexicons. The
 grammars can be redefined without having to reload the lexical database
 or any file of similar scale. Type inference and lexicon application
 with $\beta$-normalization are provided as relations which can be used
-interactively or as part of a larger program. En example of such a
-larger program might be a routine to check the validity of an ACG or to
-test some of its properties.
+interactively or as part of larger programs. En example of such a larger
+program might be a routine to check the validity of an ACG or to test
+some of its properties.
 
 In this chapter, we will spend some time explaining the design rationale
 underlying the system and the form it has now. The source code of the
@@ -110,9 +109,10 @@ single relation which is often used as a kind of ``Hello World'' program
 in the world of relational programming. Similarly, implementing
 $\beta$-reduction cleanly (without having to handle variable clashes by
 generating new variables and $\alpha$-converting) is a motivational
-example for introducing \emph{nominal logic programming}. To reach
-feature parity with the ACG toolkit, one would only need to implement
-the mapping of a lexicon over a term, which is a simple functor.
+example for introducing \emph{nominal logic programming}. Finally, to
+reach feature parity with the ACG toolkit, one would only need to
+implement the mapping of a lexicon over a term, which is a simple
+functor.
 
 The use of logic programming techniques is also very popular in our
 domain. If we look at the system demonstrations at the \emph{Logical
@@ -125,15 +125,15 @@ practical applications appear on the horizon.\footnote{Theorem provers
   are another problem area where miniKanren fits well, see
   $\alpha$leanTAP \cite{near2008alpha}.}
 
-The third system was XMG, a language for writing metagrammars, which is
-another goal of our system, the one which distinguishes it from the
-original ACG toolkit. We believe that using a declarative programming
-system such as miniKanren with the ability to extend it using a
-practical functional programming language presents an empowering way of
-defining metagrammars. This allows the grammar designer to compose her
-grammar in any way she sees fit and to use the metaprogramming
-facilities of the underlying programming language to transcribe the
-grammar in a way that makes the most sense in her case.
+The third system at the conference was XMG, a language for writing
+metagrammars, which is another goal of our system, one which
+distinguishes it from the original ACG toolkit. We believe that using a
+declarative programming system such as miniKanren with the ability to
+extend it using a practical functional programming language presents an
+empowering way of defining metagrammars. This allows the grammar
+designer to compose her grammar in any way she sees fit and to use the
+metaprogramming facilities of the underlying programming language to
+transcribe the grammar in a way that makes the most sense in her case.
 
 Finally, some of the structures that we will encounter in our domain are
 more directly modelled in mathematics as relations rather than
@@ -157,8 +157,8 @@ languages are very similar to each other and therefore the choice is of
 no great significance. An appealing feature of Clojure is that it uses
 abstract collection types pervasively instead of coupling the standard
 operations to specific data structures such as lists and cons cells and
-that it follows other similarly enlightened design decisions. Racket on
-the other hand has had more time to mature, has better metaprogramming
+that it follows other similarly enlightened design decisions. Racket, on
+the other hand, has had more time to mature, has better metaprogramming
 facilities and is more recognized in academia. In developing our system,
 we have settled for Clojure. One of the advantages of doing so is that
 the Clojure implementation of miniKanren, dubbed core.logic, has
@@ -177,15 +177,15 @@ them.
 \label{ssec:def-sig}
 
 In~\ref{ssec:sig}, we formally presented signatures as triples
-$\mathopen{<}A, C, \tau\mathclose{>}$. The set $C$ can be easily
-reconstructed as the domain of $\tau$ and the set $A$ is just the set of
-all atomic types occurring in the range of $\tau$. Therefore, to define
-the signature $\mathopen{<}A, C, \tau\mathclose{>}$, it is enough to
-provide the function $\tau$, which in its set-theoretical realization is
-just a set of pairs. In relational programming, a specific set can be
-easily encoded as a unary relation so a unary will serve as our
-representation of a signature and defining a signature will be a matter
-of constructing this relation.
+$\mathopen{<}A, C, \tau\mathclose{>}$. However, the set $C$ can be
+always reconstructed as the domain of $\tau$ and the set $A$ is just the
+set of all the atomic types occurring in the range of $\tau$. Therefore,
+to define the signature $\mathopen{<}A, C, \tau\mathclose{>}$, it is
+enough to provide the function $\tau$, which in its set-theoretical
+realization is just a set of pairs. In relational programming, a
+specific set can be easily encoded as a unary relation so a unary
+relation will serve as our representation of a signature and defining a
+signature will be a matter of constructing this relation.
 
 \subsubsection{The Relationship Between the Lexical Database and a Signature}
 
@@ -278,26 +278,26 @@ constant in Figure~\ref{fig:lex-const}.
 \end{figure}
 
 The system takes care of wiring up the relations and assembling the
-signature. The grammar designer's duty is to provide a 4-ary relation
-that links the four parts of a lexical constant: the wordform, the
-hypertag, the specifier and the type. This relation can be thought of as
-a multi-valued ``function'' that receives as input a wordform and a
-hypertag (that is, a single lexical entry) and outputs (possibly
-multiple) pairs of specifiers and types.
+signature that yields these structures. The grammar designer's duty is
+to provide a 4-ary relation that links the four parts of a lexical
+constant: the wordform, the hypertag, the specifier and the type. This
+relation can be thought of as a multi-valued ``function'' that receives
+as input a wordform and a hypertag (that is, a single lexical entry) and
+outputs (possibly multiple) pairs of specifiers and types.
 
 Since we are working in a functional programming language that supports
 manipulation of higher-order functions, we can provide helper functions
-which construct these 4-ary relations for the grammar designer in some
+which construct the signature relations for the grammar designer in some
 simple cases. Our library thus provides functions like
-\texttt{unitypedr}, which expects a type and returns the 4-ary relation
-that assigns to every lexical item a single constant whose specifier is
-$nil$ and whose type is the supplied type, or \texttt{ht->typer}, which
-expects a mapping from hypertag patterns to types and returns the 4-ary
-relation which tries to map the hypertag against the patterns and yields
-constants with the corresponding types and $nil$ specifiers. When other
-patterns emerge, the grammar designer is completely free to implement
-her new abstractions using the full power of the functional programming
-language.
+\texttt{unitypedr}, which expects a type and returns a signature that
+assigns to every lexical item a single constant whose specifier is $nil$
+and whose type is the supplied type, or \texttt{ht->typer}, which
+expects a mapping from hypertag patterns to types and returns a
+signature which tries to map the hypertags of lexical items against the
+patterns and yields constants with the corresponding types and $nil$
+specifiers. When other patterns emerge, the grammar designer is
+completely free to implement her new abstractions using the full power
+of the functional programming language.
 
 See Figure~\ref{fig:lex-sig-impl} for an example of implementing a
 lexicalized version of the $\Sigma_{Synt}$ signature
@@ -324,8 +324,8 @@ database. Consider, for example, the empty string $\epsilon$ and the
 string concatenation operator $+$ of the $\Sigma_{String}$ signature we
 gave in~\ref{ssec:example-sig} or the quantifiers and logical
 connectives of the $\Sigma_{Sem}$ signature in~\ref{ssec:acg-sem}.
-These constants are not associated to any lexical entry or specifier and
-therefore their representations must be different. See
+These constants are not associated to any lexical entry and therefore
+their representations must be different. See
 Figure~\ref{fig:nonlex-const} for an example of the representation we
 use for non-lexicalized constants.
 
@@ -341,8 +341,8 @@ use for non-lexicalized constants.
 \end{figure}
 
 Signatures of non-lexical constants can be simply defined by a mapping
-from the constant names to their types as
-in~\ref{fig:nonlex-sig-impl}. Such signatures will generally not be
+from the constant names to their types as in
+Figure~\ref{fig:nonlex-sig-impl}. Such signatures will generally not be
 sufficient by themselves and will need to be complemented by other
 signatures which contain lexical constants. Since we represent
 signatures as unary relations, combining them to produce their unions or
@@ -364,7 +364,7 @@ intersections is just a matter of taking their disjunctions
     intuitionistic implication.}
 \end{figure}
 
-With this, we have enough to fully define all the signatures of
+With this, we have enough tools to fully define all the signatures of
 section~\ref{sec:acg} in a lexicalized manner, see
 Figure~\ref{fig:example-sig-impl}.
 
@@ -413,25 +413,25 @@ pairs form a subset of $\hat{F}$. $F$ (or at least its relevant subset),
 which only maps the atomic abstract types, can be inferred from this
 subset of $\hat{F}$.
 
-In our relational framework, a mapping can be represented most directly
-as a binary relation and that is the representation that we use in our
-system. In the previous subsection, we talked a lot about how individual
-entries in the lexical database generate the items of a
+In the relational framework, a mapping can be represented most directly
+as a binary relation and that is the representation of lexicons that we
+use in our system. In the previous subsection, we talked a lot about how
+individual entries in the lexical database generate the items of a
 signature. Solving the problem for signatures also solved it for
 lexicons, since a lexicon contains exactly one object term for every
 constant in its abstract signature. Therefore, a pair of an abstract
 constant and an object term belonging to some lexicon is generated by
-the same lexical entry that generated the abstract constant.
+the same lexical entry that generated the abstract constant and its
+type.
 
 Our representation of lexical constants was purposefully engineered so
 as to make the lexical entry directly accessible to the lexicon
-implementation. Since the lexicon is directly implemented by the grammar
-designer as a binary relation between constants and terms, the grammar
-designer can inspect the abstract constant and directly access the
-hypertag and wordform of the lexical entry that generated it, the
-specifier that was assigned to it and the type of the constant and then
-express the object term assigned to the constant using any combination
-of these.
+implementation. Since the lexicon is implemented by the grammar designer
+as a binary relation between constants and terms, the grammar designer
+can inspect the abstract constant and directly access the hypertag and
+wordform of the lexical entry that generated it, the specifier that was
+assigned to it and the type of the constant, and then express the object
+term assigned to the constant using any combination of these.
 
 \subsubsection{Succinct Definitions of Lexicons}
 
@@ -439,10 +439,10 @@ The above is already enough to define any lexicon. However, our toolkit
 presents convenience facilities that capture common forms of
 lexicons. With these, we will be able to define lexicalized versions of
 the lexicons of section~\ref{sec:acg} in a concise point-free
-style. Furthermore, the grammar designer is not limited to the convenience
-facilities we have provided and is completely free to use the same
-programming language we have used to build on our abstractions and build
-her own right within her grammar definition.
+style. Furthermore, the grammar designer is not limited to the
+convenience facilities we have provided and is completely free to use
+the same programming language we have used to build her own abstractions
+on top of ours right within her grammar definition.
 
 \begin{figure}
   \centering
@@ -491,21 +491,21 @@ by the same lexical entry as the abstract constant
 loves + y$). Managing this involves some tedious boilerplate that can be
 avoided by another convenience facility. First, we define a lexicon that
 produces the desired object term but with the object constant abstracted
-out (e.g. $\lambda^{\circ} c x y.\ x + c + y$). Then, we apply the
+out (e.g. $\lambda^{\circ} c x y.\ x + c + y$). Then, we can apply the
 \texttt{lexicalizer} function to the object signature and to this
 lexicon to get the desired lexicon which fills in the correct object
 constants.
 
 It is also useful to be able to easily insert the non-lexical constants
-of the object signature in the object terms we are giving when defining
-a lexicon. This service is provided by the anaphoric macro
+of the object signature into the object terms we are giving when
+defining a lexicon. This service is provided by the anaphoric macro
 \texttt{with-sig-consts} which introduces all of the non-lexical
 constants of a signature into scope for easy use inside of lexicon
 definitions.
 
-Finally, since lexicons are again just sets of pairs, we can take their
+Finally, since lexicons are again just relations, we can take their
 unions and intersections using disjunction (\texttt{orr}) and
-conjunction (\texttt{andr}).
+conjunction (\texttt{andr}), respectively.
 
 This gives us everything we need to define the lexicalized versions of
 the lexicons of section~\ref{sec:acg} in a concise and elegant
@@ -546,12 +546,12 @@ programming system is built upon.
 \label{ssec:check-sig}
 
 The crucial property that we need to check for in signatures is that the
-relation between constant identities and their types is a function. This
-simply reduces to querying the system for the number of typed constants
-belonging to the signature and having some specific identity. If this
-number is one for all of our test cases, we have verified that (the
-tested subset of) the signature assigns exactly one type to every one of
-its constants.
+relation between the identities of constants and their types is a
+function. This simply reduces to querying the system for the number of
+typed constants belonging to the signature and having a specific
+identity. If this number is one for all the identities in our test set,
+we have verified that (the tested subset of) the signature assigns
+exactly one type to every one of its constants.
 
 \subsection{Checking Lexicons}
 

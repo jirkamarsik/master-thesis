@@ -56,7 +56,8 @@ $\mathcal{L}_{12}(S_1) = S_2$ and will therefore also belong to $A_2$
 new languages, which are formed by mapping an ACG abstract language
 using a lexicon, are called \emph{object languages}. Their terms are
 constrained not only by the types of the signature they are built upon
-but also by the type system of the abstract signature.
+but also by the type system of the abstract signature and the lexicon
+connecting the two.
 
 Finally, we can also take the composition of lexicons $\mathcal{L}_{13}
 = \mathcal{L}_{23} \circ \mathcal{L}_{12}$, which itself is also a
@@ -92,7 +93,7 @@ the quadruples described above). This contrasts with the presentation of
 ACGs that we gave in~\ref{sec:acg}, where we defined ACGs as collections
 of signatures associated with distinguished types and connected with
 lexicons. Our definition only introduced the requisite machinery, but
-delayed the delimitation of the way languages can be defined. Leaving
+delayed the delimitation of the ways languages can be defined. Leaving
 this question open will let us answer it now by providing an extension
 of ACGs which will help us overcome the modularity issues that have been
 the theme of Chapter~\ref{chap:constraints}.\footnote{Incidentally, this
@@ -116,7 +117,7 @@ the theme of Chapter~\ref{chap:constraints}.\footnote{Incidentally, this
 On top of that, we will want to define signatures and lexicons to yield
 multiple different object languages (at least one for the string
 representations of forms and one for the semantic representations of
-meaning), which would mean having at least two different ACGs which are
+meanings), which would mean having at least two different ACGs which are
 somehow linked together (e.g. by sharing the same abstract
 signature). However, since these two grammars are so interrelated, we
 would like to reason about them in a way that makes these relationships
@@ -255,7 +256,7 @@ has the node's distinguished type.
 We can confirm that the above graphical model of defining ACGs is
 coherent.
 
-First, we can show that our interpretation is sound meaning that any
+First, we can show that our interpretation is sound, meaning that any
 arborescence adorned with signatures on the nodes, compatible lexicons
 on the edges and a distinguished type on the root can only define ACG
 languages (abstract or object languages). This is trivial, since the
@@ -376,7 +377,7 @@ arborescence.
 
 \section{General Remarks on Graphical ACGs}
 
-In this section, we then examine the key properties and implications of
+In this section, we examine the key properties and implications of
 graphical ACGs.
 
 \subsection{On the Expressivity of Graphical ACGs}
@@ -418,15 +419,15 @@ graphical ACGs.
       object language) and the extrinsic languages of its predecessors
       (which can be constructed from object languages using
       intersections and lexicons thanks to the induction
-      hypothesis). Therefore even $\mathcal{E}_{\mathcal{G}}(v_n)$ can
+      hypothesis). Therefore, even $\mathcal{E}_{\mathcal{G}}(v_n)$ can
       be constructed from object languages using only intersections and
       lexicons.
   \end{itemize}
 
 
   Now we have to prove the converse. We do so by showing that extrinsic
-  languages contain object languages and are closed under intersection
-  and transformation by a lexicon.
+  languages contain object languages and are closed on intersection and
+  transformation by a lexicon.
 
   \begin{figure}
     \centering
@@ -543,8 +544,7 @@ graphical ACGs.
 \begin{corollary}
   The set of extrinsic languages definable by graphical ACGs is the same
   as the set of object languages definable by ACGs if and only if the
-  set of object languages definable by ACGs is closed under
-  intersection.
+  set of object languages definable by ACGs is closed on intersection.
 \end{corollary}
 
 We conclude this subsection with a few words to motivate the need we
@@ -572,18 +572,19 @@ expressivity needed for simple and modular wide-coverage grammars.
 \subsection{On the Decidability of Graphical ACGs}
 \label{ssec:graphical-decidability}
 
-We turn to the problem of parsing with graphical ACGs. Parsing with ACGs
-is a problem on the limits of decidability. When we consider ACGs whose
-abstract signatures only contain types of order 2 or less, parsing is
-possible in polynomial time for both linear \cite{salvati2005problemes}
-and non-linear \cite{kanazawa2007parsing} type systems (such as the one
-we introduced in~\ref{sec:acg}). If the order of the abstract signature
-exceeds 2, the membership problem for linear ACGs becomes decidable if
-and only if the satisfiability problem in the multiplicative exponential
-fragment of linear logic is decidable \cite{de2004vector}, which is an
-open problem. On the other hand, by extending the type system to include
-dependent types, parsing can become undecidable too since in such a
-system type checking itself is undecidable.
+We now turn to the problem of parsing with graphical ACGs. Parsing with
+ACGs is a problem on the limits of decidability. When we consider ACGs
+whose abstract signatures only contain types of order 2 or less, parsing
+is possible in polynomial time for both linear
+\cite{salvati2005problemes} and non-linear \cite{kanazawa2007parsing}
+type systems (such as the one we introduced in~\ref{sec:acg}). If the
+order of the abstract signature exceeds 2, the membership problem for
+linear ACGs becomes decidable if and only if the satisfiability problem
+in the multiplicative exponential fragment of linear logic is decidable
+\cite{de2004vector}, which is an open problem. On the other hand, by
+extending the type system to include dependent types, parsing can become
+undecidable too since in such a system type checking itself is
+undecidable.
 
 Our intent here is to show that by extending the formalism we have not
 made the problem of parsing more difficult, at least in terms of
@@ -881,7 +882,7 @@ discussed in this subsection.
   that have valid corresponding representations on all the other levels
   of linguistic description in Figure~\ref{fig:transducer-grammar}.
 \item The diamond grammar of Figure~\ref{fig:diamond-grammar} is also no
-  longer problematic since the labeling of nodes with terms guarantees
+  longer problematic since the labeling of nodes with terms guarantee
   that there is always a single term per node that can generate the term
   being parsed.
 \end{itemize}
@@ -907,9 +908,9 @@ partially here.
     labeling of nodes with terms by a labeling of all the paths leading
     to $u$.
 
-  \item[$\mathcal{P}_{\mathcal{G}}(u) \subseteq
-    \mathcal{E}_{\mathcal{G}}(u) \subseteq
-    \mathcal{I}_{\mathcal{G}}(u)$] \hfill \\
+  \item[The three languages are increasingly constraining:
+    $\mathcal{P}_{\mathcal{G}}(u) \subseteq \mathcal{E}_{\mathcal{G}}(u)
+    \subseteq \mathcal{I}_{\mathcal{G}}(u)$] \hfill \\
 
     Given a labeling of nodes with terms such that it satisfies the
     conditions in the definition of a pangraphical language, we can show

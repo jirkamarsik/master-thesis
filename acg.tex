@@ -15,8 +15,8 @@ where:
 \begin{itemize}
   \item $C$ is the (finite) set of constants
   \item $A$ is a (finite) set of atomic types
-  \item $\tau$ is the type associating mapping from $C$ to $\mathcal{T}(A)$,
-    the set of types built over $A$
+  \item $\tau$ is the type-associating mapping from $C$ to
+    $\mathcal{T}(A)$, the set of types built over $A$
 \end{itemize}
 
 In our case, $\mathcal{T}(A)$ is the implicative fragment of linear and
@@ -129,8 +129,8 @@ such that:
   signature, which can be understood as its
   interpretation/implementation/realization.
 \item $F$ is a mapping from $A_1$ to $\mathcal{T}(A_2)$ which links the
-  abstract-level types with the object-level types that they realized
-  as.
+  abstract-level types with the object-level types that they are
+  realized as.
 \item $F$ and $G$ are compatible, meaning that for any $c \in C_1$, we
   have $\vdash_{\Sigma_2} G(c) : \hat{F}(\tau_1(c))$ (we will be using
   $\hat{F}$ and $\hat{G}$ to refer to the homomorphic extensions of $F$
@@ -290,7 +290,7 @@ look at what they look like after applying the lexicon to them.
   x.\ x\ +\ loves\ +\ some\ +\ woman$.
 \item $t_5 = (\synt{every}\ \synt{man})\ (\lambda^{\circ}
   x.\ (\synt{some}\ \synt{woman})\ (\lambda^{\circ}
-  y.\ \synt{love}\ x\ y))$ \\ Finally, the sentence (type $s$) is mapped
+  y.\ \synt{love}\ x\ y))$ \\ Finally, the sentence (type $S$) is mapped
   into a simple $\textsc{String}$, $\mathcal{L}_{syntax}(t_5) =_{\beta}
   every\ +\ man\ +\ loves\ +\ some\ +\ woman$.
 \end{itemize}

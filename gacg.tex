@@ -590,10 +590,11 @@ made the problem of parsing more difficult, at least in terms of
 decidability if not in terms of complexity. Let us therefore imagine a
 graphical ACG where every edge (two signatures, distinguished types and
 a lexicon) is an ACG for which there is an effective parsing algorithm
-and type checking is decidable in all the signatures of the graphical
-ACG. Then we can prove the existence of a simple effective parsing
-algorithm for any of the extrinsic languages defined in the graphical
-ACG.
+that lets us find all the abstract terms for a given object term in
+finite time and where type checking is decidable in all the signatures
+of the graphical ACG. Then we can prove the existence of a simple
+effective parsing algorithm for any of the extrinsic languages defined
+in the graphical ACG.
 
 We will be testing whether the term $o$ belongs to
 $\mathcal{E}_{\mathcal{G}}(v)$. Our algorithm first checks whether $o$

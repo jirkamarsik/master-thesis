@@ -18,7 +18,7 @@ descriptions.
 We will illustrate the objects and mechanisms of interaction grammars on
 a simple example sentence. Since the largest and most-developed
 interaction grammar is the Frigram grammar of French, we will be using
-French example sentences and their analysis according to
+French example sentences and their analyses according to
 Frigram. Frigram will be discussed in more detail in
 subsection~\ref{ssec:frigram}.
 
@@ -165,7 +165,7 @@ Figure~\ref{fig:ig-partial}.
   \centering
   \includegraphics[scale=0.25]{images/ig-partial.pdf}
   \caption{\label{fig:ig-partial} The result of merging the EPTDs of
-    \emph{la} and \emph{voit} by merging the nodes (1,5) and (1,5) with
+    \emph{la} and \emph{voit} by merging the nodes (1,2) and (1,5) with
     (2,2) and (2,4), respectively.}
 \end{figure}
 
@@ -273,7 +273,9 @@ admissible to place the determiner in an embedded clause as it is in
 embedded clause, it is the embedded clause itself that must be negated,
 as in sentence (\ref{ex:aucun-good}).
 
-This example demonstrates two points of interest to us.
+We can see the EPTDs of both \emph{aucun} and \emph{ne} on
+Figure~\ref{fig:ig-neg}. This example demonstrates two points of
+interest to us.
 
 First, it uses a new polarized feature, $neg$, to model the fact that
 the two wordforms which enable negation must always co-occur. The
@@ -357,28 +359,28 @@ which maps this polarized formula into a syntactic description. Since we
 will not cover the theorem deeply in our treatise, we will settle for
 knowing that the composition $D \circ +$ of the positive polarization
 operation $+$ and the syntactic description producing operation $D$ maps
-an IILL formula into a syntactic description such that above-stated
+an IILL formula into a syntactic description such that the above-stated
 theorem holds. Furthermore, this mapping can be easily constructed since
 Perrier gives straightforward ways of computing the results of both
 operations.
 
 Perrier's theorem establishes a striking symmetry between the two
 formalisms. Let us consider the case of parsing a sentence using a
-lexicalized grammar in both formalism. First, the sentence is tokenized
+lexicalized grammar in both formalisms. First, the sentence is tokenized
 into wordforms and for each wordform, a lexical item is selected, be it
 a typed constant in some abstract signature for ACGs or an EPTD for IGs.
 
-In ACGs, we will try to take the typed constants and to use them to
-produce a term having some distinguished type $S$. Thanks to the
-Curry-Howard correspondence, constructing a term having a given type is
-nothing more than proving that term's type as a formula in the logic of
-our type system. What this means is that our parsing problem boils down
-to proving the IILL sequent $\tau_1, ..., \tau_n \vdash S$ (we omit the
+In ACGs, we will try to take the typed constants and use them to produce
+a term having some distinguished type $S$. Thanks to the Curry-Howard
+correspondence, constructing a term having a given type is nothing more
+than proving that term's type as a formula in the logic of our type
+system. What this means is that our parsing problem boils down to
+proving the IILL sequent $\tau_1, ..., \tau_n \vdash S$ (we omit the
 inclusion of intuitionistic non-linear implications since they are not
 relevant for parsing sentences). The sentence thus becomes parsable by
 our grammar under the given lexical selection if and only if this
 sequent is provable and furthermore, the proof of the sequent is our
-desired syntactic structure in a disguise.
+desired syntactic structure in disguise.
 
 Now in IGs, we will conjoin all the EPTDs into a single complex
 polarized tree description. Parsing is then just a matter of finding a
@@ -410,7 +412,7 @@ we could simply choose one of the possible formulas which fit the
 syntactic description as our canonical representation since the
 differences between the types would be inconsequential.
 
-A bigger problem is posed by the fact that $D \circ +$ is not
+Secondly, a bigger problem is posed by the fact that $D \circ +$ is not
 surjective. Perrier \cite{perrier2001intuitionistic} characterized the
 set of syntactic descriptions that can be obtained as images of IILL
 sequents using our transformation $D \circ +$, the set of \emph{IILL
@@ -465,8 +467,7 @@ order, by defining a lexicon from our abstract signature. Each constant
 would combine its arguments in the order in which their corresponding
 subtrees appeared in the ordered PTD. However, the second role of
 precedence constraints, to establish further restrictions on syntactic
-composition, would be lost, as the only restricting factor on syntactic
-composition in ACGs is the type system.
+composition, would be lost.
 
 Another large difference is the use of multiple independent polarized
 features per node. A possible solution here is to salvage the most
@@ -545,7 +546,7 @@ at the positive and negative $cat$ features, $F((2,0))$ becomes $np
 final type.
 
 However, this translation is very lossy in terms of its discriminatory
-power. Many of the constraints which were forced by the original EPTD
+power. Many of the constraints which were enforced by the original EPTD
 are now ignored. We can imagine improving our strategy by using the
 feature structures as our types instead of atomic categories, which
 would not only ensure that e.g. the $sent\_type$ of the embedded clause
@@ -554,8 +555,8 @@ $funct$ feature so that the relative pronoun \emph{que} is not permitted
 to extract subjects. There are still constraints that we would miss out
 on though, such as the fact that the subject (2,3) of the clause (2,0)
 must precede any embedded clauses (2,6)...(2,5), the fact that any such
-embedded clause must serve either the $modal$ or the $obj$ function and
-the fact that the embedded clause (2,5) must have a subject (2,4).
+embedded clauses must serve either the $modal$ or the $obj$ functions
+and the fact that the embedded clause (2,5) must have a subject (2,4).
 
 Other constraints that we did not mention also do not have a direct
 equivalent in ACGs. One example would be a feature of IGs that we have

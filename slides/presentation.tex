@@ -114,12 +114,9 @@
 
 \begin{frame}
   \begin{block}{Abstract languages}
-    %% Languages of (abstract) terms constrained by the constants they are
-    %% built on and their types. Defined by a \textcolor{red}{signature}
-    %% and a \textcolor{darkgreen}{type}.
-
     Lambda terms constrained by the types of constants. \\ Defined by a
-    \textcolor{red}{signature} and a \textcolor{darkgreen}{type}.
+    \textcolor{red}{signature} and a \textcolor{darkgreen}{distinguished
+      type}.
 
     \begin{columns}[t]
       \begin{column}{0.5\textwidth}
@@ -307,7 +304,7 @@
 
 
 
-\section{Semantics of G-ACGs Nodes}
+\section{Semantics of G-ACG Nodes}
 
 \begin{frame}
   \frametitle{Two Intuitions for G-ACGs}
@@ -397,7 +394,7 @@ $$
 
   \begin{columns}[c]
     \begin{column}{0.7\textwidth}
-      \setbeamercolor{block title}{bg=limegreen}
+\setbeamercolor{block title}{bg=limegreen}
       \setbeamercolor{block body}{bg=limegreen}
       \begin{block}{}
         \begin{itemize}
@@ -459,15 +456,11 @@ $$
     \end{itemize}
   \vfill
   \item Intrinsic languages are just the abstract languages of ACGs.
-    \begin{itemize}
-    \item $\mathcal{I} = \mathcal{A}$
-    \end{itemize}
+    $$\mathcal{I} = \mathcal{A}$$
   \vfill
   \item Extrinsic languages are simple extensions of ACGs that add
     intersections.
-    \begin{itemize}
-    \item $\mathcal{E} = \mathcal{O}^{\mathcal{L}{\cap}}$
-    \end{itemize}
+    $$\mathcal{E} = \mathcal{O}^{\mathcal{L}{\cap}}$$
   \vfill
   \item Pangraphical languages are faithful to the generative
     perspective and subsume the previous classes of languages.

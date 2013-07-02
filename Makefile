@@ -6,7 +6,7 @@ deploy: thesis.pdf
 front-page.pdf: front-page.tex
 	pdflatex $<
 
-thesis.pdf: thesis.tex motivation.tex acg.tex ig.tex\
+thesis.pdf: thesis.tex motivation.tex acg.tex ig.tex resume.tex\
             outline.tex abstract.tex implementation.tex constraints.tex\
             gacg.tex conclusion.tex acknowledgments.tex\
             images/*.pdf front-page.pdf diagrams/*.dot biblio.bib

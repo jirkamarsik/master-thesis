@@ -1,4 +1,5 @@
-all: abstract.pdf
+deploy: abstract.pdf
+	cp abstract.pdf ~/Dropbox/Public/abstract.pdf
 
 abstract.pdf: abstract.tex
 	pdflatex abstract.tex

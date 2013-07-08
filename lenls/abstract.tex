@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass[twocolumn]{article}
 
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
@@ -14,6 +14,9 @@
 \usepackage[nottoc,numbib]{tocbibind}
 \usepackage{pdfpages}
 \usepackage{enumitem}
+\usepackage{titling}
+
+\setlength{\droptitle}{-13em}
 
 %% Linear implication from Alessio Guglielmi
 %% https://groups.google.com/forum/?fromgroups=#!topic/comp.text.tex/0B4C3F_BsVI
@@ -29,9 +32,311 @@
 \author{Jiří Maršík \and Maxime Amblard}
 \maketitle
 
+\begin{abstract}
+  We present work whose ultimate goal is the creation of a wide-coverage
+  abstract categorial grammar (ACG) that could be used to automatically
+  build discourse-level representations. We focus on the challenge of
+  integrating the treatment of disparate linguistic constraints in a
+  single ACG and propose a generalization of the formalism: graphical
+  abstract categorial grammars.
+\end{abstract}
+
+\section{Motivation}
+
+Abstract categorial grammars (ACGs) have shown to be a viable formalism
+for elegantly encoding the dynamic nature of discourse. Proposals based
+on continuation semantics \cite{de2006towards} have tackled topics such
+as event anaphora \cite{qian2011event}, SDRT discourse structure
+\cite{asher2011sdrt} and modal accessibility constraints
+\cite{asher2011montagovian}. However, all of these treatments only
+consider tiny fragments of languages. We are interested in building a
+wide-coverage grammar which integrates and reconciles the existing
+formal treatments of discourse and allows us to study their interactions
+and to build discourse representations automatically.
+
+In this paper we focus on the problem of constructing a wide-coverage
+ACG. We identify a problem that comes up when one tries to enforce
+multiple constraints/dependencies in a single ACG and we propose a
+generalization of the formalism which allows for a natural solution to
+the problem.
 
 
+\begin{figure*}[t]
+  \centering
+  \begin{subfigure}[b]{0.25\textwidth}
+    \centering
+    \includegraphics[height=0.2\textheight]{../diagrams/double-acg.pdf}
+    \caption{\label{fig:acg-comp-basic} Connecting form with meaning.}
+  \end{subfigure}
+  \qquad
+  \begin{subfigure}[b]{0.25\textwidth}
+    \centering
+    \includegraphics[height=0.2\textheight]{../diagrams/serial-over-parallel.pdf}
+    \caption{\label{fig:acg-comp-constr} Adding a constraint.}
+  \end{subfigure}
+  \qquad
+  \begin{subfigure}[b]{0.25\textwidth}
+    \centering
+    \includegraphics[height=0.2\textheight]{../diagrams/parallel-over-serial.pdf}
+    \caption{\label{fig:acg-comp-sem} Distinguishing syntactic and
+      semantic ambiguities..}
+  \end{subfigure}
+  \caption{\label{fig:acg-comp} Diagrams of systems of ACGs.}
+\end{figure*}
 
+
+\section{The Problem of Multiple Constraints}
+\label{sec:constraints}
+
+We will consider several linguistic constraints that have been given
+formal treatments in grammatical formalisms.
+
+In French, negation is signalled by prepending the particle \emph{ne} to
+the negated verb in conjunction with using a properly placed
+accompanying word, such as a negative determiner in one of the verb's
+arguments. This phenomenon has been elegantly formalized in the Frigram
+interaction grammar \cite{perrier2007french}.
+
+\begin{exe}
+  \ex \label{ex:aucun-shallow} Jean \textbf{ne} parle à \textbf{aucun} collègue. \\
+      (Jean speaks to no colleague.)
+  \ex \label{ex:aucun-deep-obj} Jean \textbf{ne} parle à la femme d'\textbf{aucun} collègue. \\
+      (Jean speaks to the wife of no colleague.)
+  \ex \label{ex:aucun-deep-subj} \textbf{Aucun} collègue de Jean \textbf{ne} parle à sa femme. \\
+      (No colleague of Jean's speaks to his wife.)
+\end{exe}
+
+We see here that the negative determiner \emph{aucun} can be present in
+the subject or the object of the negated verb and it can modify the
+argument directly or be attached to one of its complements. Furthermore,
+we note that omitting either the word \emph{ne} or the word \emph{aucun}
+while keeping the other produces a sentence which is considered
+ungrammatical.
+
+This difference in syntactic behavior between noun phrases that contain
+a negative determiner and those that do not has implications for our
+grammar. Since two terms having an identical type in an ACG signature
+can be freely interchanged in any sentence, we are forced to assign two
+different types to these two different kinds of noun phrases.
+
+% NOTE: We could use a single constant for the two paired words.
+% NOTE: We could use a higher-order type for the negative determiner
+% which demands the negative particle itself.
+
+This leads us to a grammar in which we subdivide the atomic types $N$
+and $NP$ into subtypes that reflect whether or not they contain a
+negative determiner inside. Types of the other constants, such as the
+preposition \emph{de} seen in (\ref{ex:aucun-deep-obj}) and
+(\ref{ex:aucun-deep-subj}), will constrain their arguments to have
+compatible features on their types and will propagate the information
+carried in the features to its result type, e.g.:
+
+\begin{align*}
+N_{de_1} &: NP\_NEG{=}F \limp N\_NEG{=}F \limp N\_NEG{=}F \\
+N_{de_2} &: NP\_NEG{=}F \limp N\_NEG{=}T \limp N\_NEG{=}T \\
+N_{de_3} &: NP\_NEG{=}T \limp N\_NEG{=}F \limp N\_NEG{=}T
+\end{align*}
+
+Enforcing other constraints leads us to subdivide our ``atomic'' types
+even further (e.g. the authors of \cite{pogodalla2012controlling} add
+features to the $S$ and $NP$ types to implement constraints about
+extraction). Other phenomena, such as agreement on morphological
+properties like number, gender, person or case, intuitively lead us to
+make our types even more specific.
+
+If we were to use this approach to write a grammar that enforces
+multiple constraints at the same time, we would end up with complicated
+types like the one below which provide complete specifications of the
+various possible situations.
+
+\begin{align*}
+C_{de_{11}} :\ &(NP\_\textcolor{red}{NEG{=}T}\_\textcolor{green}{VAR{=}F}\_\textcolor{blue}{NUM{=}PL}) \\
+&\limp (N\_\textcolor{red}{NEG{=}F}\_\textcolor{blue}{NUM{=}SG}) \\
+&\limp (N\_\textcolor{red}{NEG{=}T}\_\textcolor{blue}{NUM{=}SG})
+\end{align*}
+
+This creates two problems. Firstly, the number of such types grows
+exponentially with the number of features added. This can be fixed by
+introducing dependent types into the type system as in
+\cite{de2007type}. Secondly, and perhaps more importantly, we have lost
+the clarity and simplicity of describing the individual phenomena
+independently. This makes adding new constraints more and more
+cumbersome and reduces our capability to reason about our grammar. It no
+longer becomes apparent which language mechanisms behave independently
+and their interactions are hard to track. We firmly believe that
+simplicity is a fundamental requirement for constructing a large and
+robust grammar and our proposal aims to reclaim that simplicity.
+
+\section{Systems of ACGs}
+\label{sec:acg-comp}
+
+An ACG is defined in terms of two higher-order signatures, sets of typed
+constants on which we can form well-typed lambda terms, and a
+translating function from terms of one of the signatures to terms of the
+other (the former signature being called the \emph{abstract} signature,
+the latter being called the \emph{object} signature and the function
+being called a \emph{lexicon}). We are then interested in the terms of
+the abstract signature having some distinguished type and their images
+through the lexicon (these two sets of terms are called the
+\emph{abstract language} and the \emph{object language}, respectively).
+
+When describing language, we are usually interested in systems of more
+than one ACG and we use diagrams such as the ones on
+Figure~\ref{fig:acg-comp} to explain them.
+
+In Figure~\ref{fig:acg-comp-basic}, we have abstract syntactic terms
+from the signature $\Sigma_{Synt}$ yielding the phonological strings and
+semantic representations using two different lexicons. In
+Figure~\ref{fig:acg-comp-constr}, we extend this pattern by adding a new
+abstract signature which narrows the language of syntactic terms and
+implements some linguistic constraint. Finally, in
+Figure~\ref{fig:acg-comp-sem}, we split the abstract signature
+$\Sigma_{Synt}$ of Figure~\ref{fig:acg-comp-basic} into two signatures,
+$\Sigma_{Syntax}$ and $\Sigma_{SyntSem}$, in order to model syntactic
+and semantic ambiguities in different grammars.
+
+In our grammar, we would like to combine both of the patterns on
+Figures~\ref{fig:acg-comp-constr} and \ref{fig:acg-comp-sem} and
+furthermore, to use the pattern of Figure~\ref{fig:acg-comp-constr}
+multiple times to implement multiple constraints independently. However,
+these combinations are not possible in the framework of ACGs without
+introducing complexity such as by contaminating the syntax-semantics
+interface by the implementation details of the syntactic layer.
+
+We would like to have a system which would be characterized by a diagram
+like the one on Figure~\ref{fig:gacg}. However, ACG diagrams are limited
+to arborescences and we are obliged to generalize the formalism in order
+to get the expected interpretation of Figure~\ref{fig:gacg}.
+
+\section{Graphical ACGs}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.25\textwidth,height=0.2\textheight]{../diagrams/final.pdf}
+  \caption{{\label{fig:gacg} A graphical ACG that implements two
+      independent syntactic constraints and distinguishes syntactic and
+      semantic ambiguities.}}
+\end{figure}
+
+We define a \emph{graphical abstract categorial grammar} as a directed
+acyclic graph (DAG) whose nodes are labeled with signatures (and
+distinguished types) and whose edges are labeled with lexicons, a
+mathematical reification of an ACG diagram generalized from
+arborescences to DAGs. We then search for an appropriate semantics for
+these structures, i.e. how to determine what languages are defined by a
+graphical ACG.
+
+We first follow the paradigm in which we associate languages with the
+nodes of the graph while the edges tell us how these languages are
+defined in terms of each other. We argue that intersection of languages
+is the suitable meaning of more than two edges arriving at the same node
+based both on the simplicity of the resulting definitions and on our
+expectations about the desired semantics. This leads us to the following
+definitions of \emph{intrinsic} and \emph{extrinsic} languages
+associated with some node $v$ in a graphical ACG $\mathcal{G}$:
+
+$$
+\mathcal{I}_{\mathcal{G}}(v) = \{t \in \Lambda(\Sigma_v)
+\mid\ \vdash_{\Sigma_v} t : S_v\}
+$$
+$$
+\mathcal{E}_{\mathcal{G}}(v) = \mathcal{I}_{\mathcal{G}}(v) \cap
+\bigcap_{(u,v) \in E} \mathcal{L}_{(u,v)}(\mathcal{E}_{\mathcal{G}}(u))
+$$
+
+The intrinsic language is just the set of terms built on the node's
+signature and having the node's distinguished type. The extrinsic
+language is established by taking the extrinsic languages of its
+predecessors, mapping them through a lexicon and taking their
+intersection, or just taking the node's intrinsic language if it has no
+predecessors.
+
+We examine the relationship between the languages defined by ACGs and
+graphical ACGs (G-ACGs). Intrinsic languages correspond exactly to
+abstract languages and therefore the sets of languages definable by both
+are equal.
+
+$$
+\mathcal{I} = \mathcal{A}
+$$
+
+G-ACG extrinsic languages correspond to ACG object languages with
+intersection. More formally, we can say that ACG object languages are
+just ACG abstract languages closed on transformation by a lexicon and we
+show that G-ACG extrinsic languages are just ACG abstract languages
+closed on transformation by a lexicon and intersection.
+
+$$
+\mathcal{O} = \mathcal{A}^{\mathcal{L}}
+$$
+$$
+\mathcal{E} = \mathcal{A}^{\mathcal{L}{\cap}}
+$$
+
+We then argue that closure on intersection is an intuitive property of a
+grammatical formalism that allows independent combination of linguistic
+constraints. Furthermore, from the above we can see that object
+languages are as expressive as extrinsic languages iff object languages
+are closed on intersection, which is conjectured to be false.
+
+However, extrinsic languages turn out to give counter-intuitive
+interpretations to some graphical ACGs and so after examining the
+algebraic paradigm which gave us the intrinsic and extrinsic languages,
+we consider an alternative paradigm, which we call generative.
+
+In this paradigm, we identify the nodes of the graph with terms and the
+edges with statements that one term is mapped into another using a
+lexicon. This leads us to the definition of the \emph{pangraphical}
+language of a node $u$ in a G-ACG $\mathcal{G}$.
+
+A term $t$ belongs to $\mathcal{P}_{\mathcal{G}}(u)$ whenever there
+exists a labeling $T$ of the nodes of the graph such that:
+
+\begin{itemize}
+  \item $T_u = t$.
+  \item For all $v \in V(G)$, $\vdash_{\Sigma_v} T_v : S_v$.
+  \item For all $(v,w) \in E(G)$, $\mathcal{L}_{(v,w)}(T_v) = T_w$.
+\end{itemize}
+
+The two paradigms under which we can interpret ACGs are equivalent in
+the context of plain ACGs and arborescent diagrams and the two metaphors
+(nodes as languages and nodes as terms) can be used interchangeably. We
+back this up formally by showing that for every node $u$ in every
+arborescent G-ACG $\mathcal{G}$, we have $\mathcal{E}_{\mathcal{G}}(u) =
+\mathcal{P}_{\mathcal{G}}(u)$. However, as we start to consider
+non-arborescent graphs, we find, interestingly, that the two paradigms
+diverge.
+
+The newly defined pangraphical languages solve the problem of extrinsic
+languages giving us counter-intuitive interpretations for some specific
+G-ACGs. We show by construction that pangraphical languages are as
+expressive as extrinsic languages and so the kinds of languages we have
+defined here are increasingly more expressive, $\mathcal{I} \subseteq
+\mathcal{E} \subseteq \mathcal{P}$. We also show that
+$\mathcal{I}_{\mathcal{G}}(u) \supseteq \mathcal{E}_{\mathcal{G}}(u)
+\supseteq \mathcal{P}_{\mathcal{G}}(u)$, meaning that the language
+definitions are more and more constraining and that the extrinsic
+languages went in the right direction as pangraphical languages, but not
+as far.
+
+Finally, we construct a G-ACG which integrates the French negation
+constraint discussed in Section~\ref{sec:constraints}, the constraints
+on extraction introduced in \cite{pogodalla2012controlling} and a
+constraint handling gender agreement in a single grammar
+specification. The negation constraint is implemented exactly as was
+described in Section~\ref{sec:constraints} and the extraction
+constraints are taken as is from \cite{pogodalla2012controlling}. The
+underlying syntactic signature is defined without any concern for the
+additional constraints and the syntax-semantics signature is kept simple
+as well.
+
+In the end, this lets us define the syntax in a clean way using the
+idiomatic style of categorial grammars (simple atomic types like $N$,
+$NP$ and $S$) and then define the constraints themselves the same way
+they are defined in papers which try to formalize them individually
+(such as the case with \cite{pogodalla2012controlling}). We can freely
+combine both the constraint pattern and the syntax-semantics ambiguities
+pattern from Section~\ref{sec:acg-comp}.
 
 \bibliographystyle{plain}
 \bibliography{../biblio}

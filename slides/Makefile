@@ -1,3 +1,10 @@
+all: presentation.pdf short-presentation.pdf
+
+short-presentation.pdf: short-presentation.tex ../diagrams/*.dot
+	make -C ../diagrams
+	pdflatex short-presentation.tex
+	pdflatex short-presentation.tex
+
 presentation.pdf: presentation.tex ../diagrams/*.dot
 	make -C ../diagrams
 	pdflatex presentation.tex

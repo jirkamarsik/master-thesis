@@ -173,34 +173,36 @@ robust grammar and our proposal aims to reclaim that simplicity.
 An ACG is defined in terms of two higher-order signatures, sets of typed
 constants on which we can form well-typed lambda terms, and a
 translating function from terms of one of the signatures to terms of the
-other (the former signature being called the \emph{abstract} signature,
-the latter being called the \emph{object} signature and the function
+other (the former signature being called the \emph{abstract signature},
+the latter being called the \emph{object signature} and the function
 being called a \emph{lexicon}). We are then interested in the terms of
 the abstract signature having some distinguished type and their images
 through the lexicon (these two sets of terms are called the
 \emph{abstract language} and the \emph{object language}, respectively).
 
-When describing language, we are usually interested in systems of more
-than one ACG and we use diagrams such as the ones on
-Figure~\ref{fig:acg-comp} to explain them.
+When describing languages, we are usually interested in systems of more
+than one ACG and diagrams such as the ones on Figure~\ref{fig:acg-comp}
+have been used to explain them.
 
-In Figure~\ref{fig:acg-comp-basic}, we have abstract syntactic terms
-from the signature $\Sigma_{Synt}$ yielding the phonological strings and
-semantic representations using two different lexicons. In
-Figure~\ref{fig:acg-comp-constr}, we extend this pattern by adding a new
-abstract signature which narrows the language of syntactic terms and
-implements some linguistic constraint. Finally, in
-Figure~\ref{fig:acg-comp-sem}, we split the abstract signature
-$\Sigma_{Synt}$ of Figure~\ref{fig:acg-comp-basic} into two signatures,
+In Figure~\ref{fig:acg-comp-basic}, abstract syntactic terms from the
+signature $\Sigma_{Synt}$ yield phonological strings and semantic
+representations using two different lexicons. In
+Figure~\ref{fig:acg-comp-constr}, this pattern is extended by adding a
+new abstract signature which narrows the language of syntactic terms and
+implements some linguistic constraint
+\cite{pogodalla2012controlling}. Finally, in
+Figure~\ref{fig:acg-comp-sem}, the abstract signature $\Sigma_{Synt}$ of
+Figure~\ref{fig:acg-comp-basic} is split into two signatures,
 $\Sigma_{Syntax}$ and $\Sigma_{SyntSem}$, in order to model syntactic
-and semantic ambiguities in different grammars.
+and semantic ambiguities in different grammars
+\cite{pogodalla2007generalizing}.
 
 In our grammar, we would like to combine both of the patterns on
 Figures~\ref{fig:acg-comp-constr} and \ref{fig:acg-comp-sem} and
 furthermore, to use the pattern of Figure~\ref{fig:acg-comp-constr}
 multiple times to implement multiple constraints independently. However,
 these combinations are not possible in the framework of ACGs without
-introducing complexity such as by contaminating the syntax-semantics
+introducing complexity such as contaminating the syntax-semantics
 interface by the implementation details of the syntactic layer.
 
 We would like to have a system which would be characterized by a diagram
@@ -220,17 +222,19 @@ to get the expected interpretation of Figure~\ref{fig:gacg}.
 
 We define a \emph{graphical abstract categorial grammar} as a directed
 acyclic graph (DAG) whose nodes are labeled with signatures (and
-distinguished types) and whose edges are labeled with lexicons, a
-mathematical reification of an ACG diagram generalized from
-arborescences to DAGs. We then search for an appropriate semantics for
-these structures, i.e. how to determine what languages are defined by a
-graphical ACG.
+distinguished types) and whose edges are labeled with lexicons, in other
+words just a mathematical reification of an ACG diagram that has also
+been generalized from arborescences to DAGs. We then search for an
+appropriate semantics for these structures, i.e. how to determine what
+languages are defined by a graphical ACG.
 
-We first follow the paradigm in which we associate languages with the
-nodes of the graph while the edges tell us how these languages are
-defined in terms of each other. We argue that intersection of languages
-is the suitable meaning of more than two edges arriving at the same node
-based both on the simplicity of the resulting definitions and on our
+We first follow a paradigm in which nodes of the diagrams are
+interpreted as languages with the edges telling us how these languages
+are defined in terms of each other. A single arrow leading to a language
+means that the target language is produced from the source by mapping it
+through a lexicon. We then argue that the suitable meaning of two or
+more edges arriving at the same node is intersection of languages based
+both on the simplicity of the resulting definitions and on our
 expectations about the desired semantics. This leads us to the following
 definitions of \emph{intrinsic} and \emph{extrinsic} languages
 associated with some node $v$ in a graphical ACG $\mathcal{G}$:
@@ -247,12 +251,12 @@ $$
 The intrinsic language is just the set of terms built on the node's
 signature and having the node's distinguished type. The extrinsic
 language is established by taking the extrinsic languages of its
-predecessors, mapping them through a lexicon and taking their
+predecessors, mapping them through lexicons and taking their
 intersection, or just taking the node's intrinsic language if it has no
 predecessors.
 
-We examine the relationship between the languages defined by ACGs and
-graphical ACGs (G-ACGs). Intrinsic languages correspond exactly to
+We then examine the relationship between the languages defined by ACGs
+and graphical ACGs (G-ACGs). Intrinsic languages correspond exactly to
 abstract languages and therefore the sets of languages definable by both
 are equal.
 
@@ -261,10 +265,10 @@ $$
 $$
 
 G-ACG extrinsic languages correspond to ACG object languages with
-intersection. More formally, we can say that ACG object languages are
-just ACG abstract languages closed on transformation by a lexicon and we
-show that G-ACG extrinsic languages are just ACG abstract languages
-closed on transformation by a lexicon and intersection.
+intersection. More formally, it can be said that ACG object languages
+are just ACG abstract languages closed on transformation by a lexicon
+and we then show that G-ACG extrinsic languages are just ACG abstract
+languages closed on transformation by a lexicon and intersection.
 
 $$
 \mathcal{O} = \mathcal{A}^{\mathcal{L}}
@@ -280,12 +284,10 @@ languages are as expressive as extrinsic languages iff object languages
 are closed on intersection, which is conjectured to be false.
 
 However, extrinsic languages turn out to give counter-intuitive
-interpretations to some graphical ACGs and so after examining the
-algebraic paradigm which gave us the intrinsic and extrinsic languages,
-we consider an alternative paradigm, which we call generative.
+interpretations to some graphical ACGs and we turn to another paradigm.
 
-In this paradigm, we identify the nodes of the graph with terms and the
-edges with statements that one term is mapped into another using a
+In the new paradigm, we interpret the nodes of the graph as terms and
+the edges with statements that one term is mapped into another using a
 lexicon. This leads us to the definition of the \emph{pangraphical}
 language of a node $u$ in a G-ACG $\mathcal{G}$.
 
@@ -299,13 +301,14 @@ exists a labeling $T$ of the nodes of the graph such that:
 \end{itemize}
 
 The two paradigms under which we can interpret ACGs are equivalent in
-the context of plain ACGs and arborescent diagrams and the two metaphors
-(nodes as languages and nodes as terms) can be used interchangeably. We
-back this up formally by showing that for every node $u$ in every
-arborescent G-ACG $\mathcal{G}$, we have $\mathcal{E}_{\mathcal{G}}(u) =
-\mathcal{P}_{\mathcal{G}}(u)$. However, as we start to consider
-non-arborescent graphs, we find, interestingly, that the two paradigms
-diverge.
+the context of plain ACGs whose diagrams are arborescent and the two
+metaphors (nodes as languages and nodes as terms) can be used
+interchangeably. We back this up formally by showing that for every node
+$u$ in every arborescent G-ACG $\mathcal{G}$, we have
+$\mathcal{E}_{\mathcal{G}}(u) = \mathcal{P}_{\mathcal{G}}(u)$. However,
+as we start to consider non-arborescent graphs, we find, interestingly,
+that the two paradigms diverge (i.e. $\exists \mathcal{G},
+u.\ \mathcal{E}_{\mathcal{G}}(u) \neq \mathcal{P}_{\mathcal{G}}(u)$).
 
 The newly defined pangraphical languages solve the problem of extrinsic
 languages giving us counter-intuitive interpretations for some specific
@@ -316,27 +319,27 @@ defined here are increasingly more expressive, $\mathcal{I} \subseteq
 $\mathcal{I}_{\mathcal{G}}(u) \supseteq \mathcal{E}_{\mathcal{G}}(u)
 \supseteq \mathcal{P}_{\mathcal{G}}(u)$, meaning that the language
 definitions are more and more constraining and that the extrinsic
-languages went in the right direction as pangraphical languages, but not
-as far.
+languages went in the same direction as pangraphical languages when
+narrowing the elements of $\mathcal{I}_{\mathcal{G}}(u)$, but not as
+far.
 
 Finally, we construct a G-ACG which integrates the French negation
 constraint discussed in Section~\ref{sec:constraints}, the constraints
 on extraction introduced in \cite{pogodalla2012controlling} and a
-constraint handling gender agreement in a single grammar
-specification. The negation constraint is implemented exactly as was
-described in Section~\ref{sec:constraints} and the extraction
-constraints are taken as is from \cite{pogodalla2012controlling}. The
-underlying syntactic signature is defined without any concern for the
-additional constraints and the syntax-semantics signature is kept simple
-as well.
+constraint handling agreement in a single grammar specification. The
+negation constraint is implemented exactly as was described in
+Section~\ref{sec:constraints} and the extraction constraints are taken
+``as is'' from \cite{pogodalla2012controlling}. The underlying syntactic
+signature is defined without any concern for the additional constraints
+and the syntax-semantics signature is kept simple as well.
 
 In the end, this lets us define the syntax in a clean way using the
 idiomatic style of categorial grammars (simple atomic types like $N$,
-$NP$ and $S$) and then define the constraints themselves the same way
+$NP$ and $S$) and then define the constraints themselves the same way as
 they are defined in papers which try to formalize them individually
-(such as the case with \cite{pogodalla2012controlling}). We can freely
-combine both the constraint pattern and the syntax-semantics ambiguities
-pattern from Section~\ref{sec:acg-comp}.
+(such as the case with \cite{pogodalla2012controlling}). We can also
+freely combine both the constraint pattern and the syntax-semantics
+ambiguities pattern from Section~\ref{sec:acg-comp}.
 
 \bibliographystyle{plain}
 \bibliography{../biblio}

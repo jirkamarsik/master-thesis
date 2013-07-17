@@ -16,7 +16,9 @@
 \usepackage{enumitem}
 \usepackage{titling}
 
-\setlength{\droptitle}{-13em}
+\setlength{\droptitle}{-14em}
+\title{Integration of Multiple Constraints in ACG}
+\date{\vspace{-5em}}
 
 %% Linear implication from Alessio Guglielmi
 %% https://groups.google.com/forum/?fromgroups=#!topic/comp.text.tex/0B4C3F_BsVI
@@ -28,38 +30,31 @@
 
 \begin{document}
 
-\title{An Integration of Multiple Constraints in ACG}
-\author{Jiří Maršík \and Maxime Amblard}
 \maketitle
 
-\begin{abstract}
-  We present work whose ultimate goal is the creation of a wide-coverage
-  abstract categorial grammar (ACG) that could be used to automatically
-  build discourse-level representations. We focus on the challenge of
-  integrating the treatment of disparate linguistic constraints in a
-  single ACG and propose a generalization of the formalism: graphical
-  abstract categorial grammars.
-\end{abstract}
+This proposal is a first step towards a wide-coverage Abstract Categorial
+Grammar (ACG) that could be used to automatically build discourse-level
+representations. We focus on the challenge of integrating the treatment of
+disparate linguistic constraints in a single ACG and propose a generalization
+of the formalism: Graphical Abstract Categorial Grammars.
 
 
 \section{Motivation}
 
-Abstract categorial grammars (ACGs) have shown to be a viable formalism
-for elegantly encoding the dynamic nature of discourse. Proposals based
-on continuation semantics \cite{de2006towards} have tackled topics such
-as event anaphora \cite{qian2011event}, SDRT discourse structure
-\cite{asher2011sdrt} and modal accessibility constraints
-\cite{asher2011montagovian}. However, all of these treatments only
-consider tiny fragments of languages. We are interested in building a
-wide-coverage grammar which integrates and reconciles the existing
-formal treatments of discourse and allows us to study their interactions
-and to build discourse representations automatically.
+Abstract Categorial Grammars (ACGs) have shown to be a viable formalism for
+elegantly encoding the dynamic nature of discourse. Proposals based on
+continuation semantics \cite{de2006towards} have tackled topics such as event
+anaphora \cite{qian2011event}, SDRT discourse structure \cite{asher2011sdrt}
+and modal accessibility constraints \cite{asher2011montagovian}. However, all
+of these treatments only consider tiny fragments of languages. We are
+interested in building a wide-coverage grammar which integrates and reconciles
+the existing formal treatments of discourse and allows us to study their
+interactions and to build discourse representations automatically.
 
-In this paper we focus on the problem of constructing a wide-coverage
-ACG. We identify a problem that comes up when one tries to enforce
-multiple constraints/dependencies in a single ACG and we propose a
-generalization of the formalism which allows for a natural solution to
-the problem.
+In this paper we focus on the problem of constructing a wide-coverage ACG. We
+identify a problem that comes up when one tries to enforce multiple
+constraints/dependencies in a single ACG and we propose a generalization of
+the formalism which resolves to the issue.
 
 
 \begin{figure*}[t]
@@ -190,27 +185,30 @@ C_{de_{11}} :\ &(NP\_\textcolor{red}{NEG{=}T}\_\textcolor{green}{VAR{=}F}\_\text
 This creates two problems. Firstly, the number of such types grows
 exponentially with the number of features added. This can be fixed by
 introducing dependent types into the type system as in
-\cite{de2007type}. However, secondly, and perhaps more importantly, we have
-lost the clarity and simplicity of describing the individual phenomena
-independently. This makes adding new constraints more and more cumbersome and
-reduces our capability to reason about our grammar. It no longer becomes
-apparent which language mechanisms behave independently and their interactions
-are hard to track. We firmly believe that simplicity is a fundamental
-requirement for constructing a large and robust grammar and our proposal aims
-to reclaim that simplicity.
+\cite{de2007type}. However, while this allows us to abstract over the
+combinations of feature values and write our grammar down concisely, it does
+not take away the complexity. The treatments of the various linguistic
+phenomena are all expressed in the same types making it hard to see whether
+they are independent or not. Since the treatments cannot be considered in
+isolation, reasoning about the entire grammar becomes difficult and so does
+enhancing it with more constraints. This is a fatal problem for a grammar
+which strives to cover a wide range of linguistic facts. We firmly believe
+that simplicity is a fundamental requirement for constructing a large and
+robust grammar and our proposal aims to reclaim that simplicity.
 
 In our grammar, we would like to combine several constraints
 (Figure~\ref{fig:acg-comp-constr}) and possibly to also separate the syntactic
 ambiguities from the purely semantic ones (Figure~\ref{fig:acg-comp-sem}).
-However, these combinations are not possible in the framework of ACGs without
-introducing complexity by solving all the constraints in one single type
-signature (the consequences of we saw above) or contaminating the
-syntax-semantics interface by the implementation details of the syntactic
-layer.
+However, trying to mix these strategies in the ACG framework forces us to
+solve all the constraints in a single type signature or contaminate the
+syntax-semantics interface with the implementation details of the syntactic
+layer, both of which introduce incidental complexity we want to avoid.
 
 We would like to have a system which would be characterized by a diagram like
-the one on Figure~\ref{fig:gacg}. However, ACG diagrams are limited to
-arborescences and we are obliged to generalize the formalism in order to get
+the one on Figure~\ref{fig:gacg} where the constraint signatures delimit the
+legal syntactic structures independently of each other and without interfering
+with the syntax-semantics interface. However, ACG diagrams are limited to
+arborescences and we are obliged to generalize them in order to get
 the expected interpretation of Figure~\ref{fig:gacg}.
 
 
@@ -219,18 +217,20 @@ the expected interpretation of Figure~\ref{fig:gacg}.
 \begin{figure}
   \centering
   \includegraphics[width=0.25\textwidth,height=0.2\textheight]{../diagrams/final.pdf}
-  \caption{{\label{fig:gacg} A graphical ACG that implements two
+  \caption{\label{fig:gacg} A graphical ACG that implements two
       independent syntactic constraints and distinguishes syntactic and
-      semantic ambiguities.}}
+      semantic ambiguities.}
 \end{figure}
 
-We define a \emph{graphical abstract categorial grammar} as a directed
-acyclic graph (DAG) whose nodes are labeled with signatures (and
-distinguished types) and whose edges are labeled with lexicons, in other
-words just a mathematical reification of an ACG diagram that has also
-been generalized from arborescences to DAGs. We then search for an
-appropriate semantics for these structures, i.e. how to determine what
-languages are defined by a graphical ACG.
+We define a \emph{graphical abstract categorial grammar} as a directed acyclic
+graph (DAG) whose nodes are labeled with signatures (and distinguished types)
+and whose edges are labeled with lexicons, in other words a mathematical
+reification of an ACG diagram that has been generalized from
+arborescences to DAGs. We then search for an appropriate semantics for these
+structures, i.e. how to determine what languages are defined by a graphical
+ACG.
+
+\subsection{Nodes as Languages}
 
 We first follow a paradigm in which nodes of the diagrams are
 interpreted as languages with the edges telling us how these languages
@@ -269,10 +269,9 @@ $$
 $$
 
 G-ACG extrinsic languages correspond to ACG object languages with
-intersection. More formally, it can be said that ACG object languages are just
-ACG abstract languages closed on transformation by a lexicon, and we then show
-that G-ACG extrinsic languages are just ACG abstract languages closed on
-transformation by a lexicon and intersection.
+intersection. More formally, while ACG object languages are ACG abstract
+languages closed on transformation by a lexicon, G-ACG extrinsic languages are
+ACG abstract languages closed on transformation by a lexicon and intersection.
 
 $$
 \mathcal{O} = \mathcal{A}^{\mathcal{L}}
@@ -283,18 +282,22 @@ $$
 
 We then argue that closure on intersection is an intuitive property of a
 grammatical formalism that allows independent combination of linguistic
-constraints. Furthermore, from the above we can see that object
-languages are as expressive as extrinsic languages iff object languages
-are closed on intersection, which is conjectured to be false.
+constraints. Furthermore, from the above we can see that object languages are
+as expressive as extrinsic languages iff object languages are closed on
+intersection, which is conjectured to be false.
 
 However, the extrinsic languages we have defined above turn out to give
 counter-intuitive interpretations to some graphical ACGs and we revisit the
 question in an another paradigm.
 
+\subsection{Nodes as Terms}
+
 In the new paradigm, we interpret the nodes of the graph as terms and the
 edges as statements that one term is mapped into another using a lexicon. This
-leads us to the definition of the \emph{pangraphical} language of a node $u$
-in a G-ACG $\mathcal{G}$.
+leads us to the definition of the \emph{pangraphical}\footnote{As opposed to
+  extrinsic languages, which are constrained only by their predecessors in the
+  graph, pangraphical languages are constrained by the entire graph.} language
+of a node $u$ in a G-ACG $\mathcal{G}$.
 
 A term $t$ belongs to $\mathcal{P}_{\mathcal{G}}(u)$ whenever there
 exists a labeling $T$ of the nodes of the graph such that:
@@ -328,23 +331,13 @@ languages went in the same direction as pangraphical languages when
 narrowing the elements of $\mathcal{I}_{\mathcal{G}}(u)$, but not as
 far.
 
-Finally, we construct a G-ACG which integrates the French negation
-constraint discussed in Section~\ref{sec:constraints}, the constraints
-on extraction introduced in \cite{pogodalla2012controlling} and a
-constraint handling agreement in a single grammar specification. The
-negation constraint is implemented exactly as was described in
-Section~\ref{sec:constraints} and the extraction constraints are taken
-``as is'' from \cite{pogodalla2012controlling}. The underlying syntactic
-signature is defined without any concern for the additional constraints
-and the syntax-semantics interface is kept simple as well.
-
-In the end, this lets us define the syntax in a clean way using the
-idiomatic style of categorial grammars (simple atomic types like $N$,
-$NP$ and $S$) and then define the constraints themselves the same way as
-they are defined in papers which try to formalize them individually
-(such as the case with \cite{pogodalla2012controlling}). We can also
-freely combine both the constraint pattern and the syntax-semantics
-ambiguities pattern from Section~\ref{sec:acg-comp}.
+Finally, we construct a G-ACG which integrates the French negation constraint
+discussed in Section~\ref{sec:constraints}, the constraints on extraction
+introduced in \cite{pogodalla2012controlling} and a constraint handling
+agreement in a single grammar specification. The constraints are implemented
+exactly as they were originally described. The underlying syntactic signature
+is defined without any concern for the additional constraints and the
+syntax-semantics interface is kept simple as well.
 
 
 \section{Conclusion}
@@ -353,7 +346,15 @@ We have considered the problem of building a wide-coverage ACG, specifically
 the problem of expressing a multitude of linguistic constraints. We have
 examined previous techniques and found no satisfying solution. We have thus
 provided an extension of the ACG formalism to solve the problem and justified
-the need for the increased expressivity.
+the need for the increased expressivity. This embedding of syntactic
+constraints will be used to define a syntax-semantics interface and then to
+build discourse structures.
+
+In the end, this lets us define the syntax in a clean way using the
+idiomatic style of categorial grammars (simple atomic types like $N$,
+$NP$ and $S$) and then define the constraints themselves the same way as
+they are defined in papers which try to formalize them individually
+(such as the case with \cite{pogodalla2012controlling}).
 
 \bibliographystyle{plain}
 \bibliography{../biblio}

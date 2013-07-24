@@ -51,10 +51,10 @@ interested in building a wide-coverage grammar which integrates and reconciles
 the existing formal treatments of discourse and allows us to study their
 interactions and to build discourse representations automatically.
 
-In this paper we focus on the problem of constructing a wide-coverage ACG. We
+In this paper, we focus on the problem of constructing a wide-coverage ACG. We
 identify a problem that comes up when one tries to enforce multiple
 constraints/dependencies in a single ACG and we propose a generalization of
-the formalism which resolves to the issue.
+the formalism which resolves the issue.
 
 
 \begin{figure*}[t]
@@ -94,9 +94,9 @@ the abstract signature having some distinguished type and their images
 through the lexicon (these two sets of terms are called the
 \emph{abstract language} and the \emph{object language}, respectively).
 
-When describing languages, we are usually interested in systems of more
-than one ACG and diagrams such as the ones on Figure~\ref{fig:acg-comp}
-have been used to explain them.
+When describing languages, we are usually interested in systems of more than
+one ACG, and diagrams such as the ones on Figure~\ref{fig:acg-comp} have been
+used to explain them.
 
 In Figure~\ref{fig:acg-comp-basic}, abstract syntactic terms from the
 signature $\Sigma_{Synt}$ yield phonological strings and semantic
@@ -118,11 +118,11 @@ and semantic ambiguities in different grammars
 We will consider several linguistic constraints that have been given
 formal treatments in grammatical formalisms.
 
-In French, negation is signalled by prepending the particle \emph{ne} to
-the negated verb in conjunction with using a properly placed
-accompanying word, such as a negative determiner in one of the verb's
-arguments. This phenomenon has been elegantly formalized in the Frigram
-interaction grammar \cite{perrier2007french}.
+In French, negation is signalled by prepending the particle \emph{ne} to the
+negated verb in conjunction with using a properly placed accompanying word,
+such as a negative determiner, in one of the verb's arguments. This phenomenon
+has been elegantly formalized in the Frigram interaction grammar
+\cite{perrier2007french}.
 
 \begin{exe}
   \ex \label{ex:aucun-shallow} Jean \textbf{ne} parle à \textbf{aucun} collègue. \\
@@ -308,15 +308,15 @@ exists a labeling $T$ of the nodes of the graph such that:
   \item For all $(v,w) \in E(G)$, $\mathcal{L}_{(v,w)}(T_v) = T_w$.
 \end{itemize}
 
-The two paradigms under which we can interpret ACGs are equivalent in
-the context of plain ACGs whose diagrams are arborescent and the two
+The two paradigms under which we can interpret ACGs are equivalent in the
+context of plain ACGs whose diagrams are arborescent and hence the two
 metaphors (nodes as languages and nodes as terms) can be used
-interchangeably. We back this up formally by showing that for every node
-$u$ in every arborescent G-ACG $\mathcal{G}$, we have
-$\mathcal{E}_{\mathcal{G}}(u) = \mathcal{P}_{\mathcal{G}}(u)$. However,
-as we start to consider non-arborescent graphs, we find, interestingly,
-that the two paradigms diverge (i.e. $\exists \mathcal{G},
-u.\ \mathcal{E}_{\mathcal{G}}(u) \neq \mathcal{P}_{\mathcal{G}}(u)$).
+interchangeably. We back this up formally by showing that for every node $u$
+in every arborescent G-ACG $\mathcal{G}$, we have
+$\mathcal{E}_{\mathcal{G}}(u) = \mathcal{P}_{\mathcal{G}}(u)$. However, as we
+start to consider non-arborescent graphs, we find, interestingly, that the two
+paradigms diverge (i.e. $\exists \mathcal{G}, u.\ \mathcal{E}_{\mathcal{G}}(u)
+\neq \mathcal{P}_{\mathcal{G}}(u)$).
 
 The newly defined pangraphical languages solve the problem of extrinsic
 languages giving us counter-intuitive interpretations for some specific
@@ -350,11 +350,11 @@ the need for the increased expressivity. This embedding of syntactic
 constraints will be used to define a syntax-semantics interface and then to
 build discourse structures.
 
-In the end, this lets us define the syntax in a clean way using the
-idiomatic style of categorial grammars (simple atomic types like $N$,
-$NP$ and $S$) and then define the constraints themselves the same way as
-they are defined in papers which try to formalize them individually
-(such as the case with \cite{pogodalla2012controlling}).
+In the end, this lets us define the syntax in a clean way using the idiomatic
+style of categorial grammars (simple atomic types like $N$, $NP$ and $S$) and
+then define the constraints themselves the same way as they are defined in
+papers which try to formalize them individually (such as is the case with
+\cite{pogodalla2012controlling}).
 
 \bibliographystyle{plain}
 \bibliography{../biblio}

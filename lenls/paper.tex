@@ -273,16 +273,29 @@ ACG.
 
 \subsection{Nodes as Languages}
 
-We first follow a paradigm in which nodes of the diagrams are
-interpreted as languages with the edges telling us how these languages
-are defined in terms of each other. A single arrow leading to a language
-means that the target language is produced from the source by mapping it
-through a lexicon. We then argue that the suitable meaning of two or
-more edges arriving at the same node is intersection of languages based
-both on the simplicity of the resulting definitions and on our
-expectations about the desired semantics. This leads us to the following
-definitions of \emph{intrinsic} and \emph{extrinsic} languages
-associated with some node $v$ in a graphical ACG $\mathcal{G}$:
+We first follow a paradigm in which nodes of the diagrams are interpreted as
+languages with the edges telling us how these languages are defined in terms
+of each other. A single arrow leading to a language means that the target
+language is produced from the source by mapping it through a lexicon. We now
+argue that the suitable meaning of two or more edges arriving at the same node
+is intersection of languages based both on the simplicity of the resulting
+definitions and on our expectations about the desired semantics.
+
+In an ACG diagram, a node with no inbound edges stands for an abstract
+language. This language is defined as the set of terms having the correct
+type. If a node has an inbound edge, and therefore a parent, then the elements
+of its language are also obliged to have an antecedent in the parent
+language. It is a small step to go from this definition to the following: the
+language of a node is the set of terms having the correct type and an
+antecedent in the language of any of its parent nodes. This correctly
+characterizes the current use of ACG diagrams, recognizing abstract languages
+as a special case of object languages. Furthermore, this restatement
+generalizes to DAGs and gives us the desired semantics for implementing
+multiple constraints: intersection.
+
+We can formalize the above definitions by introducing the notions of
+\emph{intrinsic} and \emph{extrinsic} languages associated with some node $v$
+in a graphical ACG $\mathcal{G}$:
 
 $$
 \mathcal{I}_{\mathcal{G}}(v) = \{t \in \Lambda(\Sigma_v)
@@ -312,7 +325,9 @@ $$
 G-ACG extrinsic languages correspond to ACG object languages with
 intersection. More formally, while ACG object languages are ACG abstract
 languages closed on transformation by a lexicon, G-ACG extrinsic languages are
-ACG abstract languages closed on transformation by a lexicon and intersection.
+ACG abstract languages closed on transformation by a lexicon and
+intersection\footnote{Can be show by induction on the topological ordering of
+  any given graphical ACG.}.
 
 $$
 \mathcal{O} = \mathcal{A}^{\mathcal{L}}
@@ -321,15 +336,50 @@ $$
 \mathcal{E} = \mathcal{A}^{\mathcal{L}{\cap}}
 $$
 
-We then argue that closure on intersection is an intuitive property of a
-grammatical formalism that allows independent combination of linguistic
-constraints. Furthermore, from the above we can see that object languages are
+If we want our grammatical framework to be modular w.r.t. the different
+linguistic constraints it encodes, we essentially need
+intersection\footnote{If I have a grammar that enforces $A$ and a grammar that
+  enforces $B$, then I want to have access to the grammar of the language
+  where both $A$ and $B$ are enforced.}. Not only would we want a framework in
+which intersection is possible, we would also like it to be an easy
+operation. Graphical ACGs make intersections trivial to encode and as for
+expressive power, we know, from the equations above, that object languages are
 as expressive as extrinsic languages iff object languages are closed on
-intersection, which is conjectured to be false.
+intersection (which is, at this moment, conjectured to be false). This means
+that graphical ACGs are either a conservative extension providing a more
+convenient way of expressing intersection or are extending ACGs by adding
+only intersection, which enables constraint-based composition of grammars. 
 
-However, the extrinsic languages we have defined above turn out to give
-counter-intuitive interpretations to some graphical ACGs and we revisit the
-question in an another paradigm.
+\begin{figure}
+  \centering
+  \includegraphics[height=0.3\textheight]{../diagrams/diamond-grammar.pdf}
+  \caption{\label{fig:diamond} The diamond-shaped G-ACG $\mathcal{D}$.}
+\end{figure}
+
+While the interpretation of G-ACGs given above does have some nice properties,
+it fails to predict the intuitive understanding of more complex ACG
+diagrams. This is most visible in the diamond-shaped grammar on
+Figure~\ref{fig:diamond}. If we take a term from
+$\mathcal{E}_{\mathcal{D}}(Bottom)$, we know it has antecedents both in
+$\mathcal{E}_{\mathcal{D}}(Left)$ and
+$\mathcal{E}_{\mathcal{D}}(Right)$. However, these two do not have to share an
+antecedent in $\mathcal{E}_{\mathcal{D}}(Top)$. This contradicts the
+generative story one might imagine in which a single term from $Top$ generates
+terms in $Left$ and $Right$ which finally generate a term in $Bottom$.
+
+We can observe another peculiarity on a more practical example. Consider the
+G-ACG in Figure~\ref{fig:gacg}. In classical ACGs, one can always take an
+element in a signature, like $Sem$, and by transduction find its corresponding
+element in an another signature, like $Syntax$. However, in an G-ACG such as
+this it is possible that the $Syntax$ term we obtain by transduction does not
+belong to $\mathcal{E}_{\mathcal{G}}(Syntax)$ because it lacks antecedents in
+either $Constr_1$ or $Constr_2$. This means that the notion of an extrinsic
+language is not capable to give us the set of all meaning terms in $Sem$ which
+actually correspond to syntactically correct sentences in this G-ACG.
+
+The above characteristics motivated us to explore alternative interpretations
+of G-ACGs. We will present one such alternative now, which exchanges the
+language-algebraic point of view for a generative one.
 
 \subsection{Nodes as Terms}
 
@@ -349,28 +399,53 @@ exists a labeling $T$ of the nodes of the graph such that:
   \item For all $(v,w) \in E(G)$, $\mathcal{L}_{(v,w)}(T_v) = T_w$.
 \end{itemize}
 
-The two paradigms under which we can interpret ACGs are equivalent in the
-context of plain ACGs whose diagrams are arborescent and hence the two
-metaphors (nodes as languages and nodes as terms) can be used
-interchangeably. We back this up formally by showing that for every node $u$
-in every arborescent G-ACG $\mathcal{G}$, we have
-$\mathcal{E}_{\mathcal{G}}(u) = \mathcal{P}_{\mathcal{G}}(u)$. However, as we
-start to consider non-arborescent graphs, we find, interestingly, that the two
-paradigms diverge (i.e. $\exists \mathcal{G}, u.\ \mathcal{E}_{\mathcal{G}}(u)
-\neq \mathcal{P}_{\mathcal{G}}(u)$).
+If we compare this new interpretation of G-ACGs to the former one, we find out
+that in the case when the graph of the grammar is an arborescence they are
+actually equivalent. This means that in classical ACGs, where all the diagrams
+are arborescences, the two metaphors (nodes as languages and nodes as terms)
+can be and are used interchangeably. However, as we start to consider
+non-arborescent graphs, we find, interestingly, that the two paradigms diverge
+(i.e. $\exists \mathcal{G}, u.\ \mathcal{E}_{\mathcal{G}}(u) \neq
+\mathcal{P}_{\mathcal{G}}(u)$).
 
 The newly defined pangraphical languages solve the problem of extrinsic
 languages giving us counter-intuitive interpretations for some specific
-G-ACGs. We show by construction that pangraphical languages are as
-expressive as extrinsic languages and so the kinds of languages we have
-defined here are increasingly more expressive, $\mathcal{I} \subseteq
-\mathcal{E} \subseteq \mathcal{P}$. We also show that
-$\mathcal{I}_{\mathcal{G}}(u) \supseteq \mathcal{E}_{\mathcal{G}}(u)
-\supseteq \mathcal{P}_{\mathcal{G}}(u)$, meaning that the language
-definitions are more and more constraining and that the extrinsic
-languages went in the same direction as pangraphical languages when
-narrowing the elements of $\mathcal{I}_{\mathcal{G}}(u)$, but not as
-far.
+G-ACGs. Specifically, the members of $\mathcal{P}_{\mathcal{D}}(Bottom)$ in
+the diamond grammar have a single antecedent in
+$\mathcal{P}_{\mathcal{D}}(Top)$ and the language
+$\mathcal{P}_{\mathcal{G}}(Sem)$ (from Figure~\ref{fig:gacg}) contains only
+meanings expressible by syntactically correct sentences.
+
+Pangraphical languages turn out to be at least as expressive as the extrinsic
+languages\footnote{This might come as no surprise given the extended domain of
+  constraints compared to extrinsic languages (constrained by the entire graph
+  as opposed to just the node's predecessors).}. The proof is carried out by
+transforming a G-ACG such that a particular node will have the same
+pangraphical language in the latter G-ACG as the extrinsic language it had in
+the former. The nodes of the newly constructed G-ACG correspond to paths in
+the former one terminating in the node in question\footnote{This means that
+  when the G-ACG is $\mathcal{D}$, the diamond grammar, and the node in
+  question is $Bottom$, then we will have two different nodes for the two
+  paths $[Top, Left, Bottom]$ and $[Top, Right, Bottom]$.}. Thus the labelling
+of nodes with terms which certifies a given term's presence in the
+pangraphical language of the new G-ACG also serves as a proof of its presence
+in the extrinsic language of the old G-ACG.
+
+This gives us the following ladder of expressivity
+
+$$
+\mathcal{I} \subseteq \mathcal{E} \subseteq \mathcal{P}
+$$
+
+which can be complemented with the following series
+
+$$
+\mathcal{I}_{\mathcal{G}}(u) \supseteq \mathcal{E}_{\mathcal{G}}(u) \supseteq
+\mathcal{P}_{\mathcal{G}}(u)
+$$
+
+
+\section{Example Grammar}
 
 Finally, we construct a G-ACG which integrates the French negation constraint
 discussed in Section~\ref{sec:constraints}, the constraints on extraction

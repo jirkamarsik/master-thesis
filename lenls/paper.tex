@@ -191,17 +191,30 @@ N_{de_2} &: NP\_NEG{=}F \limp N\_NEG{=}T \limp N\_NEG{=}T \\
 N_{de_3} &: NP\_NEG{=}T \limp N\_NEG{=}F \limp N\_NEG{=}T
 \end{align*}
 
-Enforcing other constraints leads us to subdivide our ``atomic'' types
-even further (e.g. the authors of \cite{pogodalla2012controlling} add
-features to the $S$ and $NP$ types to implement constraints about
-extraction). Other phenomena, such as agreement on morphological
-properties like number, gender, person or case, intuitively lead us to
-make our types even more specific.
+In the above, we elaborate the types $NP$ and $N$ with features ($\_NEG{=}F$
+and $\_NEG{=}T$) and we give the different types for the preposition \emph{de}
+in the fragment for negation ($N$). The types accept an $NP$ and an $N$ as
+arguments with any combination of values for the feature $NEG$, except for the
+case when both the prepositional $NP$ and the $N$ being modified both contain
+free negative determiners (i.e. there is no $N_{de_4} : NP\_NEG{=}T \limp
+N\_NEG{=}T \limp N\_NEG{=}\ldots$). This encodes a constraint that there can
+be only one free negative determiner per phrase (free as in not hidden inside
+an embedded clause). Besides this constraint, the types also dictate how the
+information about negative determiners should propagate from the argument
+constituent to the complex constituent (in this case, it is simple
+disjunction).
+
+Enforcing other constraints leads us to subdividing our ``atomic'' types even
+further (e.g. the authors of \cite{pogodalla2012controlling} add features to
+the $S$ and $NP$ types to implement constraints about extraction). Other
+phenomena, such as agreement on morphological properties like number, gender,
+person or case, intuitively lead us to make our types even more specific.
 
 If we were to use this approach to write a grammar that enforces multiple
 constraints at the same time, we would end up with complicated types, like the
 one below, which provide complete specifications of the various possible
-situations.
+situations (in this hypothetical grammar ($C$), the preposition \emph{de} has
+12 different types).
 
 \begin{align*}
 C_{de_{11}} :\ &(NP\_\textcolor{red}{NEG{=}T}\_\textcolor{green}{VAR{=}F}\_\textcolor{blue}{NUM{=}PL}) \\
@@ -224,12 +237,13 @@ that simplicity is a fundamental requirement for constructing a large and
 robust grammar and our proposal aims to reclaim that simplicity.
 
 In our grammar, we would like to combine several constraints
-(Figure~\ref{fig:acg-comp-constr}) and possibly to also separate the syntactic
-ambiguities from the purely semantic ones (Figure~\ref{fig:acg-comp-sem}).
-However, trying to mix these strategies in the ACG framework forces us to
-solve all the constraints in a single type signature or contaminate the
-syntax-semantics interface with the implementation details of the syntactic
-layer, both of which introduce incidental complexity we want to avoid.
+(Figure~\ref{fig:acg-comp-constr}), and possibly to also separate the
+syntactic ambiguities from the purely semantic ones
+(Figure~\ref{fig:acg-comp-sem}).  However, trying to mix these strategies in
+the ACG framework forces us to solve all the constraints in a single type
+signature or contaminate the syntax-semantics interface with the
+implementation details of the syntactic layer, both of which introduce
+incidental complexity we want to avoid.
 
 We would like to have a system which would be characterized by a diagram like
 the one on Figure~\ref{fig:gacg} where the constraint signatures delimit the

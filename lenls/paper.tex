@@ -313,18 +313,18 @@ compatible features on their types and will propagate the information
 carried in the features to its result type, e.g.:
 
 \begin{align*}
-N_{de_1} &: NP\_NEG{=}F \limp N\_NEG{=}F \limp N\_NEG{=}F \\
-N_{de_2} &: NP\_NEG{=}F \limp N\_NEG{=}T \limp N\_NEG{=}T \\
-N_{de_3} &: NP\_NEG{=}T \limp N\_NEG{=}F \limp N\_NEG{=}T
+N_{de_1} &: NP_{NEG{=}F} \limp N_{NEG{=}F} \limp N_{NEG{=}F} \\
+N_{de_2} &: NP_{NEG{=}F} \limp N_{NEG{=}T} \limp N_{NEG{=}T} \\
+N_{de_3} &: NP_{NEG{=}T} \limp N_{NEG{=}F} \limp N_{NEG{=}T}
 \end{align*}
 
-In the above, we elaborate the types $NP$ and $N$ with features ($\_NEG{=}F$
-and $\_NEG{=}T$) and we give the different types for the preposition \emph{de}
+In the above, we elaborate the types $NP$ and $N$ with features ($_{NEG{=}F}$
+and $_{NEG{=}T}$) and we give the different types for the preposition \emph{de}
 in the fragment for negation ($N$). The types accept an $NP$ and an $N$ as
 arguments with any combination of values for the feature $NEG$, except for the
 case when both the prepositional $NP$ and the $N$ being modified both contain
-free negative determiners (i.e. there is no $N_{de_4} : NP\_NEG{=}T \limp
-N\_NEG{=}T \limp N\_NEG{=}\ldots$). This encodes a constraint that there can
+free negative determiners (i.e. there is no $N_{de_4} : NP_{NEG{=}T} \limp
+N_{NEG{=}T} \limp N\_NEG{=}\ldots$). This encodes a constraint that there can
 be only one free negative determiner per phrase (free as in not hidden inside
 an embedded clause). Besides this constraint, the types also dictate how the
 information about negative determiners should propagate from the argument
@@ -343,11 +343,11 @@ one below, which provide complete specifications of the various possible
 situations (in this hypothetical grammar ($C$), the preposition \emph{de} has
 12 different types).
 
-\begin{align*}
-C_{de_{11}} :\ &(NP\_\textcolor{red}{NEG{=}T}\_\textcolor{green}{VAR{=}F}\_\textcolor{blue}{NUM{=}PL}) \\
-&\limp (N\_\textcolor{red}{NEG{=}F}\_\textcolor{blue}{NUM{=}SG}) \\
-&\limp (N\_\textcolor{red}{NEG{=}T}\_\textcolor{blue}{NUM{=}SG})
-\end{align*}
+$$
+C_{de_{11}} :\ NP_{\textcolor{red}{NEG{=}T}, \textcolor{green}{VAR{=}F}, \textcolor{blue}{NUM{=}PL}}
+\limp N_{\textcolor{red}{NEG{=}F},\textcolor{blue}{NUM{=}SG}}
+\limp N_{\textcolor{red}{NEG{=}T},\textcolor{blue}{NUM{=}SG}}
+$$
 
 This creates two problems. Firstly, the number of such types grows
 exponentially with the number of features added. This can be fixed by
@@ -572,15 +572,161 @@ $$
 $$
 
 
-\section{Example Grammar}
+\section{Illustration}
 
-Finally, we construct a G-ACG which integrates the French negation constraint
-discussed in Section~\ref{sec:constraints}, the constraints on extraction
-introduced in \cite{pogodalla2012controlling} and a constraint handling
-agreement in a single grammar specification. The constraints are implemented
-exactly as they were originally described. The underlying syntactic signature
-is defined without any concern for the additional constraints and the
-syntax-semantics interface is kept simple as well.
+In this final section, we assemble a G-ACG which integrates the French
+negation constraint discussed in Section~\ref{sec:constraints}, the
+constraints on extraction introduced in \cite{pogodalla2012controlling} and a
+constraint handling agreement in a single grammar specification to demonstrate
+our approach.
+
+\begin{figure}[t]
+  \centering
+  \begin{subfigure}[b]{0.4\textwidth}
+    \centering
+    \includegraphics[height=0.2\textheight]{../diagrams/single-cont.pdf}
+    \caption{\label{fig:single-cont} An extraction constraint }
+  \end{subfigure}
+  \qquad
+  \begin{subfigure}[b]{0.4\textwidth}
+    \centering
+    \includegraphics[height=0.2\textheight]{../diagrams/merged-conts.pdf}
+    \caption{\label{fig:merged-conts} G-ACG merging the three extraction
+      constraints.}
+  \end{subfigure}
+  \caption{\label{fig:conts} Combining the constraints on extraction.}
+\end{figure}
+
+We start with the extraction constraints. \cite{pogodalla2012controlling}
+describes three different constraints on extraction, all of them expressed
+using the Constraint pattern (Figure~\ref{fig:single-cont}). We can take the
+union of these three G-ACGs to get the G-ACG on Figure~\ref{fig:merged-conts}.
+Next, we can incorporate knowledge from another paper,
+\cite{pogodalla2007generalizing}, by splitting the $\mathcal{L}_{Syn}$ lexicon
+and introducing a new intermediate signature
+(Figure~\ref{fig:conts-elab}). The new signature, $Syntax$, deals purely with
+syntax without any issues of operator scope and its functions have lower-order
+types. We will finally add our contribution, the signatures $Neg$ and $Agr$
+and the lexicons $\mathcal{L}_{Neg}$ and $\mathcal{L}_{Agr}$ which implement
+the negation phenomenon we discussed before and some simple notion of
+agreement, respectively.
+
+\begin{figure}[t]
+  \centering
+  \begin{subfigure}[b]{0.4\textwidth}
+    \centering
+    \includegraphics[height=0.2\textheight]{../diagrams/conts-elab.pdf}
+    \caption{\label{fig:conts-elab} Elaborating the lexicon from syntax to
+      strings. }
+  \end{subfigure}
+  \qquad
+  \begin{subfigure}[b]{0.4\textwidth}
+    \centering
+    \includegraphics[height=0.2\textheight]{../diagrams/final-synth.pdf}
+    \caption{\label{fig:final-synth} Adding our own syntactic constraints,
+      $Neg$ and $Agr$.}
+  \end{subfigure}
+  \caption{\label{fig:final} Building the example grammar up to its final
+    state.}
+\end{figure}
+
+We notice that while the three constraints introduced in
+\cite{pogodalla2012controlling} are expressed in terms of the $Syn$ signature,
+our constraints $Agr$ and $Neg$ use a different interface, the $Syntax$
+signature, to constrain the languages being defined. The $Cont_i$ constraints
+are not actually constraining syntax itself, but the syntax-semantics
+interface. This is in some cases a deliberate decision, since e.g. $Cont_1$ is
+the constraint enforcing that quantifier scope must not escape outside of
+tensed clauses. The $Syntax$ signature is not equipped to talk about operator
+scope and so the constraint is expressed above the $Syn$ signature. On the
+other hand, constraints $Cont_2$ and $Cont_3$ from
+\cite{pogodalla2012controlling} are purely syntactic. However, we see it as a
+perk of our approach that we can ignore that and import the constraint
+wholesale without having to adapt them.
+
+\subsection{The $Neg$ Signature}
+
+We will now look under the covers of the two signatures implementing the
+constraints, starting with negation and the $Neg$ signature.
+
+As was said in Section~\ref{sec:constraints}, we will proceed by splitting the
+atomic types $N$ and $NP$ into $N_{NEG{=}F}$ and $N_{NEG{=}T}$, and
+$NP_{NEG{=}F}$ and $NP_{NEG{=}T}$, respectively. We will use these new types to
+distinguish whether an $N$ or $NP$ phrase contains a negative determiner that
+can pair up with a negated verb. Where before we had a single type, we will
+now have possibly multiple to account for the different values of the
+arguments' $NEG$ features. Here are some representative examples:
+
+\begin{align*}
+N_{aucun} &: N_{NEG{=}F} \limp NP_{NEG{=}T} \\
+N_{le_1} &: N_{NEG{=}F} \limp NP_{NEG{=}F} \\
+N_{le_2} &: N_{NEG{=}T} \limp NP_{NEG{=}T} \\
+N_{ne^{tv}_1} &: (NP_{NEG{=}F} \limp NP_{NEG{=}F} \limp S) \limp (NP_{NEG{=}T} \limp NP_{NEG{=}F} \limp S) \\
+N_{ne^{tv}_2} &: (NP_{NEG{=}F} \limp NP_{NEG{=}F} \limp S) \limp (NP_{NEG{=}F}
+\limp NP_{NEG{=}T} \limp S) \\
+N_{ne^{tv}_3} &: (NP_{NEG{=}F} \limp NP_{NEG{=}F} \limp S) \limp (NP_{NEG{=}T}
+\limp NP_{NEG{=}T} \limp S) \\
+N_{aime} &: NP_{NEG{=}F} \limp NP_{NEG{=}F} \limp S \\
+N_{que_1} &: (NP_{NEG{=}F} \limp S) \limp N_{NEG{=}F} \limp N_{NEG{=}F} \\
+N_{que_2} &: (NP_{NEG{=}F} \limp S) \limp N_{NEG{=}T} \limp N_{NEG{=}T} \\
+\end{align*}
+
+We see that the negative determiner \emph{aucun} can only attach to phrases
+which do not already contain a free negative determiner and that the resulting
+phrase is marked as having a free negative determiner. On the other hand, the
+determiner \emph{le} does not have any interaction and is still able to take
+any $N$ phrase, preserving any free negative determiners inside. The type of
+the negative particle \emph{ne} modifies a verb (in the example above,
+$N_{ne^{tv}_i}$, a transitive verb) and produces a new verb that makes sure
+that at least one of its arguments contains a negative determiner. Verbs are
+not agnostic about the $NEG$ feature. By default, they specifically demand it
+to be false, since a negative determiner cannot be coupled with a non-negated
+verb. Finally, the types of the relativizer \emph{que} tell us two other
+things: the $NP$ trace is considered as containing no negative determiners,
+and a relative clause does not care about or alter the presence of free
+negative determiners in the $N$ it modifies.
+
+The lexicon which translates from this signature to $Syntax$ is a
+straightforward relabeling. Its items can be characterized by the following
+schema:
+
+$$
+\mathcal{L}_{Neg}(N_{wordform_{i}}) = C_{wordform}
+$$
+
+where $C_{wordform}$ is the constant in $Syntax$ corresponding to the
+$wordform$.
+
+\subsection{The $Agr$ Signature}
+
+The $Agr$ signature will be constructed using the same strategy as $Neg$. $N$
+and $NP$ will be subdivided into $N_{NUM{=}SG}$, $N_{NUM{=}PL}$,
+$NP_{NUM{=}SG}$ and $NP_{NUM{=}PL}$ (we only treat number agreement in this
+example). Here are some example types:
+
+\begin{align*}
+A_{tatou} &: N_{NUM{=}SG} \\
+A_{tatous} &: N_{NUM{=}PL} \\
+A_{le} &: N_{NUM{=}SG} \limp NP_{NUM{=}SG} \\
+A_{les} &: N_{NUM{=}PL} \limp NP_{NUM{=}PL} \\
+A_{aime_1} &: NP_{NUM{=}SG} \limp NP_{NUM{=}SG} \limp S \\
+A_{aime_2} &: NP_{NUM{=}SG} \limp NP_{NUM{=}PL} \limp S \\
+A_{qui_1} &: (NP_{NUM{=}SG} \limp S) \limp N_{NUM{=}SG} \limp N_{NUM{=}SG} \\
+A_{qui_2} &: (NP_{NUM{=}PL} \limp S) \limp N_{NUM{=}PL} \limp N_{NUM{=}PL}
+\end{align*}
+
+The types for nouns and determiners are quite predictable. For the transitive
+verb \emph{aime}, we see that we need a second type to account for the fact
+that \emph{aime} does not care about the number of the object. Finally, the
+relativizer \emph{qui} enforces that the number of the trace $NP$ in the
+relative clause must be the same as the number of the $N$ being modified.
+
+The lexicon $\mathcal{L}_{Agr}$ follows exactly the same schema as that of
+$\mathcal{L}_{Neg}$.
+
+\subsection{Discussion}
+
+
 
 
 \section{Conclusion}

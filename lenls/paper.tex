@@ -86,7 +86,7 @@ constraints. Encoding ancillary constraints in a type system can make the
 system hard to read and understand. If multiple constraints written in the
 style of \cite{pogodalla2012controlling} are to be enforced in the same
 grammar, we advocate for extending the formalism to prevent the incidental
-complexity that would otherwise appear.
+complexity that would otherwise emerge.
 
 We begin with a short review of Abstract Categorial Grammars where we
 highlight the ways in which Abstract Categorial Grammars facilitate
@@ -94,7 +94,7 @@ decomposition of linguistic description. We follow that by a closer look at an
 example of a linguistic constraint. This discussion motivates our proposed
 extension. We then present the Graphical Abstract Categorial Grammars and
 consider some of its formal properties. We then finish with an illustration of
-our approach which incorporates linguistic contribution from multiple sources
+our approach which incorporates linguistic contributions from multiple sources
 into a single coherent and simple grammar and examine the limitations and
 challenges of adopting this approach.
 
@@ -162,11 +162,11 @@ such that:
 
 Now we have enough machinery in hand to describe how ACGs define
 languages. Given some signature and a distinguished type, we can talk of the
-\emph{abstract language} which is the set of well-typed terms built on that
-signature having that distinguished type. If we then also consider a lexicon
-and its abstract signature, then the language we get by mapping the abstract
-language of the signature through that lexicon is called an \emph{object
-  language}.
+\emph{abstract language}, which is the set of well-typed terms built on the
+signature and having the distinguished type. If we then also consider a
+lexicon and its abstract signature, then the language we get by mapping the
+abstract language of the signature through the lexicon is called an
+\emph{object language}.
 
 An ACG for us will then be just a collection of signatures with their
 distinguished types and the lexicons connecting these signatures, which we
@@ -219,9 +219,9 @@ to make linguistic structures violating the constraint untypable. We could
 dive into our grammar and rewrite it to use the new types. However, we can
 also keep the existing grammar intact and complement it with a signature and a
 lexicon that translates that signature to the abstract-most signature of our
-existing grammar. Usually, the new signature will resemble the prior
-abstract-most one, albeit with more fine-grained types necessary to express
-the constraint in question.
+existing grammar (Figure~\ref{fig:acg-comp-constr}). Usually, the new
+signature will resemble the prior abstract-most one, albeit with more
+fine-grained types necessary to express the constraint in question.
 
 This pattern is practical for examining linguistic constraints one-by-one and
 demonstrating that the formalism is capable of expressing them
@@ -260,9 +260,10 @@ would not be able to attach the constraint's signature directly to the
 $Syntax$ node but we would instead need to attach it to
 $SyntSem$\footnote{This is due to the fact that ACG diagrams are always
   arborescences, in which the root node represents the abstract language from
-  whose terms are generated terms of all the object languages.}. This means
-that the syntactic constraint would end up being expressed by strengthening
-the type system of $SyntSem$, which only adds unnecessary complexity.
+  whose terms are generated the terms of all the object languages.}. This
+means that the syntactic constraint would end up being expressed in terms of
+the types of the syntax-semantics interface ($SyntSem$) rather than just pure
+syntax ($Syntax$), which only adds unnecessary complexity.
 
 
 \section{The Problem of Multiple Constraints}
@@ -321,13 +322,13 @@ N_{de_3} &: NP_{NEG{=}T} \limp N_{NEG{=}F} \limp N_{NEG{=}T}
 
 \vspace{-1ex}
 
-In the above, we elaborate the types $NP$ and $N$ with features ($_{NEG{=}F}$
-and $_{NEG{=}T}$) and we give the different types for the preposition \emph{de}
+In the above, we elaborate the types $NP$ and $N$ with features ($NEG{=}F$
+and $NEG{=}T$) and we give the different types for the preposition \emph{de}
 in the fragment for negation ($N$). The types accept an $NP$ and an $N$ as
 arguments with any combination of values for the feature $NEG$, except for the
 case when both the prepositional $NP$ and the $N$ being modified both contain
 free negative determiners (i.e. there is no $N_{de_4} : NP_{NEG{=}T} \limp
-N_{NEG{=}T} \limp N\_NEG{=}\ldots$). This encodes a constraint that there can
+N_{NEG{=}T} \limp N_{NEG{=}}\ldots$). This encodes a constraint that there can
 be only one free negative determiner per phrase (free as in not hidden inside
 an embedded clause). Besides this constraint, the types also dictate how the
 information about negative determiners should propagate from the argument
@@ -399,11 +400,10 @@ the expected interpretation.
 
 We define a \emph{graphical abstract categorial grammar} as a directed acyclic
 graph (DAG) whose nodes are labeled with signatures (and distinguished types)
-and whose edges are labeled with lexicons, in other words a mathematical
-reification of an ACG diagram that has been generalized from
-arborescences to DAGs. We then search for an appropriate semantics for these
-structures, i.e. how to determine what languages are defined by a graphical
-ACG.
+and whose edges are labeled with lexicons, in other words, a mathematical
+reification of an ACG diagram that has been generalized from arborescences to
+DAGs. We then search for an appropriate semantics for these structures,
+i.e. how to determine what languages are defined by a graphical ACG.
 
 \subsection{Nodes as Languages}
 
@@ -460,7 +460,7 @@ G-ACG extrinsic languages correspond to ACG object languages with
 intersection. More formally, while ACG object languages are ACG abstract
 languages closed on transformation by a lexicon, G-ACG extrinsic languages are
 ACG abstract languages closed on transformation by a lexicon and
-intersection\footnote{Can be show by induction on the topological ordering of
+intersection\footnote{Can be shown by induction on the topological ordering of
   any given graphical ACG.}.
 
 $$
@@ -504,8 +504,8 @@ terms in $Left$ and $Right$ which generate a term in $Bottom$.
 We can observe another peculiarity on a more practical example. Consider the
 G-ACG in Figure~\ref{fig:gacg}. In classical ACGs, one can always take an
 element in a signature, like $Sem$, and by transduction find its corresponding
-element in an another signature, like $Syntax$. However, in an G-ACG such as
-this it is possible that the $Syntax$ term we obtain by transduction does not
+element in an another signature, like $Syntax$. However, in a G-ACG such as
+this it, is possible that the $Syntax$ term we obtain by transduction does not
 belong to $\mathcal{E}_{\mathcal{G}}(Syntax)$ because it lacks antecedents in
 either $Constr_1$ or $Constr_2$. This means that the notion of an extrinsic
 language is not capable to give us the set of all meaning terms in $Sem$ which
@@ -534,10 +534,10 @@ exists a labeling $T$ of the nodes of the graph such that:
 \end{itemize}
 
 If we compare this new interpretation of G-ACGs to the former one, we find out
-that in the case when the graph of the grammar is an arborescence they are
+that in the case when the graph of the grammar is an arborescence, they are
 actually equivalent. This means that in classical ACGs, where all the diagrams
 are arborescences, the two metaphors (nodes as languages and nodes as terms)
-can be and are used interchangeably. However, as we start to consider
+can be, and are, used interchangeably. However, as we start to consider
 non-arborescent graphs, we find, interestingly, that the two paradigms diverge
 (i.e. $\exists \mathcal{G}, u.\ \mathcal{E}_{\mathcal{G}}(u) \neq
 \mathcal{P}_{\mathcal{G}}(u)$).
@@ -563,7 +563,7 @@ the former one terminating in the node in question\footnote{This means that
   paths $[Top, Left, Bottom]$ and $[Top, Right, Bottom]$.}. Thus the labelling
 of nodes with terms which certifies a given term's presence in the
 pangraphical language of the new G-ACG also serves as a proof of its presence
-in the extrinsic language of the old G-ACG.
+in the extrinsic language of the old G-ACG and vice versa.
 
 This gives us the following ladder of expressivity
 
@@ -615,7 +615,8 @@ purely with syntax without any issues of operator scope and its functions have
 lower-order types than those in $Syn$. We will finally add our contribution,
 the signatures $Neg$ and $Agr$ and the lexicons $\mathcal{L}_{Neg}$ and
 $\mathcal{L}_{Agr}$ which implement the constraint on negation we discussed
-before and some simple notion of agreement, respectively.
+before and some simple notion of agreement, respectively
+(Figure~\ref{fig:final-synth}).
 
 \begin{figure}[t]
   \centering
@@ -760,7 +761,7 @@ resemble relabelings and a semi-decidable procedure could be used to solve the
 problem. Having the grammar decomposed like this opens it up for computational
 processing by letting us engage in different tactics at different stages
 instead of having to parse a single hidden structure which enforces
-grammaticality w.r.t. every constraint. G-ACGs share these parks also with
+grammaticality w.r.t. every constraint. G-ACGs share these perks also with
 classical ACGs but they let use this composition in another dimension, which
 facilitates the writing of multiple constraints.
 
@@ -801,7 +802,7 @@ Interesting avenues of future work include: digging deeper into the
 language-theoretical properties of G-ACGs (Are ACG object languages closed on
 intersection? Are extrinsic languages as expressive as pangraphical
 languages?), searching for a metagrammatical description of constraint
-signatures to ease work on G-ACG grammars and finally building large-scale
+signatures to ease work on G-ACG grammars, and finally building large-scale
 grammars to verify the usability of our approach.
 
 

@@ -601,15 +601,14 @@ We start with the extraction constraints. \cite{pogodalla2012controlling}
 describes three different constraints on extraction, all of them expressed
 using the Constraint pattern (Figure~\ref{fig:single-cont}). We can take the
 union of these three G-ACGs to get the G-ACG on Figure~\ref{fig:merged-conts}.
-Next, we can incorporate knowledge from another paper,
-\cite{pogodalla2007generalizing}, by splitting the $\mathcal{L}_{Syn}$ lexicon
-and introducing a new intermediate signature
-(Figure~\ref{fig:conts-elab}). The new signature, $Syntax$, deals purely with
-syntax without any issues of operator scope and its functions have lower-order
-types. We will finally add our contribution, the signatures $Neg$ and $Agr$
-and the lexicons $\mathcal{L}_{Neg}$ and $\mathcal{L}_{Agr}$ which implement
-the negation phenomenon we discussed before and some simple notion of
-agreement, respectively.
+Next, we can incorporate knowledge from \cite{pogodalla2007generalizing}, by
+splitting the $\mathcal{L}_{Syn}$ lexicon and introducing a new intermediate
+signature (Figure~\ref{fig:conts-elab}). The new signature, $Syntax$, deals
+purely with syntax without any issues of operator scope and its functions have
+lower-order types than those in $Syn$. We will finally add our contribution,
+the signatures $Neg$ and $Agr$ and the lexicons $\mathcal{L}_{Neg}$ and
+$\mathcal{L}_{Agr}$ which implement the constraint on negation we discussed
+before and some simple notion of agreement, respectively.
 
 \begin{figure}[t]
   \centering
@@ -640,9 +639,10 @@ the constraint enforcing that quantifier scope must not escape outside of
 tensed clauses. The $Syntax$ signature is not equipped to talk about operator
 scope and so the constraint is expressed above the $Syn$ signature. On the
 other hand, constraints $Cont_2$ and $Cont_3$ from
-\cite{pogodalla2012controlling} are purely syntactic. However, we see it as a
-perk of our approach that we can ignore that and import the constraint
-wholesale without having to adapt them.
+\cite{pogodalla2012controlling} are purely syntactic and therefore could be
+more easily expressed in terms of $Syntax$ instead of $Syn$. However, we see
+it as a perk of our approach that we can ignore that and import the
+constraints wholesale without having to adapt them.
 
 \subsection{The $Neg$ Signature}
 
@@ -651,11 +651,11 @@ constraints, starting with negation and the $Neg$ signature.
 
 As was said in Section~\ref{sec:constraints}, we will proceed by splitting the
 atomic types $N$ and $NP$ into $N_{NEG{=}F}$ and $N_{NEG{=}T}$, and
-$NP_{NEG{=}F}$ and $NP_{NEG{=}T}$, respectively. We will use these new types to
-distinguish whether an $N$ or $NP$ phrase contains a negative determiner that
-can pair up with a negated verb. Where before we had a single type, we will
-now have possibly multiple to account for the different values of the
-arguments' $NEG$ features. Here are some representative examples:
+$NP_{NEG{=}F}$ and $NP_{NEG{=}T}$, respectively. We will use these new types
+to distinguish whether an $N$ or $NP$ phrase contains a negative determiner
+that can pair up with a negated verb. Where before we had a single type, we
+will now have possibly multiple types to account for the different values of
+the arguments' $NEG$ features. Here are some representative examples:
 
 \begin{align*}
 N_{aucun} &: N_{NEG{=}F} \limp NP_{NEG{=}T} \\
@@ -674,17 +674,18 @@ N_{que_2} &: (NP_{NEG{=}F} \limp S) \limp N_{NEG{=}T} \limp N_{NEG{=}T} \\
 We see that the negative determiner \emph{aucun} can only attach to phrases
 which do not already contain a free negative determiner and that the resulting
 phrase is marked as having a free negative determiner. On the other hand, the
-determiner \emph{le} does not have any interaction and is still able to take
-any $N$ phrase, preserving any free negative determiners inside. The type of
-the negative particle \emph{ne} modifies a verb (in the example above,
-$N_{ne^{tv}_i}$, a transitive verb) and produces a new verb that makes sure
-that at least one of its arguments contains a negative determiner. Verbs are
-not agnostic about the $NEG$ feature. By default, they specifically demand it
-to be false, since a negative determiner cannot be coupled with a non-negated
-verb. Finally, the types of the relativizer \emph{que} tell us two other
-things: the $NP$ trace is considered as containing no negative determiners,
-and a relative clause does not care about or alter the presence of free
-negative determiners in the $N$ it modifies.
+determiner \emph{le} does not have any interaction with the new $NEG$ feature
+and is still able to take any $N$ phrase, preserving any free negative
+determiners inside. The type of the negative particle \emph{ne} modifies a
+verb (in the example above, $N_{ne^{tv}_i}$, a transitive verb) and produces a
+new verb that makes sure that at least one of its arguments contains a
+negative determiner. Verbs are not agnostic about the $NEG$ feature. By
+default, they specifically demand it to be false, since a negative determiner
+cannot be coupled with a non-negated verb. Finally, the types of the
+relativizer \emph{que} tell us two other things: the $NP$ trace is considered
+as containing no negative determiners, and a relative clause does not care
+about or alter the presence of free negative determiners in the $N$ it
+modifies.
 
 The lexicon which translates from this signature to $Syntax$ is a
 straightforward relabeling. Its items can be characterized by the following
@@ -724,9 +725,47 @@ relative clause must be the same as the number of the $N$ being modified.
 The lexicon $\mathcal{L}_{Agr}$ follows exactly the same schema as that of
 $\mathcal{L}_{Neg}$.
 
-\subsection{Discussion}
+\subsection{Limits of Modularity}
 
+We have decomposed our grammar into 9 signatures and 8 lexicons. Besides
+making the grammar more readable and easily navigable, it also makes the
+grammar more attractive from a computational point of view. The complexity of
+parsing the highest abstract-most structures and verifying all the constraints
+is decomposed into smaller subtasks. A string can be parsed into its
+representation at the $Syntax$ level fairly easily (compared to parsing it at
+the higher levels) since $Syntax$ employs types of lower orders than the more
+abstract signatures. Finding the syntactic structure for a string is thus
+feasible. We then proceed to verifying the syntactic constraints. Here we can
+observe that the lexicons $\mathcal{L}_{Neg}$ and $\mathcal{L}_{Agr}$ are mere
+relabelings and therefore parsing (i.e. constraint verification) is trivial
+(i.e. decidable). Now in order to determine the meaning of our sentence, we
+have to continue parsing by finding an antecedent in $Syn$. This involves
+higher-order types used to encode the various scope-bearing
+operators. Finally, we can opt in to verify the high-level syntax-semantics
+constraints which employ dependent types. However, the lexicons in this case
+resemble relabelings and a semi-decidable procedure could be used to solve the
+problem. Having the grammar decomposed like this opens it up for computational
+processing by letting us engage in different tactics at different stages
+instead of having to parse a single hidden structure which enforces
+grammaticality w.r.t. every constraint. G-ACGs share these parks also with
+classical ACGs but they let use this composition in another dimension, which
+facilitates the writing of multiple constraints.
 
+However, it is important to keep in mind that the composability demonstrated
+above is limited only to the composition of constraints. If we would like to
+extend our language with, e.g., a new lexical category, then every signature
+and every lexicon would have to be extended to cover this new category. It is
+also important to point out that the constraint signatures that we have been
+composing are not light-weight objects. They are usually defined by taking an
+existing signature that describes the language at a relevant level and by
+strengthening (usually all) the types of that signature to enforce the
+constraint\footnote{This makes the expressivity of model-theoretic syntactic
+  formalisms formalisms such as Interaction Grammars, in which adding the
+  lexical items for \emph{ne} and \emph{aucun} along with enforcing the $Neg$
+  constraint takes only two tree descriptions \cite{perrier2007french}, even
+  more striking when compared to our approach.}. However, most of these type
+alterations are mundane and we believe that this is fertile ground for
+applying metagrammars.
 
 
 \section{Conclusion}

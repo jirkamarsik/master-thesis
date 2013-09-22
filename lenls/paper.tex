@@ -91,23 +91,22 @@ style of \cite{pogodalla2012controlling} are to be enforced in the same
 grammar, we advocate for extending the formalism to prevent the incidental
 complexity that would otherwise appear.
 
-We begin with a short review of Abstract Categorial Grammars in which we
+We begin with a short review of Abstract Categorial Grammars where we
 highlight the ways in which Abstract Categorial Grammars facilitate
 decomposition of linguistic description. We follow that by a closer look at an
-example linguistic constraint and how its treatment might look like in a
-categorial grammar, which motivates our proposed extension. We then present
-the Graphical Abstract Categorial Grammars and discuss some of its formal
-properties. We then finish with an illustration of our approach which
-incorporates linguistic contribution from multiple sources into a single
-coherent and simple grammar and discuss the limitations and challenges of
-adopting this approach.
+example of a linguistic constraint. This discussion motivates our proposed
+extension. We then present the Graphical Abstract Categorial Grammars and
+consider some of its formal properties. We then finish with an illustration of
+our approach which incorporates linguistic contribution from multiple sources
+into a single coherent and simple grammar and examine the limitations and
+challenges of adopting this approach.
 
 
 \section{Abstract Categorial Grammars}
 \label{sec:acg-comp}
 
 We first review the grammatical framework in which we conduct our
-work. Abstract Categorial Grammars are built upon two mathematical structures,
+work. Abstract Categorial Grammars are built upon two mathematical structures:
 \emph{(higher-order) signatures} and \emph{lexicons}.
 
 \subsection{Higher-Order Signatures}
@@ -176,10 +175,11 @@ An ACG for us will then be just a collection of signatures with their
 distinguished types and the lexicons connecting these signatures, which we
 will write down in diagrams such as the ones in Figure~\ref{fig:acg-comp}.
 
-The most common pattern will have us using two object signatures for the
-surface forms of utterances (strings) and their logical forms (logical
-propositions) and an abstract signature which is connected to both of the
-object signatures via lexicons (as we can see in
+The most common pattern will have us using two object signatures,
+$\Sigma_{String}$ and $\Sigma_{Sem}$, for the surface forms of utterances
+(strings) and their logical forms (logical propositions) and an abstract
+signature, $\Sigma_{Synt}$, which is connected to both of the object
+signatures via lexicons (as we can see in
 Figure~\ref{fig:acg-comp-basic}). Parsing is then just a matter of inverting
 the surface lexicon to get the abstract term and then applying to it the
 logical lexicon. Generation is symmetric, we simply invert the logical lexicon
@@ -219,7 +219,7 @@ The first constitutes the Constraint pattern used throughout
 particular linguistic constraint, say that tensed clauses form islands for
 quantifier scope, and suppose we want to proceed by refining our types so as
 to make linguistic structures violating the constraint untypable. We could
-dive in to our grammar and rewrite it to use the new types. However, we can
+dive into our grammar and rewrite it to use the new types. However, we can
 also keep the existing grammar intact and complement it with a signature and a
 lexicon that translates that signature to the abstract-most signature of our
 existing grammar. Usually, the new signature will resemble the prior

@@ -1,0 +1,12 @@
+strict digraph "illustration5" {
+  node [shape="circle",style="filled",fillcolor="lightblue"]
+  edge [style="bold"]
+  "Cont_2" -> "Syn" [label="\\mathcal{L}_{Cont_2}"]
+  "Cont_1" -> "Syn" [label="\\mathcal{L}_{Cont_1}"]
+  "Cont_3" -> "Syn" [label="\\mathcal{L}_{Cont_3}"]
+  "Syn" -> "Sem" [label="\\mathcal{L}_{Sem}"]
+  "Syntax" -> "String" [label="\\mathcal{L}_{syntax}"]
+  "Neg" -> "Syntax" [label="\\mathcal{L}_{Neg}"]
+  "Agr" -> "Syntax" [label="\\mathcal{L}_{Agr}"]
+  "Syn" -> "Syntax" [label="\\mathcal{L}_{amb}"]
+}

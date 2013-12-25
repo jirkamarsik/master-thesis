@@ -1,0 +1,98 @@
+\chapter{In Conclusion}
+\label{chap:conclusion}
+
+In this final chapter, we first discuss some the consequences of using
+G-ACGs for writing grammars. We then summarize the contributions that we
+have put forward and suggest problems we believe to be interesting.
+
+\section{On the Practical Consequences of Graphical ACGs}
+\label{sec:practical}
+
+We will enumerate some of the practical benefits and challenges of using
+graphical ACGs for implementing grammar-based systems.
+
+\begin{itemize}
+\item The lexicons that go from our constraint signatures ($Neg$, $Ext$
+  and $Agr$ in subsection \ref{ssec:graphical-engineering}) are all
+  trivial in the sense they map constants to constants. Finding an
+  antecedent to a term is then just a question of finding an antecedent
+  for every constant in the term (i.e. ``tagging'' the constants of the
+  term with antecedent constants). This means that there is an effective
+  parsing algorithm for verifying the constraints. Furthermore, this
+  algorithm could also be made efficient by introducing filtering
+  techniques \cite{guillaume2008toolchain} and statistical supertagging
+  \cite{moot2012categorial}.
+
+\item Constraints can introduce type extensions in their abstract
+  signatures and the added complexity of these extensions is then
+  contained within the constraint. Furthermore, the constraint signature
+  can be treated as a ``black box'' that verifies a constraint and in
+  the context of an implementation, it can be replaced with a
+  special-purpose hand-written procedure that does the same more
+  efficiently.
+
+\item The distributed nature of graphical ACGs has its own practical
+  applications. Parsing can be made more robust by being able to parse
+  sentences which violate some of the constraints. Parsing an
+  ungrammatical sentence and identifying the constraints it violates can
+  also serve as a basis for a syntax checker.
+
+\item If we decide to define all of our syntactic constraints in
+  separate signatures, we will end up with a lot of signatures which
+  look exactly like the syntactic signature but with some small
+  refinements (see the signatures in sections \ref{sec:negation},
+  \ref{sec:extraction} and \ref{sec:agreement}). Thus we will desire
+  some concise way of formulating these refinements so that we will not
+  need to replicate the entire syntactic signature for every
+  constraint.
+
+  We hope that the class of useful refinements is small and that these
+  constraint signatures could be systematically constructed from the
+  syntactic signature by applying a series of refining
+  transformations. This is an interesting engineering challenge awaiting
+  anyone willing to design a truly wide-coverage graphical ACG using
+  constraints.
+\end{itemize}
+
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+The contributions of our work can be summarized in the following three
+points:
+
+\begin{enumerate}
+\item We have highlighted the challenges inherent in translating an
+  existing grammar in the formalism of IGs to the formalism of
+  ACGs. Based on the breadth of different constraints built in to the IG
+  formalism, we have conjectured that a direct translation of IG lexical
+  items to ACG lexical items based on the deep underlying similarity
+  between the two formalisms is not practical.
+
+\item We have implemented a system for experimenting with (lexicalized)
+  abstract categorial grammars that can serve as the basis for
+  formulating wide-coverage graphical ACGs
+  (\url{https://github.com/jirkamarsik/acg-clj}).
+
+\item We have presented the graphical abstract categorial grammars
+  (G-ACGs) which generalize ACGs. We have determined the set of
+  languages definable by G-ACGs in terms of ACG languages and we have
+  shown how G-ACGs allow us to write categorial grammars that handle
+  multiple disparate linguistic constraints without sacrificing
+  simplicity.
+\end{enumerate}
+
+Here are some of the items that we believe warrant future investigation:
+
+\begin{itemize}
+\item Try to express the multiple independent polarized features of IGs
+  using G-ACGs.
+\item Determine whether ACG object languages are closed on intersection
+  or not.
+\item Make a closer examination of the relationship between extrinsic
+  and pangraphical languages in G-ACGs.
+\item Write grammars using the G-ACG constraint architecture to verify
+  its applicability and test the claims of modularity we have made here.
+\item Study the problem of concisely defining constraint signatures from
+  syntactic signatures and rules of feature propagation.
+\end{itemize}

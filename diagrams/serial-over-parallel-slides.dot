@@ -1,0 +1,8 @@
+strict digraph "serial-over-parallel-slides" {
+  node [shape="circle",style="filled",fillcolor="lightblue"]
+  edge [style="bold"]
+  "Constr" [fillcolor="#5C53FC"]
+  "Constr" -> "Synt" [label="\\mathcal{L}_{constr}"]
+  "Synt" -> "String" [label="\\mathcal{L}_{syntax}"]
+  "Synt" -> "Sem" [label="\\mathcal{L}_{sem}"]
+}

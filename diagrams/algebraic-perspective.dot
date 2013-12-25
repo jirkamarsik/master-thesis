@@ -1,15 +1,9 @@
 strict digraph "algebraic-perspective" {
+  d2tdocpreamble="\definecolor{darkgreen}{rgb}{0., 0.6, 0.}"
   node [shape="circle",style="filled",fillcolor="lightblue"];
   edge [style="bold"];
-  ordering="in";
 
-  "A'" [label="\\mathcal{L}_1(A)"];
-  "B int C" [label="\\mathcal{L}_2(B) \\cap \\mathcal{L}_3(C)"];
-  "A int B int C" [label="\\mathcal{L}_4(\\mathcal{L}_1(A)) \\cap \\mathcal{L}_5(\\mathcal{L}_2(B) \\cap \\mathcal{L}_3(C))"];
-
-  "A" -> "A'" [label="\\mathcal{L}_1"];
-  "B" -> "B int C" [label="\\mathcal{L}_2"];
-  "C" -> "B int C" [label="\\mathcal{L}_3"];
-  "A'" -> "A int B int C" [label="\\mathcal{L}_4"];
-  "B int C" -> "A int B int C" [label="\\mathcal{L}_5"];
+  "A" -> "A int B" [label="\\mathcal{L}_1"];
+  "B" -> "A int B" [label="\\mathcal{L}_2"];
+  "A int B" [label="\\textcolor{darkgreen}{\\mathcal{L}_1}(A) \\: \\textcolor{red}{\\cap} \\: \\textcolor{darkgreen}{\\mathcal{L}_2}(B)"];
 }

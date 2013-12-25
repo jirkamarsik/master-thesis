@@ -1,0 +1,10 @@
+strict digraph "both-patterns-slides" {
+  node [shape="circle",style="filled",fillcolor="lightblue"]
+  edge [style="bold"]
+  "Constr" [fillcolor="#5C53FC"]
+  "SyntSem" [fillcolor="yellow"]
+  "SyntSem" -> "Syntax"
+  "SyntSem" -> "Sem"
+  "Constr" -> "Syntax"
+  "Syntax" -> "String"
+}

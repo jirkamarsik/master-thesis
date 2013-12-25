@@ -1,6 +1,9 @@
 strict digraph "constr-fail-2" {
   node [shape="circle",style="filled",fillcolor="lightblue"]
   edge [style="bold"]
+  "Constr_1" [fillcolor="#5C53FC"]
+  "Constr_{1 \land 2}" [fillcolor="#E39ADE"]
+  "Constr_{1 \land 2 \land 3}" [fillcolor="#EB6C6C"]
   "Constr_{1 \land 2 \land 3}" -> "Constr_{1 \land 2}" [label="\\mathcal{L}_{constr_3}"]
   "Constr_{1 \land 2}" -> "Constr_1" [label="\\mathcal{L}_{constr_2}"]
   "Constr_1" -> "Synt" [label="\\mathcal{L}_{constr_1}"]

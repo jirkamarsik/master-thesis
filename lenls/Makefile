@@ -20,8 +20,6 @@ paper.pdf: paper.tex ../diagrams/*.dot ../biblio.bib
 slides.pdf: slides.tex ../diagrams/*.dot ../biblio.bib
 	make -C ../diagrams
 	pdflatex slides.tex
-	bibtex paper.aux
-	pdflatex slides.tex
 	pdflatex slides.tex
 
 clean:

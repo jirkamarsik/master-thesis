@@ -2,6 +2,7 @@
 
 \usepackage[utf8]{inputenc}
 \usepackage{xcolor}
+\usepackage{pgfpages}
 
 \definecolor{darkgreen}{rgb}{0., 0.6, 0.}
 \definecolor{darkgold}{rgb}{8., 0.6, 0.}
@@ -24,6 +25,9 @@
 \setbeamertemplate{footline}
   {\hfill {\normalsize \insertframenumber{}/\inserttotalframenumber{}}}
 
+\setbeameroption{show notes on second screen=right}
+%\setbeamertemplate{note page}[plain]
+
 
 \begin{document}
 
@@ -35,6 +39,7 @@
 \institute{Université de Lorraine, Laboratoire lorrain de recherche en informatique et ses applications, UMR 7503, Vandoeuvre-lès-Nancy, 54500, France\\
 INRIA, Villers-lès-Nancy, 54600, France\\
 CNRS, Loria, Vandoeuvre-lès-Nancy, UMR 7503, 54500, France\\
+$\,$  \\
 \texttt{\{jiri.marsik, maxime.amblard\}@loria.fr}}
 
 \date[October 2013]{October 28, 2013}
@@ -52,26 +57,44 @@ CNRS, Loria, Vandoeuvre-lès-Nancy, UMR 7503, 54500, France\\
   \frametitle{Introduction}
 
   \begin{itemize}
-    \item Abstract Categorial Grammars provide interesting tools for managing
-      discourse and dynamic semantics. \vfill
-    \item Refining grammars to enforce numerous constraints breeds complexity.
-      \vfill
-    \item We formalize an extension of ACGs which lets us use the ACG
-      apparatus and maintain independent constraints. \vfill
-    \item Our goal is a large-scale grammar usable for discussing discourse.
+    \item Long-term goal: large-scale grammar usable for discourse \vfill
+    \item Abstract Categorial Grammars: a tool for discourse and dynamic
+      semantics \vfill
+    \item Refining grammars to enforce numerous constraints \\ $\Rightarrow$
+      complexity \vfill
+    \item Extension of ACGs for independent constraints
   \end{itemize}
 \end{frame}
 
+\note[itemize]{\item In our team, we are interested in formal treatments of
+  discourse-level phenomena.
+
+\item Our tool of choice is the formalism of Abstract Categorial
+  Grammars. ACGs provide us with interesting tools to handle discourse and
+  dynamic semantics with continuations allowing us to capture dynamic meaning
+  and the generality of the lambda calculus allowing us to introduce our own
+  constructs such as discourse structures.
+
+\item However, during our work when trying to use ACGs, we observed that it
+  proved difficult to try to enforce multiple independent constraints within a
+  single grammar without the grammar becoming too complex\ldots
+
+\item \ldots and it is this inadequacy that prompted the extension of the
+  formalism that is the focus of our contribution.
+
+\item 0:34}
+
 
 \section{ACG Preliminaries}
+
+\note{I will now give a short introduction to the ACG formalism.}
 
 \newcommand{\synt}[1]{C_{\textrm{#1}}}
 
 \begin{frame}
   \begin{block}{Abstract languages}
-    Lambda terms constrained by the types of constants. \\ Defined by a
-    \textcolor{red}{signature} and a \textcolor{darkgreen}{distinguished
-      type}.
+    Defined by a \textcolor{red}{signature} and a
+    \textcolor{darkgreen}{distinguished type}.
 
     \begin{columns}[t]
       \begin{column}{0.5\textwidth}
@@ -93,8 +116,7 @@ CNRS, Loria, Vandoeuvre-lès-Nancy, UMR 7503, 54500, France\\
   \end{block}
 
   \begin{block}{Object languages}
-    Languages of (object) terms which are obtained by replacing the
-    constants in an existing (abstract) term using a \textcolor{darkgold}{lexicon}.
+    A projection of an abstract language with a \textcolor{darkgold}{lexicon}.
 
     \begin{columns}[t]
       \begin{column}{0.5\textwidth}
@@ -116,78 +138,104 @@ CNRS, Loria, Vandoeuvre-lès-Nancy, UMR 7503, 54500, France\\
   \end{block}
 \end{frame}
 
+\note[itemize]{\item Abstract Categorial Grammars introduce two families of
+  languages: the so-called abstract languages and object languages.
+
+\item Abstract languages are sets of lambda terms built from some signature of
+  typed constants where every term of the language is well-typed and has a
+  specific distinguished type. Here we have an example signature giving some
+  familiar types to French words and a term of type S which corresponds to the
+  structure of a French sentence.
+
+\item Object languages are then derived from abstract languages by replacing
+  all the constants in their terms with specific substitutes given by a
+  lexicon. Here we have such a lexicon that when applied to the example
+  sentence structure, it will yield a term that beta-reduces to the French
+  sentence ``Laura aime les tatous''.
+
+\item An ACG is then usually represented as a quadruple consisting of an
+  abstract signature, a distinguished abstract type, an object signature and a
+  lexicon connecting the two signatures.
+
+\item 0:35}
+
 
 \begin{frame}
   \frametitle{ACG Diagrams}
 
-  \begin{columns}[c]
-    \begin{column}{0.5\textwidth}
-      \begin{itemize}
-      \item Two different lexicons interpret the same abstract terms.
-      \item Instead of referring to the two ACGs $\mathopen{<}
-        \Sigma_{Synt}, \Sigma_{String}, \mathcal{L}_{syntax}, S
-        \mathclose{>}$ and $\mathopen{<} \Sigma_{Synt}, \Sigma_{Sem},
-        \mathcal{L}_{sem}, S \mathclose{>}$, refer to this single
-        diagram.
-      \end{itemize}
-    \end{column}
-    \begin{column}{0.5\textwidth}
-      \includegraphics[width=\textwidth]{../diagrams/double-acg.pdf}
-    \end{column}
-  \end{columns}
+  \begin{center}
+    \includegraphics[height=0.8\textheight]{../diagrams/double-acg.pdf}
+  \end{center}
 \end{frame}
 
+\note[itemize]{\item Outside of language-theoretical explorations, considering
+  single ACGs is seldom useful. In this typical example, we have two ACGs that
+  share a single abstract language of sentence structures that is mapped via
+  two different lexicons to phonological strings and semantic formulae.
+
+\item Instead of talking about two quadruples that share some elements, we
+  will prefer the more eloquent diagrams.
+
+\item 0:20}
 
 \begin{frame}
   \frametitle{ACG Patterns}
 
   \begin{columns}[c]
-    \begin{column}{0.5\textwidth}
-      \begin{block}{Semantic ambiguities}
+     \begin{column}{0.5\textwidth}
+      \begin{block}{Constraint}
         \vspace{2 mm}
         \begin{center}
-          \includegraphics[height=0.7\textheight]{../diagrams/parallel-over-serial.pdf}
+          \includegraphics[height=0.7\textheight]{../diagrams/serial-over-parallel-slides.pdf}
         \end{center}
       \end{block}
     \end{column}
     \begin{column}{0.5\textwidth}
-      \begin{block}{Syntactic constraint}
+      \begin{block}{Elaboration}
         \vspace{2 mm}
         \begin{center}
-          \includegraphics[height=0.7\textheight]{../diagrams/serial-over-parallel.pdf}
+          \includegraphics[height=0.7\textheight]{../diagrams/parallel-over-serial-slides.pdf}
         \end{center}
       \end{block}
     \end{column}
-  \end{columns}
+ \end{columns}
 \end{frame}
+
+\note[itemize]{\item Besides the diagram we just saw, there are other
+  established patterns in ACGs.
+
+\item The Constraint pattern lets us retroactively restrain the members of
+  previously defined languages. Whereas before, any sentence structure that
+  had the distinguished type was considered valid, with the added constraint,
+  we only consider those that can be generated from the newly added signature
+  and lexicon. The new signature usually mimics the old one but refines its
+  types so that certain terms will no longer be admissible.
+
+\item The Elaboration pattern serves a different purpose. It lets us decompose
+  an involved translation into two smaller translations and expose the
+  intermediate product. In this case, we split the signature of sentence
+  structures into a more superficial analytic layer which accounts only for
+  syntactic ambiguities and a deeper tectogrammatical layer which goes
+  further, into the semantic ambiguities of scope.
+
+\item 0:45}
 
 
 \section{Why Graphical ACGs?}
 
+\note{Now that we are familiar with ACGs, I will proceed to show the problems
+  that motivated our proposed extension.}
+
 \begin{frame}
   \frametitle{Composing ACG Patterns I}
 
-  ACG diagrams are arborescences.
-
   \begin{columns}[c]
-    \begin{column}{0.25\textwidth}
-      {\small Syntax-semantics interface deals with syntactic
-        constraints.}
-
-      \onslide<2->{$\implies$ Complex.}
-    \end{column}
-    \begin{column}{0.25\textwidth}
+    \begin{column}{0.5\textwidth}
       \begin{center}
         \includegraphics[height=0.7\textheight]{../diagrams/fail1.pdf}
       \end{center}
     \end{column}
-    \begin{column}{0.25\textwidth}
-      {\small Syntactic constraints deal with the syntax-semantics
-        interface.}
-
-      \onslide<3->{$\implies$ Complex.}
-    \end{column}
-    \begin{column}{0.25\textwidth}
+    \begin{column}{0.5\textwidth}
       \begin{center}
         \includegraphics[height=0.7\textheight]{../diagrams/fail2.pdf}
       \end{center}
@@ -195,30 +243,44 @@ CNRS, Loria, Vandoeuvre-lès-Nancy, UMR 7503, 54500, France\\
   \end{columns}
 \end{frame}
 
+\note[itemize]{{\scriptsize
+\item Our problems revolve around the fact that all the diagrams drawn for
+  ACGs are arborescences. There is always a single abstract language and all
+  the other languages are established by projecting that abstract language
+  with some composition of lexicons. This limits us when we try to combine the
+  two patterns we just saw in a single grammar.
+
+\item Consider the situation where we want to distinguish the analytic syntax
+  and tectogrammatical levels of sentence structure, while adding a constraint
+  on the analytic level. One way we can try to do this is to have the
+  constraint signature constrain the analytic syntax level directly. But then
+  the tectogrammatical level, which provides the link between syntax and
+  semantics, has to deal with the constraint signature by having to generate
+  correct members of its language. Thus we have an unwarranted interaction
+  between internal details of syntax and the syntax-semantics interface.
+
+}{\scriptsize
+\item Another solution would be to keep the syntax-semantics interface pure by
+  having it still connect just the analytic syntax with the
+  semantics. However, then the constraint has to be implemented on top of all
+  that, meaning that the constraint now has to deal with matters of
+  tectogrammatics and the syntax-semantics interface. Again, we arrive at
+  accidental complexity, this time with the syntax-semantics interface
+  contaminating the syntactic constraint.
+
+\item 0:54}}
+
 
 \begin{frame}
   \frametitle{Composing ACG Patterns II}
 
-  Writing a simple wide-coverage grammar implies specifying constraints
-  independently.
-
   \begin{columns}[c]
-    \begin{column}{0.25\textwidth}
-      Second constraint reimplements first constraint.
-
-      \onslide<2->{$\implies$ Ineffective.}
-    \end{column}
-    \begin{column}{0.25\textwidth}
+    \begin{column}{0.5\textwidth}
       \begin{center}
         \includegraphics[height=0.7\textheight]{../diagrams/constr-fail-1.pdf}
       \end{center}
     \end{column}
-    \begin{column}{0.25\textwidth}
-      Third constraint reimplements first and second constraint.
-
-      \onslide<3->{$\implies$ Ineffective.}
-    \end{column}
-    \begin{column}{0.25\textwidth}
+    \begin{column}{0.5\textwidth}
       \begin{center}
         \includegraphics[height=0.7\textheight]{../diagrams/constr-fail-2.pdf}
       \end{center}
@@ -226,13 +288,30 @@ CNRS, Loria, Vandoeuvre-lès-Nancy, UMR 7503, 54500, France\\
   \end{columns}
 \end{frame}
 
+\note[itemize]{{\footnotesize \item When writing a wide-coverage grammar, we
+    will be especially interested in implementing many different constraints
+    and we would like to try to factor them out, maybe by using the Constraint
+    pattern. However, this proves to be difficult thanks to the homomorphism
+    property of lexicons, which lies at the heart of ACGs. The consequence of
+    the homomorphism property that's interesting to us is that the image of a
+    well-typed term with a lexicon must be another well-typed term.
+
+\item This means that when we try to attach a second constraint in the example
+  on the left, its types have to essentially ensure that all the licensed
+  structures not only satisfy the new constraint, but also the existing one.
+
+\item This problem is exacerbated by iteration. When adding a third
+  constraint, we are obliged to engineer its signature such that the licensed
+  terms conform to all three constraints. In the end, there is not much
+  redeeming value to stacking constraints like this and we end up implementing
+  multiple constraints in a single signature which, as we'll see, can get very
+  complex.
+
+\item 0:34}}
+
 
 \begin{frame}
   \frametitle{Multiple Constraints}
-
-  Implementing multiple constraints in a single signature is
-  \textbf{difficult}.
-
   Agreement:
     \begin{align*}
       A_{aime_1} &: NP_{\textcolor{darkgold}{NUM{=}SG}} \limp NP_{\textcolor{darkgold}{NUM{=}SG}} \limp S \\
@@ -259,6 +338,21 @@ CNRS, Loria, Vandoeuvre-lès-Nancy, UMR 7503, 54500, France\\
   \end{small}
 \end{frame}
 
+\note[itemize]{\item Here we have an example of trying to combine the
+  treatment of two independent constraints in a single signature. In the first
+  fragment, we see a few types refined to handle agreement in number. In the
+  second, we have the same wordform in a refinement which enforces a
+  constraint on extraction and relative clauses. Finally, in the third block,
+  we have a slice of a signature which enforces both constraints at the same
+  time.
+
+\item While the individual constraint signatures are reasonably
+  understandable, the combined signature grows exponentially with the number
+  of features and it becomes difficult to see whether constraints are
+  independent of each other or not.
+
+\item 0:29}
+
 
 \begin{frame}
   \frametitle{Graphical Abstract Categorial Grammars (G-ACGs)}
@@ -266,33 +360,45 @@ CNRS, Loria, Vandoeuvre-lès-Nancy, UMR 7503, 54500, France\\
   \begin{columns}[c]
     \begin{column}{0.6\textwidth}
       \begin{center}
-        \includegraphics[height=0.7\textheight]{../diagrams/final.pdf}
+        \includegraphics[height=0.7\textheight]{../diagrams/final-slides.pdf}
       \end{center}
     \end{column}
 
-    \pause
-
     \begin{column}{0.4\textwidth}
         \begin{itemize}
-        \item A DAG.
-        \item Nodes labelled with:
+        \item DAG
+        \item Nodes:
           \begin{itemize}
-          \item Signatures.
-          \item Distinguished types.
+          \item Signatures
+          \item Distinguished types
           \end{itemize}
-        \item Edges labelled with:
+        \item Edges:
           \begin{itemize}
-          \item Lexicons.
+          \item Lexicons
           \end{itemize}
         \end{itemize}
     \end{column}
   \end{columns}
 \end{frame}
 
+\note[itemize]{\item The framework that we would like to work in would ideally
+  let us build a grammar like this. Individual constraints are laid
+  side-by-side without any cumulative complexity and outside of the scope of
+  the syntax-semantics interface. With no directed paths leading between the
+  constraint or tectogrammatics signatures, there are no direct dependencies
+  between signatures which handle different issues in our grammar.
+
+\item What we have here is the basic notation of our Graphical Abstract
+  Categorial Grammars: a directed acyclic graph whose nodes are labelled with
+  signatures and distinguished types and whose edges are labelled with
+  lexicons. Having introduced the notation, we are now obliged to answer the
+  question of how this notation establishes languages.
+
+\item 0:36}
 
 
 
-\section{Semantics of G-ACG Nodes}
+\section{Semantics of G-ACG}
 
 \begin{frame}
   \frametitle{Two Intuitions for G-ACGs}
@@ -301,22 +407,31 @@ CNRS, Loria, Vandoeuvre-lès-Nancy, UMR 7503, 54500, France\\
   \setbeamercolor{block body}{bg=limeblue}
   \begin{block}{Algebraic Perspective}
     \begin{itemize}
-    \item Nodes as \emph{languages}.
-    \item Edges define \emph{languages} in terms of other
-      \emph{languages} using lexicons and intersections.
+    \item Nodes as \emph{languages}
     \end{itemize}
   \end{block}
   \setbeamercolor{block title}{bg=limegreen}
   \setbeamercolor{block body}{bg=limegreen}
   \begin{block}{Generative Perspective}
     \begin{itemize}
-    \item Nodes as \emph{terms}.
-    \item Edges describe how \emph{terms} are obtained from other
-      \emph{terms} by applying lexicons.
+    \item Nodes as \emph{terms}
     \end{itemize}
   \end{block}
 \end{frame}
 
+\note[itemize]{\item We will present two interpretations of the G-ACG
+  notation.
+
+\item In the first, which we dubbed ``algebraic'', nodes are identified with
+  languages and edges tell us how languages are defined in terms of each other
+  using lexicons and intersections
+
+\item In the second interpretation, the ``generative'' one, nodes are seen as
+  standing for individual terms and edges are seen as statements that applying
+  a particular lexicon to one term produces another. The languages are then
+  established through the notion of a model.
+
+\item 0:31}
 
 \begin{frame}
   \frametitle{Algebraic Intuition}
@@ -327,11 +442,9 @@ CNRS, Loria, Vandoeuvre-lès-Nancy, UMR 7503, 54500, France\\
       \setbeamercolor{block body}{bg=limeblue}
       \begin{block}{}
         \begin{itemize}
-        \item Every node is a language.
-        \item An arrow means that a language is produced from another by
-          mapping through a \textcolor{darkgreen}{lexicon}.
-        \item Two arrows converging on a node mean an
-          \textcolor{red}{intersection} of languages.
+        \item Node = Language
+        \item Edge = Projection with a \textcolor{darkgreen}{lexicon}
+        \item Two incoming edges = \textcolor{red}{Intersection} of languages
         \end{itemize}
       \end{block}
 
@@ -352,6 +465,22 @@ $$
 
 \end{frame}
 
+\note[itemize]{\item In the algebraic paradigm, we associate a language with
+  every node of the G-ACG. A single incoming edge tells us that the target
+  language is the projection of the source language with the edge's
+  lexicon. When multiple incoming edges meet, we take the intersection of the
+  projections.
+
+\item Formally, this is realized by establishing intrinsic languages for every
+  node which correspond exactly to the abstract languages of ACGs; they are
+  simply sets of terms having some distinguished type. This then helps us
+  inductively build the extrinsic languages, which are defined as the
+  intersection of the lexical projections of the node's predecessors'
+  extrinsic languages, or the node's intrinsic language if it has no
+  predecessors.
+
+\item 0:43}
+
 
 \begin{frame}
   \frametitle{Two Problems with the Algebraic View}
@@ -359,7 +488,7 @@ $$
   \begin{columns}[t]
     \begin{column}{0.5\textwidth}
       \begin{center}
-        \includegraphics[height=0.6\textheight]{../diagrams/both-patterns.pdf}
+        \includegraphics[height=0.6\textheight]{../diagrams/both-patterns-slides.pdf}
       \end{center}
 
       How do we get the language of meanings expressible only by
@@ -371,10 +500,34 @@ $$
       \end{center}
 
       How do we express the language of $Bottom$ terms whose $Left$ and
-      $Right$ antecedent are generated by the same $Top$ antecedent?
+      $Right$ antecedents are generated by the same $Top$ antecedent?
     \end{column}
   \end{columns}
 \end{frame}
+
+\note[itemize]{{\scriptsize \item The algebraic interpretation that we
+    developed can be counter-intuitive in certain situations. First, consider
+    the combination of a syntactic constraint that is independent of the
+    syntax-semantics interface, as can be seen in the diagram on the
+    left. When we take a semantic formula belonging to the extrinsic language
+    of the node $Sem$, we can take its antecedent in the syntax-semantics
+    interface $SyntSem$ and project it to find the syntactic counterparts of
+    our semantic formula. However, we have no guarantee that these
+    counterparts will satisfy the syntactic constraint, in other words, they
+    might lack an antecedent in the $Constr$ signature. Thus, it becomes
+    difficult to establish the language of meanings which are expressible only
+    by syntactically correct sentences since the extrinsic language of $Sem$
+    is not constrained by the $Constr$ signature and thus overgenerates in
+    this case.
+
+\item Another counter-intuitive example is the diamond grammar on the
+  right. If we take a member of the $Bottom$ extrinsic language, it must have,
+  by definition, antecedents in the $Left$ and $Right$ extrinsic
+  languages. These two antecedents then must have their own antecedents in the
+  $Top$ extrinsic language. However, they don't have to be the same
+  antecedent as the single shared node on the diagram might suggest.
+
+\item 0:58}}
 
 
 \begin{frame}
@@ -386,22 +539,20 @@ $$
       \setbeamercolor{block body}{bg=limegreen}
       \begin{block}{}
         \begin{itemize}
-        \item Every node is a \textcolor{red}{term}.
-        \item An arrow means that a term is produced from another by
-          applying a \textcolor{darkgreen}{lexicon}.
-        \item Two arrows converging on a node mean that the two (abstract)
-          terms yield \textcolor{red}{the same} (object) term.
+        \item Node = \textcolor{red}{Term}
+        \item Edge = Image with a \textcolor{darkgreen}{lexicon}
+        \item Two incoming edges = \textcolor{red}{Equality} of images
         \end{itemize}
       \end{block}
 
       \vspace{3 mm}
 
-      $t$ belongs to $\mathcal{P}_{\mathcal{G}}(u)$ iff \\$\exists T :
-      \textcolor{red}{V(G) \to \Lambda}$ such that:
+      $t \in \mathcal{P}_{\mathcal{G}}(u)$ iff $\exists T :
+      \textcolor{red}{V(G) \to \Lambda}$ s.t.:
       \begin{itemize}
       \item $T_u = t$.
-      \item For all $v \in V(G)$, $\vdash_{\Sigma_v} T_v : S_v$.
-      \item For all $(v,w) \in E(G)$,
+      \item $\forall v \in V(G)$, $\vdash_{\Sigma_v} T_v : S_v$.
+      \item $\forall (v,w) \in E(G)$,
         $\textcolor{darkgreen}{\mathcal{L}_{(v,w)}(T_v) = T_w}$.
       \end{itemize}
     \end{column}
@@ -411,56 +562,104 @@ $$
   \end{columns}
 \end{frame}
 
+\note[itemize]{\item We now turn to another interpretation of G-ACGs, one that
+  we called the ``generative'' interpretation, though ``logical'' or
+  ``relational'' are also apt names.
+
+\item The nodes of the graph stand for terms, that is, they are term variables
+  that range over the nodes' intrinsic languages. An edge is a statement
+  saying that the pair of terms must belong to the edge's lexicon, which is to
+  say that applying the lexicon to the source term must yield the target term.
+
+\item We then consider a model of this graphical formula to be a labelling
+  which assigns terms to the vertices such that both the domain restrictions
+  and the edge statements are satisfied. From this we establish the
+  pangraphical language of a node as the set of all the possible terms that
+  can label the node in a valid model.
+
+\item 0:44}
+
 
 \begin{frame}
   \frametitle{Algebraic and Generative Relations}
+
+  \note{We have presented two interpretations of G-ACGs based on two different
+    intuitive readings of ACG diagrams, one where nodes are thought of as
+    languages and one where they stand for individual terms. The result shown
+    here validates these two ways of reasoning about diagrams in the context
+    of classical ACGs since they lead to the same languages as the canonical
+    definition of an object language.
+
+    0:25}
 
   \begin{itemize}
   \item $\forall \, \mathcal{G}, u$ where $\mathcal{G}$ is arborescent:
     $$\mathcal{E}_{\mathcal{G}}(u) = \mathcal{P}_{\mathcal{G}}(u)
     = \mathcal{O}_{\mathcal{G}}(u)$$
-    \pause
-  \item However, $\exists \, \mathcal{G}, u$ such that
+  \pause
+  \item However, $\exists \, \mathcal{G}, u$ such that:
     $$\mathcal{E}_{\mathcal{G}}(u) \neq \mathcal{P}_{\mathcal{G}}(u)$$
-    \vfill
-    \pause
-  \item[$\Rightarrow$] They are not interchangeable points of view.
   \end{itemize}
 \end{frame}
 
+
+\note{However, as soon as we turn to G-ACGs which are not arborescent, the
+  difference between these two perspectives becomes substantial since the two
+  definitions we elaborated on before lead to different languages.
+
+  0:14}
 
 \begin{frame}
-  \frametitle{Properties of G-ACG languages}
+  \frametitle{Properties of G-ACG Languages}
 
-  \begin{itemize}
-  \item The three language families we defined above are\ldots
-    \begin{itemize}
-    \item {\ldots}increasingly constraining, $\forall \, \mathcal{G},
-      u. \; \mathcal{I}_{\mathcal{G}}(u) \supseteq
-      \mathcal{E}_{\mathcal{G}}(u) \supseteq
-      \mathcal{P}_{\mathcal{G}}(u)$.
-    \item {\ldots}increasingly expressive, $\mathcal{I} \subseteq
-      \mathcal{E} \subseteq \mathcal{P}$.
-    \end{itemize}
-  \vfill
-  \item Intrinsic languages are just the abstract languages of ACGs.
-    $$\mathcal{I} = \mathcal{A}$$
-  \item Extrinsic languages are simple extensions of ACGs that add
-    intersections.
-    $$\mathcal{O} = \mathcal{A}^{\mathcal{L}}$$
-    $$\mathcal{E} = \mathcal{A}^{\mathcal{L}{\cap}}$$
-  \vfill
-  \item Pangraphical languages are faithful to the generative
-    perspective and subsume the previous classes of languages.
-    \begin{itemize}
-    \item They solve both the example problems we saw before
-      (\emph{meanings of grammatical sentences} and the \emph{diamond}).
-    \end{itemize}
-  \end{itemize}
+  $$\forall \, \mathcal{G}, u. \; \mathcal{I}_{\mathcal{G}}(u) \supseteq
+  \mathcal{E}_{\mathcal{G}}(u) \supseteq \mathcal{P}_{\mathcal{G}}(u)$$
+
+  $$\mathcal{I} \subseteq \mathcal{E} \subseteq \mathcal{P}$$
+
+  $$\mathcal{I} = \mathcal{A}$$
+
+  $$\mathcal{O} = \mathcal{A}^{\mathcal{L}}$$
+
+  $$\mathcal{E} = \mathcal{A}^{\mathcal{L}{\cap}}$$
 \end{frame}
 
+\note[itemize]{{\scriptsize \item We now proceed to give some basic properties
+    of the language families we have just introduced.
+
+\item The three language families that we have just defined (intrinsic,
+  extrinsic and pangraphical) were increasingly restrictive. The intrinsic
+  languages were constrained only by the node's signature and distinguished
+  type, whereas the extrinsic languages were constrained also by the node's
+  predecessors and the pangraphical languages were constrained by the entire
+  graph.
+
+\item We can prove that any extrinsic language is also pangraphical and
+  therefore we get that the three language families we introduced were also
+  increasingly expressive.
+
+\item Intrinsic languages were useful to establish extrinsic and pangraphical
+  languages. They are exactly the same thing as the abstract languages of
+  ACGs.
+
+\item Extrinsic languages, even though they can give counter-intuitive
+  interpretations in some cases, are still very interesting. It can be shown
+  that they extend the expressive power of object languages precisely by
+  introducing closure on intersection and nothing more.
+
+}{\tiny
+\item We don't have a similar result for pangraphical languages but we find
+  them useful since they more closely capture our intuitions about ACG
+  diagrams and so, for example, they resolve the two problems we saw with
+  interpreting G-ACGs as extrinsic languages.
+
+\item 1:01}}
 
 \section{Illustration}
+
+\note{We now illustrate the kind of grammar for which we introduced this
+  extension.}
+
 
 \begin{frame}
   \frametitle{Basic Setup}
@@ -469,33 +668,71 @@ $$
   \end{center}
 \end{frame}
 
+\note{We start with the canonical example of a tectogrammatical language that
+  is projected into phenogrammatical strings and semantic formulae.
+
+  0:09}
+
+
 \begin{frame}
+  \addtocounter{framenumber}{-1}
   \frametitle{Single Constraint}
   \begin{center}
     \includegraphics[height=0.8\textheight]{../diagrams/illustration1.pdf}
   \end{center}
 \end{frame}
 
+\note{We then add one of the three constraints on extraction developed by
+  Sylvain Pogodalla and Florent Pompigne in their 2010 paper.
+
+  0:08}
+
+
 \begin{frame}
+  \addtocounter{framenumber}{-1}
   \frametitle{Multiple Constraints}
   \begin{center}
     \includegraphics[height=0.8\textheight]{../diagrams/illustration2.pdf}
   \end{center}
 \end{frame}
 
+\note{Then we add the other two constraints the same way. It is here that we
+  leave the scope of what classical ACGs let us do.
+
+  0:09}
+
+
 \begin{frame}
+  \addtocounter{framenumber}{-1}
   \frametitle{Exposing Another Signature}
   \begin{center}
     \includegraphics[height=0.8\textheight]{../diagrams/illustration3.pdf}
   \end{center}
 \end{frame}
 
+\note{Next, we proceed by elaborating the syntactic lexicon, again by
+  literally copying existing work from one of Sylvain Pogodalla's papers. This
+  exposes a new signature of lower-order syntactic structures which are more
+  comfortable to work with.
+
+  0:14}
+
+
 \begin{frame}
+  \addtocounter{framenumber}{-1}
   \frametitle{Constraints on Multiple Signatures}
   \begin{center}
     \includegraphics[height=0.8\textheight]{../diagrams/illustration4.pdf}
   \end{center}
 \end{frame}
+
+\note{We then exploit this new syntactic signature by adding constraints. We
+  refine some types to simulate Guy Perrier's treatment of negative
+  determiners in French. We also add a constraint for enforcing agreement of
+  number.
+
+  0:13}
+
 
 \begin{frame}
   \frametitle{Reflection}
@@ -509,13 +746,24 @@ $$
       \begin{itemize}
         \item 9 signatures
         \item 8 lexicons
+        \item High level of redundancy
         \item Constraints decomplected from each other
         \item Constraints on different signatures
-        \item High level of redundancy
       \end{itemize}
     \end{column}
   \end{columns}
 \end{frame}
+
+\note{One thing to remark about this grammar is its size. Having a different
+  signature for each constraint means that there is quite a lot of redundancy
+  since we are repeatedly refining the same signature in different ways. On
+  the other hand, we have segregated all of our constraints into individual
+  signatures, keeping them simple. Furthermore, the constraints are attached
+  to different nodes of the G-ACG, making the introduction of new constraints
+  flexible in how deeply they want to get involved with the rest of the
+  grammar.
+
+  0:21}
 
 
 \section{Conclusion}
@@ -524,36 +772,75 @@ $$
   \frametitle{Recapitulation}
 
   \begin{itemize}
-  \item We reinterpreted ACGs by treating the diagrams as primary constructs
-    instead of as artifacts.
+  \item ACG diagrams as mathematical objects
   \vfill
-  \pause
-  \item This lets us handle non-arborescent diagrams in a principled manner.
+  \item Non-arborescence enables intersection
   \vfill
-  \pause
-  \item Non-arborescence enables intersection and therefore conjunction of
-    independent constraints.
+  \item Intersection enables conjunction of independent constraints
   \vfill
-  \pause
-  \item We presented the kind of grammar we envisioned, built by collecting
-    fragments described in existing research.
+  \item Large-scale grammar: collection of fragments
   \end{itemize}
 \end{frame}
+
+\note[itemize]{\item We started by reinterpreting ACGs by treating their
+  diagrams as primary defining constructs instead of as artifacts used only
+  for illustration.
+
+\item This let us explore the semantics of non-arborescent diagrams
+  directly. Through our explorations, we have arrived at a formalism which
+  facilitates intersection.
+
+\item Intersection turned out to be a key feature for the arbitrary
+  conjunction of independent constraints, which is useful in crafting detailed
+  grammars.
+
+\item We illustrated our approach by building a grammar which enforces a small
+  but diverse range of constraints and is broken up into manageable
+  chunks. This modularity was showcased by assembling the grammar in large
+  part by simply copying existing work without any modification.
+
+\item 0:35}
 
 
 \begin{frame}
   \frametitle{Future Directions}
 
   \begin{itemize}
-  \item Are extrinsic languages as expressive as pangraphical
-    ones? $$\mathcal{P} \subseteq \mathcal{E}$$
   \item Are ACG object languages closed on
     intersection? $$\mathcal{O}^{\mathcal{L}{\cap}} \subseteq \mathcal{O}^{\mathcal{L}}$$
+  \item Are extrinsic languages as expressive as pangraphical
+    ones? $$\mathcal{P} \subseteq \mathcal{E}$$
   \item Is there a metagrammatical approach that makes refining the types of a
     signature more concise?
   \vfill
   \item Is this enough to build a satisfactory grammar of a real language?
   \end{itemize}
 \end{frame}
+
+\note[itemize]{{\scriptsize \item Are ACG object languages closed on
+    intersection? If this were true, then our proposal would be just a
+    conservative extension which makes conjunction of constraints easier. If
+    this were false, then our proposal is necessary to make the languages
+    definable by the formalism closed on intersection, which we see as
+    critical for conjoining independent constraints.
+
+\item We like that we can exactly describe the set of extrinsic languages
+  w.r.t. ACG object languages. However, we still prefer pangraphical languages
+  as we find them more intuitive and easier to understand. We already know
+  that extrinsic languages are pangraphical. Proving the converse would be one
+  way of characterizing the set of pangraphical languages.
+
+\item A constraint signature that is created by refining the types shares a
+  lot of similarities with the original signature. Likewise, constraint
+  signatures developed using this techniques are alike. This makes us think
+  that it should be possible to find some kind of meta-notation that will be
+  able to convey new constraints more concisely than refining an entire
+  signature by hand.
+
+\item Finally, we are also curious to see how far we can get in building G-ACG
+  grammars before we run into another problem that will warrant extending the
+  formalism in yet another direction.
+
+\item 1:07}}
 
 \end{document}

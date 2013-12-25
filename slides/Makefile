@@ -10,6 +10,11 @@ presentation.pdf: presentation.tex ../diagrams/*.dot
 	pdflatex presentation.tex
 	pdflatex presentation.tex
 
+sjtu-presentation.pdf: sjtu-presentation.tex ../diagrams/*.dot
+	make -C ../diagrams
+	pdflatex sjtu-presentation.tex
+	pdflatex sjtu-presentation.tex
+
 clean:
 	rm -f *.aux *.log *.nav *.out *.pdf *.snm *.toc
 	make -C ../diagrams clean

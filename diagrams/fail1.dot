@@ -1,6 +1,8 @@
 strict digraph "fail1" {
   node [shape="circle",style="filled",fillcolor="lightblue"]
   edge [style="bold"]
+  "SyntSem?" [fillcolor="yellow"]
+  "Constr" [fillcolor="#5C53FC"]
   "SyntSem?" -> "Constr" [label="\\mathcal{L}_{interSyntax?}"]
   "Constr" -> "Syntax" [label="\\mathcal{L}_{constr}"]
   "Syntax" -> "String" [label="\\mathcal{L}_{yield}"]

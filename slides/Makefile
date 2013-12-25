@@ -1,4 +1,4 @@
-all: presentation.pdf short-presentation.pdf
+all: presentation.pdf short-presentation.pdf sjtu-presentation.pdf
 
 short-presentation.pdf: short-presentation.tex ../diagrams/*.dot
 	make -C ../diagrams

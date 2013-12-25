@@ -1,0 +1,561 @@
+\documentclass{beamer}
+
+\usepackage[utf8]{inputenc}
+\usepackage{xcolor}
+\usepackage{pgfpages}
+
+\definecolor{darkgreen}{rgb}{0., 0.6, 0.}
+\definecolor{darkgold}{rgb}{8., 0.6, 0.}
+\definecolor{limegreen}{RGB}{175, 255, 175}
+\definecolor{limeblue}{RGB}{200, 200, 235}
+
+\hypersetup{pdfstartview={Fit}}
+\def\limp {\mathbin{{-}\mkern-3.5mu{\circ}}}
+
+\AtBeginSection[]
+{
+  \begin{frame}
+    \frametitle{Outline}
+    \tableofcontents[currentsection]
+    \addtocounter{framenumber}{-1}
+  \end{frame}
+}
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}
+  {\hfill {\normalsize \insertframenumber{}/\inserttotalframenumber{}}}
+
+
+\begin{document}
+
+\title[G-ACGs]{Towards a Wide-Coverage Grammar}
+\subtitle{Graphical Abstract Categorial Grammars}
+\author{Jiří Maršík}
+\institute[INRIA Loria]
+{
+  Department of Computer Science \& Engineering \\
+  Shanghai Jiao Tong University
+  \and
+  INRIA Loria
+}
+\date[December 2013]{December 26, 2013}
+
+\frame{\titlepage \setcounter{framenumber}{1}}
+
+\begin{frame}
+\frametitle{Outline}
+\tableofcontents
+\end{frame}
+
+\section{Introduction}
+
+\begin{frame}
+  \frametitle{Towards a Wide-Coverage Grammar}
+
+  \textbf{Objective:} Build discourse representations using ACGs: \\a
+  wide-coverage ACG grammar.
+
+  \vfill
+
+  \begin{itemize}
+  \item Having linguistic resources to build upon
+    \begin{itemize}
+    \item Frilex, a formalism-independent lexical database
+    \item Frigram, a French interaction grammar
+    \end{itemize}
+    \vfill
+  \item Debugging the grammar
+    \begin{itemize}
+    \item A toolkit for formulating ACGs as simple metagrammars, for
+      examining how they work and for checking their consistency.
+    \end{itemize}
+    \vfill
+  \item Using a formalism that allows for a simple grammar
+    \begin{itemize}
+    \item Express multiple independent constraints \\ $\implies$ graphical abstract categorial grammars.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{ACGs and IGs}
+
+  \begin{itemize}
+  \item ACGs are based on types (IILL formulas).
+  \item IGs are based on polarized tree descriptions.
+    \vfill
+  \item[$\Rightarrow$] Perrier has linked the two.
+
+    \vspace{2 mm}
+    \begin{columns}[c]
+      \begin{column}{0.1\textwidth}\end{column}
+      \begin{column}{0.4\textwidth}
+        $$(NP \limp S) \limp N \limp N$$
+        $$N \limp (NP \limp S) \limp N$$
+      \end{column}
+      \begin{column}{0.1\textwidth}$\to$\end{column}
+      \begin{column}{0.2\textwidth}
+        \includegraphics[height=0.3\textheight]{../diagrams/ptd.pdf}
+      \end{column}
+      \begin{column}{0.25\textwidth}\end{column}
+    \end{columns}
+    \vfill
+  \item IG of Frigram use different constraints in tree descriptions.
+    \begin{itemize}
+    \item The deductive syntactic model of IGs is built on a wider range
+      of linear logic primitives ($\otimes$, $\&$).
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+\section{ACG Preliminaries}
+
+\newcommand{\synt}[1]{C_{\textrm{#1}}}
+
+\begin{frame}
+  \begin{block}{Abstract languages}
+    Defined by a \textcolor{red}{signature} and a
+    \textcolor{darkgreen}{distinguished type}.
+
+    \begin{columns}[t]
+      \begin{column}{0.5\textwidth}
+        \begin{align*}
+          \synt{tatous} &: \textcolor{red}{N} \\
+          \synt{Laura} &: \textcolor{red}{NP}
+        \end{align*}
+      \end{column}
+      \begin{column}{0.5\textwidth}
+        \begin{align*}
+          \synt{les} &: \textcolor{red}{N \limp NP} \\
+          \synt{aime} &: \textcolor{red}{NP \limp NP \limp S}
+        \end{align*}
+      \end{column}
+    \end{columns}
+
+    $$\synt{aime}\ \synt{Laura}\ (\synt{les}\ \synt{tatous}) :
+    \textcolor{darkgreen}{S}$$
+  \end{block}
+
+  \begin{block}{Object languages}
+    A projection of an abstract language with a \textcolor{darkgold}{lexicon}.
+
+    \begin{columns}[t]
+      \begin{column}{0.5\textwidth}
+        \begin{align*}
+          \mathcal{L}(\synt{tatous}) &= \textcolor{darkgold}{tatous} \\
+          \mathcal{L}(\synt{Laura}) &= \textcolor{darkgold}{Laura}
+        \end{align*}
+      \end{column}
+      \begin{column}{0.5\textwidth}
+        \begin{align*}
+          \mathcal{L}(\synt{les}) &= \textcolor{darkgold}{\lambda^{\circ} x.\ les + x} \\
+          \mathcal{L}(\synt{aime}) &= \textcolor{darkgold}{\lambda^{\circ} x y.\ x + aime + y}
+        \end{align*}
+      \end{column}
+    \end{columns}
+
+    $$\mathcal{L}(\synt{aime}\ \synt{Laura}\ (\synt{les}\ \synt{tatous}))
+    =_{\beta} Laura + aime + les + tatous$$
+  \end{block}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{ACG Diagrams}
+
+  \begin{center}
+    \includegraphics[height=0.8\textheight]{../diagrams/double-acg.pdf}
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{ACG Patterns}
+
+  \begin{columns}[c]
+     \begin{column}{0.5\textwidth}
+      \begin{block}{Constraint}
+        \vspace{2 mm}
+        \begin{center}
+          \includegraphics[height=0.7\textheight]{../diagrams/serial-over-parallel-slides.pdf}
+        \end{center}
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Elaboration}
+        \vspace{2 mm}
+        \begin{center}
+          \includegraphics[height=0.7\textheight]{../diagrams/parallel-over-serial-slides.pdf}
+        \end{center}
+      \end{block}
+    \end{column}
+ \end{columns}
+\end{frame}
+
+
+\section{Why Graphical ACGs?}
+
+\begin{frame}
+  \frametitle{Composing ACG Patterns I}
+
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+      \begin{center}
+        \includegraphics[height=0.7\textheight]{../diagrams/fail1.pdf}
+      \end{center}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{center}
+        \includegraphics[height=0.7\textheight]{../diagrams/fail2.pdf}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Composing ACG Patterns II}
+
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+      \begin{center}
+        \includegraphics[height=0.7\textheight]{../diagrams/constr-fail-1.pdf}
+      \end{center}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{center}
+        \includegraphics[height=0.7\textheight]{../diagrams/constr-fail-2.pdf}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Multiple Constraints}
+  Agreement:
+    \begin{align*}
+      A_{aime_1} &: NP_{\textcolor{darkgold}{NUM{=}SG}} \limp NP_{\textcolor{darkgold}{NUM{=}SG}} \limp S \\
+      A_{aime_2} &: NP_{\textcolor{darkgold}{NUM{=}SG}} \limp NP_{\textcolor{darkgold}{NUM{=}PL}} \limp S
+    \end{align*}
+
+  Extraction:
+    \begin{align*}
+      E_{aime_1} &: NP_{\textcolor{darkgreen}{VAR{=}F}} \limp NP_{\textcolor{darkgreen}{VAR{=}F}} \limp S_{\textcolor{darkgreen}{EXT{=}NO}} \\
+      E_{aime_2} &: NP_{\textcolor{darkgreen}{VAR{=}T}} \limp NP_{\textcolor{darkgreen}{VAR{=}F}} \limp S_{\textcolor{darkgreen}{EXT{=}ROOT}} \\
+      E_{aime_3} &: NP_{\textcolor{darkgreen}{VAR{=}F}} \limp NP_{\textcolor{darkgreen}{VAR{=}T}} \limp S_{\textcolor{darkgreen}{EXT{=}ROOT}
+}    \end{align*}
+
+  Combined:
+  \begin{small}
+  \begin{align*}
+      C_{aime_1} &: NP_{\textcolor{darkgold}{NUM{=}SG},\textcolor{darkgreen}{VAR{=}F}} \limp NP_{\textcolor{darkgold}{NUM{=}SG},\textcolor{darkgreen}{VAR{=}F}} \limp S_{\textcolor{darkgreen}{EXT{=}NO}} \\
+      C_{aime_2} &: NP_{\textcolor{darkgold}{NUM{=}SG},\textcolor{darkgreen}{VAR{=}T}} \limp NP_{\textcolor{darkgold}{NUM{=}SG},\textcolor{darkgreen}{VAR{=}F}} \limp S_{\textcolor{darkgreen}{EXT{=}ROOT}} \\
+      C_{aime_3} &: NP_{\textcolor{darkgold}{NUM{=}SG},\textcolor{darkgreen}{VAR{=}F}} \limp NP_{\textcolor{darkgold}{NUM{=}SG},\textcolor{darkgreen}{VAR{=}T}} \limp S_{\textcolor{darkgreen}{EXT{=}ROOT}} \\
+      C_{aime_4} &: NP_{\textcolor{darkgold}{NUM{=}SG},\textcolor{darkgreen}{VAR{=}F}} \limp NP_{\textcolor{darkgold}{NUM{=}PL},\textcolor{darkgreen}{VAR{=}F}} \limp S_{\textcolor{darkgreen}{EXT{=}NO}} \\
+      C_{aime_5} &: NP_{\textcolor{darkgold}{NUM{=}SG},\textcolor{darkgreen}{VAR{=}T}} \limp NP_{\textcolor{darkgold}{NUM{=}PL},\textcolor{darkgreen}{VAR{=}F}} \limp S_{\textcolor{darkgreen}{EXT{=}ROOT}} \\
+      C_{aime_6} &: NP_{\textcolor{darkgold}{NUM{=}SG},\textcolor{darkgreen}{VAR{=}F}} \limp NP_{\textcolor{darkgold}{NUM{=}PL},\textcolor{darkgreen}{VAR{=}T}} \limp S_{\textcolor{darkgreen}{EXT{=}ROOT}
+}  \end{align*}
+  \end{small}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Graphical Abstract Categorial Grammars (G-ACGs)}
+
+  \begin{columns}[c]
+    \begin{column}{0.6\textwidth}
+      \begin{center}
+        \includegraphics[height=0.7\textheight]{../diagrams/final-slides.pdf}
+      \end{center}
+    \end{column}
+
+    \begin{column}{0.4\textwidth}
+        \begin{itemize}
+        \item DAG
+        \item Nodes:
+          \begin{itemize}
+          \item Signatures
+          \item Distinguished types
+          \end{itemize}
+        \item Edges:
+          \begin{itemize}
+          \item Lexicons
+          \end{itemize}
+        \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+
+\section{Semantics of G-ACG Nodes}
+
+\begin{frame}
+  \frametitle{Two Intuitions for G-ACGs}
+
+  \setbeamercolor{block title}{bg=limeblue}
+  \setbeamercolor{block body}{bg=limeblue}
+  \begin{block}{Algebraic Perspective}
+    \begin{itemize}
+    \item Nodes as \emph{languages}
+    \end{itemize}
+  \end{block}
+  \setbeamercolor{block title}{bg=limegreen}
+  \setbeamercolor{block body}{bg=limegreen}
+  \begin{block}{Generative Perspective}
+    \begin{itemize}
+    \item Nodes as \emph{terms}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Algebraic Intuition}
+
+  \begin{columns}[c]
+    \begin{column}{0.7\textwidth}
+      \setbeamercolor{block title}{bg=limeblue}
+      \setbeamercolor{block body}{bg=limeblue}
+      \begin{block}{}
+        \begin{itemize}
+        \item Node = Language
+        \item Edge = Projection with a \textcolor{darkgreen}{lexicon}
+        \item Two incoming edges = \textcolor{red}{Intersection} of languages
+        \end{itemize}
+      \end{block}
+
+$$
+\mathcal{I}_{\mathcal{G}}(v) = \{t \in \Lambda(\Sigma_v)
+\mid\ \vdash_{\Sigma_v} t : S_v\}
+$$
+$$
+\mathcal{E}_{\mathcal{G}}(v) = \mathcal{I}_{\mathcal{G}}(v) \cap
+\textcolor{red}{\bigcap_{(u,v) \in E}}
+\textcolor{darkgreen}{\mathcal{L}_{(u,v)}}(\mathcal{E}_{\mathcal{G}}(u)).
+$$
+    \end{column}
+    \begin{column}{0.3\textwidth}
+      \includegraphics[width=\textwidth]{../diagrams/algebraic-perspective.pdf}
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Two Problems with the Algebraic View}
+
+  \begin{columns}[t]
+    \begin{column}{0.5\textwidth}
+      \begin{center}
+        \includegraphics[height=0.6\textheight]{../diagrams/both-patterns-slides.pdf}
+      \end{center}
+
+      How do we get the language of meanings expressible only by
+      syntactically correct sentences?
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{center}
+        \includegraphics[height=0.6\textheight]{../diagrams/diamond-grammar.pdf}
+      \end{center}
+
+      How do we express the language of $Bottom$ terms whose $Left$ and
+      $Right$ antecedents are generated by the same $Top$ antecedent?
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Generative Intuition}
+
+  \begin{columns}[c]
+    \begin{column}{0.7\textwidth}
+\setbeamercolor{block title}{bg=limegreen}
+      \setbeamercolor{block body}{bg=limegreen}
+      \begin{block}{}
+        \begin{itemize}
+        \item Node = \textcolor{red}{Term}
+        \item Edge = Image with a \textcolor{darkgreen}{lexicon}
+        \item Two incoming edges = \textcolor{red}{Equality} of images
+        \end{itemize}
+      \end{block}
+
+      \vspace{3 mm}
+
+      $t \in \mathcal{P}_{\mathcal{G}}(u)$ iff $\exists T :
+      \textcolor{red}{V(G) \to \Lambda}$ s.t.:
+      \begin{itemize}
+      \item $T_u = t$.
+      \item $\forall v \in V(G)$, $\vdash_{\Sigma_v} T_v : S_v$.
+      \item $\forall (v,w) \in E(G)$,
+        $\textcolor{darkgreen}{\mathcal{L}_{(v,w)}(T_v) = T_w}$.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.3\textwidth}
+      \includegraphics[width=\textwidth]{../diagrams/generative-perspective.pdf}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Algebraic and Generative Relations}
+
+  \note{We have presented two interpretations of G-ACGs based on two different
+    intuitive readings of ACG diagrams, one where nodes are thought of as
+    languages and one where they stand for individual terms. The result shown
+    here validates these two ways of reasoning about diagrams in the context
+    of classical ACGs since they lead to the same languages as the canonical
+    definition of an object language.
+
+    0:25}
+
+  \begin{itemize}
+  \item $\forall \, \mathcal{G}, u$ where $\mathcal{G}$ is arborescent:
+    $$\mathcal{E}_{\mathcal{G}}(u) = \mathcal{P}_{\mathcal{G}}(u)
+    = \mathcal{O}_{\mathcal{G}}(u)$$
+  \pause
+  \item However, $\exists \, \mathcal{G}, u$ such that:
+    $$\mathcal{E}_{\mathcal{G}}(u) \neq \mathcal{P}_{\mathcal{G}}(u)$$
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Properties of G-ACG Languages}
+
+  $$\forall \, \mathcal{G}, u. \; \mathcal{I}_{\mathcal{G}}(u) \supseteq
+  \mathcal{E}_{\mathcal{G}}(u) \supseteq \mathcal{P}_{\mathcal{G}}(u)$$
+
+  $$\mathcal{I} \subseteq \mathcal{E} \subseteq \mathcal{P}$$
+
+  $$\mathcal{I} = \mathcal{A}$$
+
+  $$\mathcal{O} = \mathcal{A}^{\mathcal{L}}$$
+
+  $$\mathcal{E} = \mathcal{A}^{\mathcal{L}{\cap}}$$
+\end{frame}
+
+\section{Illustration}
+
+\note{We now illustrate the kind of grammar for which we introduced this
+  extension.}
+
+
+\begin{frame}
+  \frametitle{Basic Setup}
+  \begin{center}
+    \includegraphics[height=0.8\textheight]{../diagrams/illustration0.pdf}
+  \end{center}
+\end{frame}
+
+\note{We start with the canonical example of a tectogrammatical language that
+  is projected into phenogrammatical strings and semantic formulae.
+
+  0:09}
+
+
+\begin{frame}
+  \addtocounter{framenumber}{-1}
+  \frametitle{Single Constraint}
+  \begin{center}
+    \includegraphics[height=0.8\textheight]{../diagrams/illustration1.pdf}
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \addtocounter{framenumber}{-1}
+  \frametitle{Multiple Constraints}
+  \begin{center}
+    \includegraphics[height=0.8\textheight]{../diagrams/illustration2.pdf}
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \addtocounter{framenumber}{-1}
+  \frametitle{Exposing Another Signature}
+  \begin{center}
+    \includegraphics[height=0.8\textheight]{../diagrams/illustration3.pdf}
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \addtocounter{framenumber}{-1}
+  \frametitle{Constraints on Multiple Signatures}
+  \begin{center}
+    \includegraphics[height=0.8\textheight]{../diagrams/illustration4.pdf}
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Reflection}
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+      \begin{center}
+        \includegraphics[height=0.8\textheight]{../diagrams/illustration5.pdf}
+      \end{center}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+        \item 9 signatures
+        \item 8 lexicons
+        \item High level of redundancy
+        \item Constraints decomplected from each other
+        \item Constraints on different signatures
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+
+\section{Conclusion}
+
+\begin{frame}
+  \frametitle{Summary of Work Done}
+
+  \begin{itemize}
+  \item Formalized graphical abstract categorial grammars.
+    \begin{itemize}
+      \item ACG diagrams as mathematical objects
+      \item Non-arborescence enables intersection
+      \item Intersection enables conjunction of independent constraints
+      \item Large-scale grammar: collection of fragments
+    \end{itemize}
+  \vfill
+  \item Created a toolkit to serve as basis for more explorations or
+    implementations.
+  \vfill
+  \item Direct embedding of IGs into ACGs based on Perrier's theorem
+    conjectured not to be practical.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Future Directions}
+
+  \begin{itemize}
+  \item Are ACG object languages closed on
+    intersection? $$\mathcal{O}^{\mathcal{L}{\cap}} \subseteq \mathcal{O}^{\mathcal{L}}$$
+  \item Are extrinsic languages as expressive as pangraphical
+    ones? $$\mathcal{P} \subseteq \mathcal{E}$$
+  \item Express the multiple polarized features of IGs in G-ACGs.
+  \vfill
+  \item Is there a metagrammatical approach that makes refining the types of a
+    signature more concise?
+  \vfill
+  \item Is this enough to build a satisfactory grammar of a real language?
+  \end{itemize}
+\end{frame}
+
+\end{document}

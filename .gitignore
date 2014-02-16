@@ -9,5 +9,6 @@
 *.snm
 *.toc
 *.cache
+*.synctex.gz
 lenls/springer
 lenls/slides.synctex.gz

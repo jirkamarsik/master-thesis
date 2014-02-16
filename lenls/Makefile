@@ -1,4 +1,4 @@
-deploy: abstract.pdf paper.pdf slides.pdf
+deploy: abstract.pdf paper.pdf slides.pdf post-proc.pdf
 	cp abstract.pdf ~/Dropbox/Public/abstract.pdf
 	cp paper.pdf ~/Dropbox/Public/lenls.pdf
 	cp slides.pdf ~/Dropbox/Public/lenls-slides.pdf
@@ -15,7 +15,13 @@ paper.pdf: paper.tex ../diagrams/*.dot ../biblio.bib
 	pdflatex paper.tex
 	bibtex paper.aux
 	pdflatex paper.tex
-	pdflatex paper.tex
+
+post-proc.pdf: post-proc.tex ../diagrams/*.dot ../biblio.bib
+	make -C ../diagrams
+	pdflatex post-proc.tex
+	bibtex post-proc.aux
+	pdflatex post-proc.tex
+	pdflatex post-proc.tex
 
 slides.pdf: slides.tex ../diagrams/*.dot ../biblio.bib
 	make -C ../diagrams

@@ -75,7 +75,7 @@ representations automatically.
 A presupposed condition to actually using an ACG to describe discourse in a
 large scope is to have a large scale ACG grammar in the first place. The work
 presented here was motivated by this quest for a wide-coverage ACG grammar, as
-seen from a point of view of language as a system of largely orthogonal
+seen from the point of view of language as a system of largely orthogonal
 constraints. Encoding ancillary constraints in a type system can make the
 system hard to read and understand. If multiple constraints written in the
 style of \cite{pogodalla2012controlling} are to be enforced in the same
@@ -322,7 +322,7 @@ in the fragment for negation ($N$). The types accept an $NP$ and an $N$ as
 arguments with any combination of values for the feature $NEG$, except for the
 case when both the prepositional $NP$ and the $N$ being modified both contain
 free negative determiners (i.e. there is no $N_{de_4} : NP_{NEG{=}T} \limp
-N_{NEG{=}T} \limp N_{NEG{=}}\ldots$). This encodes a constraint that there can
+N_{NEG{=}T} \limp N_{NEG{=}?}$). This encodes a constraint that there can
 be only one free negative determiner per phrase (free as in not hidden inside
 an embedded clause). Besides this constraint, the types also dictate how the
 information about negative determiners should propagate from the argument
@@ -434,12 +434,11 @@ $$
 \bigcap_{(u,v) \in E} \mathcal{L}_{(u,v)}(\mathcal{E}_{\mathcal{G}}(u))
 $$
 
-The intrinsic language is just the set of terms built on the node's
-signature and having the node's distinguished type. The extrinsic
-language is established by taking the extrinsic languages of its
-predecessors, mapping them through lexicons and taking their
-intersection, or just taking the node's intrinsic language if it has no
-predecessors.
+The intrinsic language is just the set of terms built on the node's signature
+and having the node's distinguished type. The extrinsic language is
+established by taking the extrinsic languages of its predecessors, mapping
+them through the lexicons and taking their intersection, or just taking the
+node's intrinsic language if it has no predecessors.
 
 We then examine the relationship between the languages defined by ACGs
 and graphical ACGs (G-ACGs). Intrinsic languages correspond exactly to
@@ -507,28 +506,35 @@ actually correspond to syntactically correct sentences in this G-ACG.
 
 The above characteristics motivated us to explore alternative interpretations
 of G-ACGs. We will present one such alternative now, which exchanges the
-language-algebraic point of view for a generative one.
+language-algebraic point of view for a term-relational one.
 
 \subsection{Nodes as Terms}
 
-In the new paradigm, we interpret the nodes of the graph as terms and the
-edges as statements that one term is mapped into another using a lexicon. This
-leads us to the definition of the \emph{pangraphical}\footnote{As opposed to
-  extrinsic languages, which are constrained only by their predecessors in the
-  graph, pangraphical languages are constrained by the entire graph.} language
-of a node $u$ in a G-ACG $\mathcal{G}$.
+In the new paradigm, we interpret the graph as a logical formula. The nodes
+will be seen as variables whose domains are their intrinsic languages,
+i.e. each node $v$ as a variable will range over the terms built from its
+signature $\Sigma_v$ and having its distinguished type $S_v$. Edges $(v,w)$
+will be statements saying that the image of the term $v$ through the lexicon
+$\mathcal{L}_{(v,w)}$ is exactly the term $w$.
 
-A term $t$ belongs to $\mathcal{P}_{\mathcal{G}}(u)$ whenever there
-exists a labeling $T$ of the nodes of the graph such that:
+We can think of \emph{models} for this graphical propositional logic as
+assignments of terms to variables, i.e. labelings of the nodes of the graph
+with terms. A model $T$ is \emph{valid} when it satisfies the following
+conditions:
 
 \begin{itemize}
-  \item $T_u = t$.
   \item For all $v \in V(G)$, $\vdash_{\Sigma_v} T_v : S_v$.
   \item For all $(v,w) \in E(G)$, $\mathcal{L}_{(v,w)}(T_v) = T_w$.
 \end{itemize}
 
+A term $t$ belongs to the \emph{pangraphical}\footnote{As opposed to extrinsic
+  languages, which are constrained only by their predecessors in the graph,
+  pangraphical languages are constrained by the entire graph, hence the name.}
+language $\mathcal{P}_{\mathcal{G}}(u)$ if there exists a valid model $T$ such
+that $T(u) = t$.
+
 If we compare this new interpretation of G-ACGs to the former one, we find out
-that in the case when the graph of the grammar is an arborescence, they are
+that in the cases when the graph of the grammar is an arborescence, they are
 actually equivalent. This means that in classical ACGs, where all the diagrams
 are arborescences, the two metaphors (nodes as languages and nodes as terms)
 can be, and are, used interchangeably. However, as we start to consider
@@ -606,10 +612,10 @@ Next, we can incorporate knowledge from \cite{pogodalla2007generalizing}, by
 splitting the $\mathcal{L}_{Syn}$ lexicon and introducing a new intermediate
 signature (Figure~\ref{fig:conts-elab}). The new signature, $Syntax$, deals
 purely with syntax without any issues of operator scope and its functions have
-lower-order types than those in $Syn$. We will finally add our contribution,
-the signatures $Neg$ and $Agr$ and the lexicons $\mathcal{L}_{Neg}$ and
-$\mathcal{L}_{Agr}$ which implement the constraint on negation we discussed
-before and some simple notion of agreement, respectively
+types of a lower order than those in $Syn$. We will finally add our
+contribution, the signatures $Neg$ and $Agr$ and the lexicons
+$\mathcal{L}_{Neg}$ and $\mathcal{L}_{Agr}$ which implement the constraint on
+negation we discussed before and some simple notion of agreement, respectively
 (Figure~\ref{fig:final-synth}).
 
 \begin{figure}[t]
@@ -750,8 +756,9 @@ relabelings and therefore parsing (i.e. constraint verification) is trivial
 have to continue parsing by finding an antecedent in $Syn$. This involves
 higher-order types used to encode the various scope-bearing
 operators. Finally, we can opt in to verify the high-level syntax-semantics
-constraints which employ dependent types. However, the lexicons in this case
-resemble relabelings and a semi-decidable procedure could be used to solve the
+constraints which employ dependent types
+\cite{pogodalla2012controlling}. However, the lexicons in this case resemble
+relabelings and a semi-decidable procedure could be used to solve the
 problem. Having the grammar decomposed like this opens it up for computational
 processing by letting us engage in different tactics at different stages
 instead of having to parse a single hidden structure which enforces

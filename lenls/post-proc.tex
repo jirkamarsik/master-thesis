@@ -453,8 +453,7 @@ G-ACG extrinsic languages correspond to ACG object languages with
 intersection. More formally, while ACG object languages are ACG abstract
 languages closed on transformation by a lexicon, G-ACG extrinsic languages are
 ACG abstract languages closed on transformation by a lexicon and
-intersection\footnote{Can be shown by induction on the topological ordering of
-  any given graphical ACG.}.
+intersection.
 
 $$
 \mathcal{O} = \mathcal{A}^{\mathcal{L}}
@@ -462,6 +461,143 @@ $$
 $$
 \mathcal{E} = \mathcal{A}^{\mathcal{L}{\cap}}
 $$
+
+\begin{proof}
+  We prove $\mathcal{E} = \mathcal{A}^{\mathcal{L}{\cap}}$, or equivalently
+  $\mathcal{E} = \mathcal{I}^{\mathcal{L}{\cap}}$, by proving $\mathcal{E}
+  \subseteq \mathcal{I}^{\mathcal{L}{\cap}}$ and
+  $\mathcal{I}^{\mathcal{L}{\cap}} \subseteq \mathcal{E}$.
+
+  We begin with $\mathcal{E} \subseteq \mathcal{I}^{\mathcal{L}{\cap}}$. Let
+  us consider any graphical ACG $\mathcal{G}$ and some topological ordering
+  $v_1, \ldots, v_n$ of its nodes $V(G)$ (an ordering such that more abstract
+  nodes always precede less abstract ones). We proceed by induction on the
+  topological ordering and prove that $\mathcal{E}_{\mathcal{G}}(v_i) \in
+  \mathcal{I}^{\mathcal{L}{\cap}}$ for all $v_i$ in $V(G)$:
+
+  \begin{itemize}
+  \item For $v_1$, the case is trivial. $v_1$ has no predecessors and so
+    $\mathcal{E}_{\mathcal{G}}(v_1) = \mathcal{I}_{\mathcal{G}}(v_1) \in
+    \mathcal{I}$.
+  \item For any other node $v_n$, we inspect the definition of
+    $\mathcal{E}_{\mathcal{G}}(v_n)$.
+
+    $$\mathcal{E}_{\mathcal{G}}(v_n) = \mathcal{I}_{\mathcal{G}}(v_n) \cap
+    \bigcap_{(u,v_n) \in E(G)}
+    \mathcal{L}_{(u,v_n)}(\mathcal{E}_{\mathcal{G}}(u))$$
+
+    By induction hypothesis, $\mathcal{E}_{\mathcal{G}}(u) \in
+    \mathcal{I}^{\mathcal{L}{\cap}}$ for all the predecessors $u$ of
+    $v_n$. Since, $\mathcal{I}^{\mathcal{L}{\cap}}$ is closed on projection by
+    a lexicon, we have that
+    $\mathcal{L}_{(u,v_n)}(\mathcal{E}_{\mathcal{G}}(u)) \in
+    \mathcal{I}^{\mathcal{L}{\cap}}$ as well. Finally, by the closure of
+    $\mathcal{I}^{\mathcal{L}{\cap}}$ on intersection, we have that their
+    intersection $\bigcap_{(u,v_n) \in E(G)}
+    \mathcal{L}_{(u,v_n)}(\mathcal{E}_{\mathcal{G}}(u))$ also belongs to
+    $\mathcal{I}^{\mathcal{L}{\cap}}$. Since $\mathcal{I}_{\mathcal{G}}(v_n)$
+    belongs to $\mathcal{I}^{\mathcal{L}{\cap}}$ too, we know that their
+    intersection, $\mathcal{E}_{\mathcal{G}}(v_n)$ belongs to
+    $\mathcal{I}^{\mathcal{L}{\cap}}$.
+  \end{itemize}
+
+  Now we prove the converse, that is that $\mathcal{I}^{\mathcal{L}{\cap}}
+  \subseteq \mathcal{E}$. We do so by proving that $\mathcal{I} \subseteq
+  \mathcal{E}$ and that $\mathcal{E}$ is closed on projection through a
+  lexicon and intersection.
+
+  \begin{description}
+    \item[Inclusion of intrinsic languages] Let us consider the intrinsic
+      language $\mathcal{I}_{\mathcal{G}}(u)$ of some node $u$ in some G-ACG
+      $\mathcal{G}$. We can produce a G-ACG $\mathcal{G}_u$, whose graph
+      contains only the node $u$ labeled with the same signature and
+      distinguished type as in $\mathcal{G}$. Since $u$ has no predecessors in
+      $\mathcal{G}_u$, it will be the case that
+      $\mathcal{E}_{\mathcal{G}_u}(u) = \mathcal{I}_{\mathcal{G}_u}(u) =
+      \mathcal{I}_{\mathcal{G}}(u)$ and therefore the intrinsic language
+      $\mathcal{I}_{\mathcal{G}}(u)$ is also an extrinsic language
+      $\mathcal{E}_{\mathcal{G}_u}(u)$.
+
+    \vspace{5mm}
+
+    \item[Closure on projection through a lexicon] Let $L_1$ and $L_2$ be two
+      extrinsic languages defined by the nodes $u_1$ and $u_2$ in some
+      graphical ACGs $\mathcal{G}_1$ and $\mathcal{G}_2$, respectively. We can
+      construct a new graphical ACG $\mathcal{G}'$ by taking the union of the
+      two ACGs (union of graphs (union of vertices and edges) and unions of
+      the labelings).\footnote{Assuming, without loss of generality, that the
+        sets of vertices of the two graphs are disjoint.} We will then add a
+      new node $v$ such that $\mathcal{E}_{\mathcal{G}'}(v) = L_1 \cap L_2$.
+
+      The signature labeling $v$ will be the union of the two signatures
+      labeling $u_1$ and $u_2$, ensuring that $\forall u \in \{u_1,
+      u_2\}$, $\mathcal{I}_{\mathcal{G}'}(v) \supseteq
+      \mathcal{I}_{\mathcal{G}'}(u) \supseteq
+      \mathcal{E}_{\mathcal{G}'}(u)$. We can use either of the two
+      distinguished types that label $u_1$ or $u_2$ to label $v$ (if
+      they are different, then the intersection $L_1 \cap L_2$ is
+      trivially empty). Finally, we will add two edges leading from
+      $u_1$ and $u_2$ to $v$, both labeled with the identity lexicon. We
+      will now show that $\mathcal{E}_{\mathcal{G}'}(v) = L_1 \cap L_2$.
+
+      \begin{align*}
+        \mathcal{E}_{\mathcal{G}'}(v) &= \mathcal{I}_{\mathcal{G}'}(v)
+        \cap \mathcal{L}_{(u_1,v)}(\mathcal{E}_{\mathcal{G}'}(u_1)) \cap
+        \mathcal{L}_{(u_2,v)}(\mathcal{E}_{\mathcal{G}'}(u_2)) \\ &=
+        \mathcal{I}_{\mathcal{G}'}(v) \cap
+        \mathcal{E}_{\mathcal{G}'}(u_1) \cap
+        \mathcal{E}_{\mathcal{G}'}(u_2) \\ &=
+        \mathcal{E}_{\mathcal{G}'}(u_1) \cap
+        \mathcal{E}_{\mathcal{G}'}(u_2) \\ &=
+        \mathcal{E}_{\mathcal{G}_1}(u_1) \cap
+        \mathcal{E}_{\mathcal{G}_2}(u_2) \\ &= L_1 \cap L_2
+      \end{align*}
+
+      The simplifications use the facts that: the two new lexicons are
+      identities, that $\mathcal{I}_{\mathcal{G}'}(v) \supseteq
+      \mathcal{E}_{\mathcal{G}'}(u_1) \cap \mathcal{E}_{\mathcal{G}'}(u_2)$
+      (due to $\Sigma'_v = \Sigma'_{u_1} \cup \Sigma'_{u_2}$), that
+      $\mathcal{E}_{\mathcal{G}'}(u_1) = \mathcal{E}_{\mathcal{G}_1}(u_1)$ and
+      $\mathcal{E}_{\mathcal{G}'}(u_2) = \mathcal{E}_{\mathcal{G}_2}(u_2)$
+      (due to $u_1$ and $u_2$ having the same predecessors in $\mathcal{G}$
+      and $\mathcal{G}'$) and finally that $\mathcal{E}_{\mathcal{G}}(u_1) =
+      L_1$ and $\mathcal{E}_{\mathcal{G}}(u_2) = L_2$ (our starting
+      assumptions).
+
+  \vspace{5mm}
+
+  \item[Closure on intersection] Let $L \subseteq \Lambda(\Sigma_O)$ be a
+    language which is the result of mapping an extrinsic language $L'
+    \subseteq \Lambda(\Sigma_A)$ through the lexicon $\mathcal{L} : \Sigma_A
+    \to \Sigma_O$. We will show that $L$ is also an extrinsic language. Let
+    $u$ be the node that defines the extrinsic language $L$ in some graphical
+    ACG $\mathcal{G}$. We construct a new graphical ACG $\mathcal{G}'$ by
+    adding a new vertex $v$ to $\mathcal{G}$ labeled with the signature
+    $\Sigma_O$ and the distinguished type $\mathcal{L}(S)$ where $S$ is the
+    distinguished type labeling $u$. To this graph, we conjoin the edge
+    $(u,v)$ and label it with $\mathcal{L}$.
+
+    Now we verify that $\mathcal{E}_{\mathcal{G}'}(v) = L$.
+
+    \begin{align*}
+      \mathcal{E}_{\mathcal{G}'}(v) &= \mathcal{I}_{\mathcal{G}'}(v) \cap
+      \mathcal{L}(\mathcal{E}_{\mathcal{G}'}(u)) \\
+      &= \mathcal{L}(\mathcal{E}_{\mathcal{G}'}(u)) \\
+      &= \mathcal{L}(\mathcal{E}_{\mathcal{G}}(u)) \\
+      &= \mathcal{L}(L') \\
+      &= L
+    \end{align*}
+
+    The assumptions used here are in turn: that $\mathcal{I}_{\mathcal{G}'}(v)
+    \supseteq \mathcal{L}(\mathcal{E}_{\mathcal{G}'}(u))$ (due to the
+    homomorphism property of lexicon $\mathcal{L} : \Sigma_A \to \Sigma_O$),
+    that $\mathcal{E}_{\mathcal{G}'}(u) = \mathcal{E}_{\mathcal{G}}(u)$ (due
+    to $u$ having the same predecessors in $\mathcal{G}$ and $\mathcal{G}'$),
+    that $\mathcal{E}_{\mathcal{G}}(u) = L'$ and that $\mathcal{L}(L') = L$
+    (our starting assumptions).
+  \end{description}
+\hfill $\qed$
+\end{proof}
 
 If we want our grammatical framework to be modular w.r.t. the different
 linguistic constraints it encodes, we essentially need
@@ -554,16 +690,24 @@ Pangraphical languages turn out to be at least as expressive as the extrinsic
 languages\footnote{This might come as no surprise given the extended domain of
   constraints compared to extrinsic languages (constrained by the entire graph
   as opposed to just the node's predecessors).}. The proof is carried out by
-transforming a G-ACG such that a particular node will have the same
-pangraphical language in the latter G-ACG as the extrinsic language it had in
-the former. The nodes of the newly constructed G-ACG correspond to paths in
-the former one terminating in the node in question\footnote{This means that
-  when the G-ACG is $\mathcal{D}$, the diamond grammar, and the node in
-  question is $Bottom$, then we will have two different nodes for the two
-  paths $[Top, Left, Bottom]$ and $[Top, Right, Bottom]$.}. Thus the labelling
-of nodes with terms which certifies a given term's presence in the
-pangraphical language of the new G-ACG also serves as a proof of its presence
-in the extrinsic language of the old G-ACG and vice versa.
+transforming any G-ACG $\mathcal{G}$ where $L = \mathcal{E}_{\mathcal{G}}(u)$
+to a G-ACG $\mathcal{G'}$ where for some $v$, $\mathcal{P}_{\mathcal{G'}}(v) =
+L$. We do so by taking all the (finitely many) paths in $G$ that end in $u$ to
+be the vertices of $G'$. Each of the vertices in $G'$ (paths in $G$) will be
+labeled by the same signature and distinguished type as the first node of the
+corresponding path. Furthermore, there will be an edge $(p_1, p_2)$ in $G'$
+labeled with the lexicon $\mathcal{L}$ whenever the path $p_2$ is the maximal
+strict suffix of $p_1$ such that $p_1 = e; p_2$ where the edge $e$ is labeled
+with $\mathcal{L}$ in $G$.\footnote{This means that when the G-ACG is
+  $\mathcal{D}$, the diamond grammar, and the node in question is $Bottom$,
+  then we will have the following nodes in $\mathcal{D}'$: $[Top, Left,
+    Bottom]$, $[Top, Right, Bottom]$, $[Left, Bottom]$, $[Right, Bottom]$,
+  $[Bottom]$. Note that we have two nodes for (i.e. beginning with) $Top$,
+  which will let us admit two different antecedents in
+  $\mathcal{E}_{\mathcal{D}}(Top)$.} In this G-ACG $\mathcal{G'}$, valid
+models $T$ which assign $T([u]) = t$ are isomorphic to proofs of membership of
+$t$ in $\mathcal{E}_{\mathcal{G}}(u)$ and therefore
+$\mathcal{P}_{\mathcal{G'}}([u]) = \mathcal{E}_{\mathcal{G}}(u)$.
 
 This gives us the following ladder of expressivity
 
@@ -591,13 +735,13 @@ our approach.
   \centering
   \begin{subfigure}[b]{0.4\textwidth}
     \centering
-    \includegraphics[height=0.2\textheight]{../diagrams/single-cont.pdf}
+    \includegraphics[height=0.2\textheight]{../diagrams/story-single-cont.pdf}
     \caption{\label{fig:single-cont} An extraction constraint }
   \end{subfigure}
   \qquad
   \begin{subfigure}[b]{0.4\textwidth}
     \centering
-    \includegraphics[height=0.2\textheight]{../diagrams/merged-conts.pdf}
+    \includegraphics[height=0.2\textheight]{../diagrams/story-merged-conts.pdf}
     \caption{\label{fig:merged-conts} G-ACG merging the three extraction
       constraints.}
   \end{subfigure}
@@ -622,14 +766,14 @@ negation we discussed before and some simple notion of agreement, respectively
   \centering
   \begin{subfigure}[b]{0.4\textwidth}
     \centering
-    \includegraphics[height=0.2\textheight]{../diagrams/conts-elab.pdf}
+    \includegraphics[height=0.2\textheight]{../diagrams/story-conts-elab.pdf}
     \caption{\label{fig:conts-elab} Elaborating the lexicon from syntax to
       strings. }
   \end{subfigure}
   \qquad
   \begin{subfigure}[b]{0.4\textwidth}
     \centering
-    \includegraphics[height=0.2\textheight]{../diagrams/final-synth.pdf}
+    \includegraphics[height=0.2\textheight]{../diagrams/story-final-synth.pdf}
     \caption{\label{fig:final-synth} Adding our own syntactic constraints,
       $Neg$ and $Agr$.}
   \end{subfigure}
@@ -667,6 +811,8 @@ the arguments' $NEG$ features. Here are some representative examples:
 
 \begin{align*}
 N_{aucun} &: N_{NEG{=}F} \limp NP_{NEG{=}T} \\
+\end{align*} % for page break purposes
+\begin{align*}
 N_{le_1} &: N_{NEG{=}F} \limp NP_{NEG{=}F} \\
 N_{le_2} &: N_{NEG{=}T} \limp NP_{NEG{=}T} \\
 N_{ne^{tv}_1} &: (NP_{NEG{=}F} \limp NP_{NEG{=}F} \limp S) \limp (NP_{NEG{=}T} \limp NP_{NEG{=}F} \limp S) \\
@@ -715,19 +861,17 @@ and $NP$ will be subdivided into $N_{NUM{=}SG}$, $N_{NUM{=}PL}$,
 $NP_{NUM{=}SG}$ and $NP_{NUM{=}PL}$ (we only treat number agreement in this
 example). Here are some example types:
 
-\vspace{-3ex}
-
 \begin{align*}
 A_{tatou} &: N_{NUM{=}SG} \\
 A_{tatous} &: N_{NUM{=}PL} \\
 A_{le} &: N_{NUM{=}SG} \limp NP_{NUM{=}SG} \\
 A_{les} &: N_{NUM{=}PL} \limp NP_{NUM{=}PL} \\
 A_{aime_1} &: NP_{NUM{=}SG} \limp NP_{NUM{=}SG} \limp S \\
-A_{aime_2} &: NP_{NUM{=}SG} \limp NP_{NUM{=}PL} \limp S
-\end{align*}
+A_{aime_2} &: NP_{NUM{=}SG} \limp NP_{NUM{=}PL} \limp S \\
+\end{align*} % for page break purposes
 \begin{align*}
 A_{qui_1} &: (NP_{NUM{=}SG} \limp S) \limp N_{NUM{=}SG} \limp N_{NUM{=}SG} \\
-A_{qui_2} &: (NP_{NUM{=}PL} \limp S) \limp N_{NUM{=}PL} \limp N_{NUM{=}PL}
+A_{qui_2} &: (NP_{NUM{=}PL} \limp S) \limp N_{NUM{=}PL} \limp N_{NUM{=}PL} \\
 \end{align*}
 
 The types for nouns and determiners are quite predictable. For the transitive

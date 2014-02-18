@@ -1,0 +1,9 @@
+strict digraph "story-merged-conts" {
+  node [shape="circle",style="filled",fillcolor="lightblue"]
+  edge [style="bold"]
+  "Cont_1" -> "Syn" [label="\\mathcal{L}_{Cont_1}"]
+  "Cont_2" -> "Syn" [label="\\mathcal{L}_{Cont_2}"]
+  "Cont_3" -> "Syn" [label="\\mathcal{L}_{Cont_3}"]
+  "Syn" -> "Sem" [label="\\mathcal{L}_{Sem}"]
+  "Syn" -> "String" [label="\\mathcal{L}_{Syn}"]
+}
